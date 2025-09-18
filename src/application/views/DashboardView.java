@@ -42,7 +42,7 @@ public class DashboardView {
     private void onActivateProductos(StackPane content) {
         try {
             ProductoService service = new ProductoService();
-            java.util.List<?> productos = service.getProducts();
+            var productos = service.getProducts();
             content.getChildren().setAll(
                     ProductoController.getScene(productos)
             );
@@ -54,7 +54,7 @@ public class DashboardView {
     private void onActivateProveedores(StackPane content) {
         try {
             ProveedorService service = new ProveedorService();
-            java.util.List<?> proveedores = service.getAll();
+            var proveedores = service.getAll();
             content.getChildren().setAll(
                     ProveedorController.createView(proveedores)
             );
@@ -78,7 +78,7 @@ public class DashboardView {
     private void onActivatePedidos(StackPane content) {
         try {
             PedidoService service = new PedidoService();
-            java.util.List<?> pedidos = service.getPedidos();
+            var pedidos = service.getPedidos();
             content.getChildren().setAll(
                     PedidoController.getScene(pedidos)
             );
