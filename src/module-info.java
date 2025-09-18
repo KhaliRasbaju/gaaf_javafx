@@ -1,5 +1,19 @@
 module GAAF_V1 {
-	requires javafx.controls;
-	
-	opens application to javafx.graphics, javafx.fxml;
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires java.net.http; // 👈 necesario para usar HttpClient
+    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.annotation;
+
+    opens application to javafx.graphics, javafx.fxml;
+    opens application.utils to javafx.fxml;   // si usas FXML en utils
+    opens application.views to javafx.fxml;   // si cargas vistas desde FXML
+
+    opens application.models to javafx.base;
+    opens application.controllers to javafx.fxml;
+    
+    exports application.models;
+    exports application.controllers;
+
 }

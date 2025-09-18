@@ -58,7 +58,7 @@ public class LoginView {
 		    vbox.setStyle("-fx-background-color: linear-gradient(to bottom, #ECF0F1, #BDC3C7);");
 		    vbox.setStyle("-fx-background-color: #1ABC9C;");
 
-		return new Scene(vbox, 400, 300);
+		return new Scene(vbox, 800, 600);
 		
 	}
 

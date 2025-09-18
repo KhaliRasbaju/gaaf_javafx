@@ -15,6 +15,8 @@ public class SceneManager {
 		stage.setTitle(title);
 		scene.getStylesheets().add(SceneManager.class.getResource("/application/resources/application.css").toExternalForm());
 		stage.setScene(scene);
+		stage.setWidth(800);
+	    stage.setHeight(600);
 		stage.show();
 	}
 	

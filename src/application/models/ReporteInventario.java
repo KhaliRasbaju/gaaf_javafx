@@ -2,8 +2,8 @@ package application.models;
 
 public class ReporteInventario {
 	private String fecha;
-    private int cantidadDisponible;
-    private int cantidadReservada;
+    private Integer cantidadDisponible;
+    private Integer cantidadReservada;
     private String producto;
     private String bodega;
 
@@ -16,18 +16,18 @@ public class ReporteInventario {
     	this.fecha = fecha; 
     }
 
-    public int getCantidadDisponible() { 
+    public Integer getCantidadDisponible() { 
     	return cantidadDisponible; 
     }
     
-    public void setCantidadDisponible(int cantidadDisponible) { 
+    public void setCantidadDisponible(Integer cantidadDisponible) { 
     	this.cantidadDisponible = cantidadDisponible; 
     }
 
-    public int getCantidadReservada() { 
+    public Integer getCantidadReservada() { 
     	return cantidadReservada; 
     }
-    public void setCantidadReservada(int cantidadReservada) { 
+    public void setCantidadReservada(Integer cantidadReservada) { 
     	this.cantidadReservada = cantidadReservada; 
     }
 

@@ -2,9 +2,9 @@ package application.models;
 
 public class ReporteBodega {
 	private String bodega;
-    private int cantidadDisponibleTotal;
-    private int cantidadReservadaTotal;
-    private int total;
+    private Integer cantidadDisponibleTotal;
+    private Integer cantidadReservadaTotal;
+    private Integer total;
 
     // Getters y setters
     public String getBodega(){ 
@@ -14,25 +14,25 @@ public class ReporteBodega {
     	this.bodega = bodega; 
     }
 
-    public int getCantidadDisponibleTotal() { 
+    public Integer getCantidadDisponibleTotal() { 
     	return cantidadDisponibleTotal; 
     }
-    public void setCantidadDisponibleTotal(int cantidadDisponibleTotal) { 
+    public void setCantidadDisponibleTotal(Integer cantidadDisponibleTotal) { 
     	this.cantidadDisponibleTotal = cantidadDisponibleTotal; 
     }
 
-    public int getCantidadReservadaTotal() {
+    public Integer getCantidadReservadaTotal() {
     	return cantidadReservadaTotal; 
     }
-    public void setCantidadReservadaTotal(int cantidadReservadaTotal) { 
+    public void setCantidadReservadaTotal(Integer cantidadReservadaTotal) { 
     	this.cantidadReservadaTotal = cantidadReservadaTotal; 
     }
 
-    public int getTotal() { 
+    public Integer getTotal() { 
     	return total; 
     }
     
-    public void setTotal(int total) { 
+    public void setTotal(Integer total) { 
     	this.total = total; 
     }
 }
