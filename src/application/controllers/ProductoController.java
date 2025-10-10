@@ -3,7 +3,7 @@ package application.controllers;
 
 import java.util.List;
 
-import application.models.Producto;
+import application.models.response.Producto;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

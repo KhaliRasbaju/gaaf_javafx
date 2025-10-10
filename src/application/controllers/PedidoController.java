@@ -5,9 +5,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import application.models.Pedido;
+import application.models.response.Pedido;
 import javafx.scene.layout.VBox;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -31,11 +30,7 @@ public class PedidoController {
 		colNit.setCellValueFactory(new PropertyValueFactory<>("nitProveedor"));
 
 		
-		TableColumn<Pedido, String> colProductos = new TableColumn<>("Productos");
-		colProductos.setCellValueFactory(cellData -> {
-		    List<String> productos = cellData.getValue().getProductos();
-		    return new javafx.beans.property.SimpleStringProperty(String.join(", ", productos));
-		});
+	
 
 		
 		TableColumn<Pedido, Integer> colCantidad = new TableColumn<>("Cantidad");
@@ -126,7 +121,7 @@ public class PedidoController {
 
 
 		
-		table.getColumns().addAll(colNit, colProductos, colCantidad, colValor, colFechaPedido, colRecibido, colFechaEntrega);
+		table.getColumns().addAll(colNit, colCantidad, colValor, colFechaPedido, colRecibido, colFechaEntrega);
 
 		
 		ObservableList<Pedido> data = FXCollections.observableArrayList(pedidos);

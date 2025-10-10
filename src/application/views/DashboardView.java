@@ -1,14 +1,11 @@
 package application.views;
 
-import application.controllers.InventarioController;
 import application.controllers.PedidoController;
 import application.controllers.ProductoController;
 import application.controllers.ProveedorController;
-import application.controllers.ReporteInventarioController;
 import application.services.PedidoService;
 import application.services.ProductoService;
 import application.services.ProveedorService;
-import application.services.ReporteInventarioService;
 import application.utils.SceneManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -27,7 +24,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Tooltip;
-import javafx.scene.text.FontPosture;
 
 /**
  * DashboardView — versión corregida:
@@ -42,7 +38,7 @@ public class DashboardView {
     private void onActivateProductos(StackPane content) {
         try {
             ProductoService service = new ProductoService();
-            var productos = service.getProducts();
+            var productos = service.obtenerTodos();
             content.getChildren().setAll(
                     ProductoController.getScene(productos)
             );
@@ -54,7 +50,7 @@ public class DashboardView {
     private void onActivateProveedores(StackPane content) {
         try {
             ProveedorService service = new ProveedorService();
-            var proveedores = service.getAll();
+            var proveedores = service.obtenerTodos();
             content.getChildren().setAll(
                     ProveedorController.createView(proveedores)
             );
@@ -63,22 +59,12 @@ public class DashboardView {
         }
     }
 
-    private void onActivateInventario(StackPane content) {
-        try {
-            ReporteInventarioService service = new ReporteInventarioService();
-            var reporte = service.getReporte();
-            content.getChildren().setAll(
-                    InventarioController.getScene(reporte.getReporteInventario())
-            );
-        } catch (Exception ex) {
-            System.out.println("Error tipo : " + ex);
-        }
-    }
+  
 
     private void onActivatePedidos(StackPane content) {
         try {
             PedidoService service = new PedidoService();
-            var pedidos = service.getPedidos();
+            var pedidos = service.obtenerPedidos();
             content.getChildren().setAll(
                     PedidoController.getScene(pedidos)
             );
@@ -87,17 +73,7 @@ public class DashboardView {
         }
     }
 
-    private void onActivateReporteInventario(StackPane content) {
-        try {
-            ReporteInventarioService service = new ReporteInventarioService();
-            var reporte = service.getReporte();
-            content.getChildren().setAll(
-                    ReporteInventarioController.getScene(reporte)
-            );
-        } catch (Exception ex) {
-            System.out.println("Error tipo : " + ex);
-        }
-    }
+   
 
     // ---------- CREACIÓN DE BOTÓN (ICON + LABEL) ----------
     private Button createMenuButton(String icon, String text) {
@@ -192,9 +168,9 @@ public class DashboardView {
         // hook actions
         btnProductos.setOnAction(e -> onActivateProductos(content));
         btnProveedor.setOnAction(e -> onActivateProveedores(content));
-        btnInventario.setOnAction(e -> onActivateInventario(content));
+//        btnInventario.setOnAction(e -> ());
         btnPedido.setOnAction(e -> onActivatePedidos(content));
-        btnReporteInventario.setOnAction(e -> onActivateReporteInventario(content));
+//        btnReporteInventario.setOnAction(e -> onActivateReporteInventario(content));
 
         HBox mainContainer = new HBox(vbox, content);
 

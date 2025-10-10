@@ -10,10 +10,12 @@ module GAAF_V1 {
     opens application.utils to javafx.fxml;   // si usas FXML en utils
     opens application.views to javafx.fxml;   // si cargas vistas desde FXML
 
-    opens application.models to javafx.base;
+    opens application.models.request to javafx.base;
+    opens application.models.response to javafx.base;
     opens application.controllers to javafx.fxml;
     
-    exports application.models;
+    exports application.models.request;
+    exports application.models.response;
     exports application.controllers;
 
 }

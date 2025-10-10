@@ -2,10 +2,9 @@ package application.controllers;
 
 import java.util.List;
 
-import application.models.Proveedor;
+import application.models.response.Proveedor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;

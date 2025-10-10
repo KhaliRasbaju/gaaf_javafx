@@ -1,26 +1,20 @@
-package application.models;
+package application.models.request;
 
-public class Producto {
-	private Long id;
+
+public class ProductoRequest {
+	
     private String nombre;
+    
+    private String tipo;
+    
     private String descripcion;
 
-    public Producto () {}
-    
-    // Constructor
-    public Producto(Long id, String nombre, String descripcion) {
-        this.id = id;
+    public ProductoRequest() {}
+
+    public ProductoRequest(String nombre, String tipo, String descripcion) {
         this.nombre = nombre;
+        this.tipo = tipo;
         this.descripcion = descripcion;
-    }
-
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getNombre() {
@@ -29,6 +23,14 @@ public class Producto {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getDescripcion() {

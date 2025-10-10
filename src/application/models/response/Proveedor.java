@@ -1,28 +1,45 @@
-package application.models;
+package application.models.response;
+
+import java.util.List;
 
 public class Proveedor {
+	
 	private Long nit;
+	
     private String nombre;
+    
     private String telefono;
+    
     private String correo;
+    
     private String direccion;
+    
+    private List<Ubicacion> ubicacion;
+    
+    private List<Cuenta> cuenta;
 
     public Proveedor() {}
     // Constructor
-    public Proveedor(long nit, String nombre, String telefono, String correo, String direccion) {
-        this.nit = nit;
-        this.nombre = nombre;
-        this.telefono = telefono;
-        this.correo = correo;
-        this.direccion = direccion;
-    }
+    
 
     // Getters y Setters
     public long getNit() {
         return nit;
     }
 
-    public void setNit(long nit) {
+    public Proveedor(Long nit, String nombre, String telefono, String correo, String direccion,
+			List<Ubicacion> ubicacion, List<Cuenta> cuenta) {
+		this.nit = nit;
+		this.nombre = nombre;
+		this.telefono = telefono;
+		this.correo = correo;
+		this.direccion = direccion;
+		this.ubicacion = ubicacion;
+		this.cuenta = cuenta;
+	}
+    
+    
+	public void setNit(long nit) {
         this.nit = nit;
     }
 
@@ -58,14 +75,24 @@ public class Proveedor {
         this.direccion = direccion;
     }
     
-    @Override
-    public String toString() {
-        return "Proveedor{" +
-                "nit=" + nit +
-                ", nombre='" + nombre + '\'' +
-                ", telefono='" + telefono + '\'' +
-                ", correo='" + correo + '\'' +
-                ", direccion='" + direccion + '\'' +
-                '}';
-    }
+    
+    
+    public List<Ubicacion> getUbicacion() {
+		return ubicacion;
+	}
+
+
+	public void setUbicacion(List<Ubicacion> ubicacion) {
+		this.ubicacion = ubicacion;
+	}
+
+
+	public List<Cuenta> getCuenta() {
+		return cuenta;
+	}
+
+
+	public void setCuenta(List<Cuenta> cuenta) {
+		this.cuenta = cuenta;
+	}
 }

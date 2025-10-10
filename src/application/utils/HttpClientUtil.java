@@ -20,13 +20,36 @@ public class HttpClientUtil {
 	}
 
 	 public static String post(String url, String jsonBody) throws Exception {
-	        HttpRequest request = HttpRequest.newBuilder()
-	                .uri(new URI(url))
-	                .header("Content-Type", "application/json")
-	                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
-	                .build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
 
-	        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-	        return response.body();
-	    }
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    }
+	 
+	 public static String put(String url, String jsonBody) throws Exception {
+		 HttpRequest request = HttpRequest.newBuilder()
+				 .uri(new URI(url))
+				 .header("Content-Type", "application/json")
+				 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
+				 .build();
+		 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+	 }
+	 
+
+	 
+	 public static String delete(String url) throws Exception {
+	    HttpRequest request = HttpRequest.newBuilder()
+	            .uri(new URI(url))
+	            .header("Accept", "application/json")
+	            .DELETE()
+	            .build();
+
+	    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+	    return response.body();
+	 }
 }
