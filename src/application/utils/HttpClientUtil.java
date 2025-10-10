@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package application.utils;
 
 
@@ -53,3 +54,60 @@ public class HttpClientUtil {
 	    return response.body();
 	 }
 }
+=======
+package application.utils;
+
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+public class HttpClientUtil {
+	private static final HttpClient client = HttpClient.newHttpClient();
+	
+	public static String get(String url) throws Exception{
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(new URI(url))
+				.GET()
+				.build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		
+		return response.body();
+	}
+
+	 public static String post(String url, String jsonBody) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI(url))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    }
+	 
+	 public static String put(String url, String jsonBody) throws Exception {
+		 HttpRequest request = HttpRequest.newBuilder()
+				 .uri(new URI(url))
+				 .header("Content-Type", "application/json")
+				 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
+				 .build();
+		 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+	 }
+	 
+
+	 
+	 public static String delete(String url) throws Exception {
+	    HttpRequest request = HttpRequest.newBuilder()
+	            .uri(new URI(url))
+	            .header("Accept", "application/json")
+	            .DELETE()
+	            .build();
+
+	    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+	    return response.body();
+	 }
+}
+>>>>>>> b614632 (Se cambiaron los estilos y se movieron hacia el css)

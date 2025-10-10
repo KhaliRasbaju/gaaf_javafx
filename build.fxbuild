@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="ASCII"?>
 <anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://org.eclipse.fx.ide.jdt/1.0" buildDirectory="${project}/build">
   <deploy>
@@ -6,3 +7,13 @@
   </deploy>
   <signjar/>
 </anttasks:AntTask>
+=======
+<?xml version="1.0" encoding="ASCII"?>
+<anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://org.eclipse.fx.ide.jdt/1.0" buildDirectory="${project}/build">
+  <deploy>
+    <application name="GAAF_V1"/>
+    <info/>
+  </deploy>
+  <signjar/>
+</anttasks:AntTask>
+>>>>>>> b614632 (Se cambiaron los estilos y se movieron hacia el css)

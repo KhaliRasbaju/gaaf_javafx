@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package application.models.request;
 
 public class UbicacionRequest {
@@ -32,3 +33,39 @@ public class UbicacionRequest {
     }
 
 }
+=======
+package application.models.request;
+
+public class UbicacionRequest {
+
+
+    private String direccion;
+    
+    private Long idMunicipio;
+
+    public UbicacionRequest() {}
+
+    public UbicacionRequest(String direccion, Long idMunicipio) {
+        this.direccion = direccion;
+        this.idMunicipio = idMunicipio;
+    }
+
+    // Getters y Setters
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public Long getIdMunicipio() {
+        return idMunicipio;
+    }
+
+    public void setIdMunicipio(Long idMunicipio) {
+        this.idMunicipio = idMunicipio;
+    }
+
+}
+>>>>>>> b614632 (Se cambiaron los estilos y se movieron hacia el css)
