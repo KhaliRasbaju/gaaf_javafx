@@ -16,6 +16,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -73,38 +75,25 @@ public class DashboardView {
 
     // ---------- CREACIÓN DE BOTÓN (ICON + LABEL) ----------
     private Button createMenuButton(String icon, String text) {
-        // Icon (emoji or glyph)
         Text iconText = new Text(icon);
         iconText.setFont(Font.font("Segoe UI Emoji", FontWeight.BOLD, 18));
-        iconText.setFill(Color.web("#00E5FF"));
+        iconText.setFill(Color.rgb(229, 229, 229)); // Cambiado a gris claro
 
-        // Label
         Text labelText = new Text(text);
         labelText.setFont(Font.font("Orbitron", FontWeight.NORMAL, 14));
-        labelText.setFill(Color.web("#E6EEF6"));
-
-        // make label not take space when invisible
+        labelText.setFill(Color.rgb(229, 229, 229)); // Cambiado a gris claro
         labelText.managedProperty().bind(labelText.visibleProperty());
-
-        // container for icon + label
         HBox hbox = new HBox(10, iconText, labelText);
         hbox.setAlignment(Pos.CENTER_LEFT);
-
         Button btn = new Button();
         btn.setGraphic(hbox);
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.getStyleClass().add("dashboard-menu-button");
-
-        // Store references to adjust on toggle
         btn.getProperties().put("labelText", labelText);
         btn.getProperties().put("iconText", iconText);
         btn.getProperties().put("hbox", hbox);
-
-        // Glow effect for whole button
-        DropShadow glow = new DropShadow(20, Color.web("#00E5FF"));
+        DropShadow glow = new DropShadow(20, Color.rgb(229, 229, 229));
         glow.setSpread(0.45);
-
-        // Hover: glow the whole button and scale the icon
         btn.setOnMouseEntered(e -> {
             btn.setEffect(glow);
             ScaleTransition st = new ScaleTransition(Duration.millis(180), iconText);
@@ -119,11 +108,8 @@ public class DashboardView {
             st.setToY(1);
             st.play();
         });
-
-        // tooltip (optional): show label when minimized
         Tooltip tip = new Tooltip(text);
         Tooltip.install(btn, tip);
-
         return btn;
     }
 
@@ -145,6 +131,19 @@ public class DashboardView {
 
         vbox.getChildren().addAll(title, btnProductos, btnProveedor, btnInventario, btnPedido, btnReporteInventario);
 
+        // Pie de menú lateral: nombre y campana
+        HBox sidebarFooter = new HBox();
+        sidebarFooter.setSpacing(12);
+        sidebarFooter.setAlignment(Pos.CENTER);
+        sidebarFooter.getStyleClass().add("dashboard-sidebar-footer");
+        Text userLabel = new Text("Administrador");
+        userLabel.getStyleClass().add("dashboard-user-label");
+        userLabel.setFill(Color.WHITE); // Asegura que el texto sea blanco
+        Button bellButton = new Button("🔔");
+        bellButton.getStyleClass().add("dashboard-bell-button");
+        sidebarFooter.getChildren().addAll(userLabel, bellButton);
+        vbox.getChildren().add(sidebarFooter);
+
         // ------- Main content -------
         StackPane content = new StackPane();
         content.getStyleClass().add("dashboard-content");
@@ -160,6 +159,14 @@ public class DashboardView {
         HBox mainContainer = new HBox(vbox, content);
 
         // ------- Header -------
+        Image logoImg = new Image(getClass().getResource("/application/resources/logoGAAF.png").toExternalForm());
+        ImageView empresaLogo = new ImageView(logoImg);
+        empresaLogo.setFitHeight(38);
+        empresaLogo.setPreserveRatio(true);
+        empresaLogo.setSmooth(true);
+        empresaLogo.setCache(true);
+        empresaLogo.getStyleClass().add("dashboard-header-logo");
+
         Text empresa = new Text("GAAF - Grupo Alimenticio Alba del Fonce SAS");
         empresa.getStyleClass().add("dashboard-header-title");
 
@@ -199,7 +206,7 @@ public class DashboardView {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox headerBox = new HBox(16, toggleMenu, empresa, spacer, salir);
+        HBox headerBox = new HBox(16, toggleMenu, empresaLogo, spacer, salir);
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setPadding(new Insets(12));
         headerBox.getStyleClass().add("dashboard-header");

@@ -11,6 +11,7 @@ public class DashboardGerenteView extends DashboardViewBase {
         vbox.getChildren().addAll(btnReporteInventario, btnReporteCompras);
         // btnReporteInventario.setOnAction(e -> ... );
         // btnReporteCompras.setOnAction(e -> ... );
+        addSidebarFooter("Gerente");
     }
     @Override
     protected String getTitleText() { return "📈 Dashboard"; }

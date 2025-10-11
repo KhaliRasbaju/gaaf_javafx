@@ -9,6 +9,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -24,7 +26,7 @@ public abstract class DashboardViewBase {
     protected HBox headerBox;
     protected Button toggleMenu;
     protected Button salir;
-    protected Text empresa;
+    protected ImageView empresaLogo;
 
     public DashboardViewBase() {
         vbox = new VBox(12);
@@ -37,6 +39,7 @@ public abstract class DashboardViewBase {
         vbox.getChildren().add(title);
 
         addMenuButtons();
+        // El pie se agrega en cada rol específico usando addSidebarFooter(roleName)
 
         content = new StackPane();
         content.getStyleClass().add("dashboard-content");
@@ -46,8 +49,14 @@ public abstract class DashboardViewBase {
 
         mainContainer = new HBox(vbox, content);
 
-        empresa = new Text("GAAF - Grupo Alimenticio Alba del Fonce SAS");
-        empresa.getStyleClass().add("dashboard-header-title");
+        // Reemplazar el texto por el logo
+        Image logoImg = new Image(getClass().getResource("/application/resources/logoGAAF.png").toExternalForm());
+        empresaLogo = new ImageView(logoImg);
+        empresaLogo.setFitHeight(38);
+        empresaLogo.setPreserveRatio(true);
+        empresaLogo.setSmooth(true);
+        empresaLogo.setCache(true);
+        empresaLogo.getStyleClass().add("dashboard-header-logo");
 
         toggleMenu = new Button("☰");
         toggleMenu.getStyleClass().add("dashboard-toggle-button");
@@ -75,7 +84,7 @@ public abstract class DashboardViewBase {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        headerBox = new HBox(16, toggleMenu, empresa, spacer, salir);
+        headerBox = new HBox(16, toggleMenu, empresaLogo, spacer, salir);
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setPadding(new Insets(12));
         headerBox.getStyleClass().add("dashboard-header");
@@ -89,9 +98,9 @@ public abstract class DashboardViewBase {
 
     protected Button createMenuButton(String icon, String text) {
         Text iconText = new Text(icon);
-        iconText.setStyle("-fx-font-family: 'Segoe UI Emoji'; -fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #00E5FF;");
+        iconText.setStyle("-fx-font-family: 'Segoe UI Emoji'; -fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #E5E5E5;");
         Text labelText = new Text(text);
-        labelText.setStyle("-fx-font-family: 'Orbitron'; -fx-font-size: 14px; -fx-fill: #E6EEF6;");
+        labelText.setStyle("-fx-font-family: 'Orbitron'; -fx-font-size: 14px; -fx-fill: #E5E5E5;");
         labelText.managedProperty().bind(labelText.visibleProperty());
         HBox hbox = new HBox(10, iconText, labelText);
         hbox.setAlignment(Pos.CENTER_LEFT);
@@ -102,7 +111,7 @@ public abstract class DashboardViewBase {
         btn.getProperties().put("labelText", labelText);
         btn.getProperties().put("iconText", iconText);
         btn.getProperties().put("hbox", hbox);
-        DropShadow glow = new DropShadow(20, Color.web("#00E5FF"));
+        DropShadow glow = new DropShadow(20, Color.web("#E5E5E5"));
         glow.setSpread(0.45);
         btn.setOnMouseEntered(e -> {
             btn.setEffect(glow);
@@ -161,5 +170,19 @@ public abstract class DashboardViewBase {
         Scene scene = new Scene(root, 1000, 650);
         scene.getStylesheets().add(getClass().getResource("/application/resources/application.css").toExternalForm());
         return scene;
+    }
+
+    protected void addSidebarFooter(String roleName) {
+        HBox sidebarFooter = new HBox();
+        sidebarFooter.setSpacing(12);
+        sidebarFooter.setAlignment(Pos.CENTER);
+        sidebarFooter.getStyleClass().add("dashboard-sidebar-footer");
+        Text userLabel = new Text(roleName);
+        userLabel.getStyleClass().add("dashboard-user-label");
+        userLabel.setFill(Color.WHITE); // Asegura que el texto sea blanco en todas las views
+        Button bellButton = new Button("🔔");
+        bellButton.getStyleClass().add("dashboard-bell-button");
+        sidebarFooter.getChildren().addAll(userLabel, bellButton);
+        vbox.getChildren().add(sidebarFooter);
     }
 }

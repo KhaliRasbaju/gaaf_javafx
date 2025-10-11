@@ -13,6 +13,7 @@ public class DashboardBodegaView extends DashboardViewBase {
         // btnBodegas.setOnAction(e -> ... );
         // btnInventario.setOnAction(e -> ... );
         // btnReporteInventario.setOnAction(e -> ... );
+        addSidebarFooter("Jefe Bodega");
     }
     @Override
     protected String getTitleText() { return "📦 Dashboard"; }

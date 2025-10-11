@@ -6,6 +6,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Popup;
@@ -14,9 +16,13 @@ import javafx.util.Duration;
 public class LoginView {
 
     public Scene getScene() {
-        // 🔹 Título principal
-        Label title = new Label("LOGIN GAAF");
-        title.getStyleClass().add("login-title");
+        // 🔹 Logo principal (reemplaza el texto "LOGIN GAAF")
+        Image logoImg = new Image(getClass().getResource("/application/resources/logoGAAF.png").toExternalForm());
+        ImageView logoView = new ImageView(logoImg);
+        logoView.setFitWidth(320);
+        logoView.setPreserveRatio(true);
+        logoView.setSmooth(true);
+        logoView.setCache(true);
 
         // 🔹 Icono de candado
         Label lockIcon = new Label("🔒");
@@ -92,14 +98,14 @@ public class LoginView {
                 SceneManager.changeScene(new DashboardGerenteView().getScene(), "Panel Gerente");
             } else if (user.equals("admin") && pass.equals("123")) {
                 showNotification(loginButton.getScene(), "✔ Acceso autorizado", Color.LIMEGREEN);
-                SceneManager.changeScene(new DashboardComprasView().getScene(), "Panel de Datos");
+                SceneManager.changeScene(new DashboardView().getScene(), "Panel de Administrador");
             } else {
                 showNotification(loginButton.getScene(), "❌ Credenciales incorrectas", Color.RED);
             }
         });
 
-        // 🔹 Layout principal
-        VBox vbox = new VBox(15, title, lockIcon, usernameField, passwordPane, loginButton);
+        // 🔹 Layout principal (logo reemplaza el título)
+        VBox vbox = new VBox(15, logoView, lockIcon, usernameField, passwordPane, loginButton);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(40));
         vbox.getStyleClass().add("login-root");

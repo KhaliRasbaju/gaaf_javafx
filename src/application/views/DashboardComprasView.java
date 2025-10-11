@@ -18,6 +18,7 @@ public class DashboardComprasView extends DashboardViewBase {
         btnProveedor.setOnAction(e -> content.getChildren().setAll(ProveedorController.createView(null)));
         btnPedido.setOnAction(e -> content.getChildren().setAll(PedidoController.getScene(null)));
         // btnReporteCompras.setOnAction(e -> ... );
+        addSidebarFooter("Coord. Compras");
     }
     @Override
     protected String getTitleText() { return "📊 Dashboard"; }
