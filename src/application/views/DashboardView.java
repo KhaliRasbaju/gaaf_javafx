@@ -25,11 +25,7 @@ import javafx.util.Duration;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Tooltip;
 
-/**
- * DashboardView — versión corregida:
- * - minimizado muestra iconos centrados (sin espacio)
- * - hover ilumina todo el botón y escala el icono
- */
+
 public class DashboardView {
 
     private boolean menuOpen = true;
@@ -97,7 +93,7 @@ public class DashboardView {
         Button btn = new Button();
         btn.setGraphic(hbox);
         btn.setMaxWidth(Double.MAX_VALUE);
-        btn.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 8 12;");
+        btn.getStyleClass().add("dashboard-menu-button");
 
         // Store references to adjust on toggle
         btn.getProperties().put("labelText", labelText);
@@ -111,15 +107,10 @@ public class DashboardView {
         // Hover: glow the whole button and scale the icon
         btn.setOnMouseEntered(e -> {
             btn.setEffect(glow);
-
-            // scale icon smoothly
             ScaleTransition st = new ScaleTransition(Duration.millis(180), iconText);
             st.setToX(1.35);
             st.setToY(1.35);
             st.play();
-
-            // slight background tint for the button (does not change layout)
-            btn.setStyle("-fx-background-color: rgba(14,165,233,0.06); -fx-cursor: hand; -fx-padding: 8 12;");
         });
         btn.setOnMouseExited(e -> {
             btn.setEffect(null);
@@ -127,8 +118,6 @@ public class DashboardView {
             st.setToX(1);
             st.setToY(1);
             st.play();
-
-            btn.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-padding: 8 12;");
         });
 
         // tooltip (optional): show label when minimized
@@ -143,11 +132,10 @@ public class DashboardView {
         VBox vbox = new VBox(12);
         vbox.setPadding(new Insets(18));
         vbox.setPrefWidth(200);
-        vbox.setStyle("-fx-background-color: linear-gradient(to bottom, #0f1724, #0b1220);");
+        vbox.getStyleClass().add("dashboard-sidebar");
 
         Text title = new Text("📊 Dashboard");
-        title.setFont(Font.font("Orbitron", FontWeight.BOLD, 18));
-        title.setFill(Color.web("#00E5FF"));
+        title.getStyleClass().add("dashboard-title");
 
         Button btnProductos = createMenuButton("📦", "Productos");
         Button btnProveedor = createMenuButton("🚚", "Proveedores");
@@ -159,33 +147,27 @@ public class DashboardView {
 
         // ------- Main content -------
         StackPane content = new StackPane();
-        content.setStyle("-fx-background-color: linear-gradient(to bottom, #eaf2f8, #dfeff6); -fx-padding: 18;");
+        content.getStyleClass().add("dashboard-content");
         Text placeholder = new Text("Selecciona una opción del menú");
-        placeholder.setFont(Font.font("Segoe UI", FontWeight.NORMAL, 14));
         content.getChildren().add(placeholder);
         HBox.setHgrow(content, Priority.ALWAYS);
 
         // hook actions
         btnProductos.setOnAction(e -> onActivateProductos(content));
         btnProveedor.setOnAction(e -> onActivateProveedores(content));
-//        btnInventario.setOnAction(e -> ());
         btnPedido.setOnAction(e -> onActivatePedidos(content));
-//        btnReporteInventario.setOnAction(e -> onActivateReporteInventario(content));
 
         HBox mainContainer = new HBox(vbox, content);
 
         // ------- Header -------
         Text empresa = new Text("GAAF - Grupo Alimenticio Alba del Fonce SAS");
-        empresa.setFont(Font.font("Orbitron", FontWeight.BOLD, 18));
-        empresa.setFill(Color.web("#00E5FF"));
+        empresa.getStyleClass().add("dashboard-header-title");
 
         Button toggleMenu = new Button("☰");
-        toggleMenu.setFont(Font.font("Orbitron", FontWeight.BOLD, 14));
-        toggleMenu.setStyle("-fx-background-color: transparent; -fx-text-fill: #00E5FF; -fx-padding: 6 10; -fx-cursor: hand;");
+        toggleMenu.getStyleClass().add("dashboard-toggle-button");
 
         Button salir = new Button("Salir");
-        salir.setFont(Font.font("Orbitron", FontWeight.BOLD, 14));
-        salir.setStyle("-fx-background-color: #E62727; -fx-text-fill: white; -fx-padding: 8 14; -fx-background-radius: 8; -fx-cursor: hand;");
+        salir.getStyleClass().add("dashboard-salir-button");
 
         // salir hover glow + press scale (keeps layout safe)
         DropShadow redGlow = new DropShadow(18, Color.web("#ff6b6b"));
@@ -206,7 +188,6 @@ public class DashboardView {
         });
 
         salir.setOnAction(e -> {
-            // fade entire mainContainer then change scene to avoid visual blank state
             Timeline t = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(mainContainer.opacityProperty(), 1.0)),
                     new KeyFrame(Duration.millis(320), new KeyValue(mainContainer.opacityProperty(), 0.0))
@@ -221,7 +202,7 @@ public class DashboardView {
         HBox headerBox = new HBox(16, toggleMenu, empresa, spacer, salir);
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setPadding(new Insets(12));
-        headerBox.setStyle("-fx-background-color: linear-gradient(to right, #06202a, #0e3a45); -fx-border-color: #00E5FF; -fx-border-width: 0 0 2 0;");
+        headerBox.getStyleClass().add("dashboard-header");
 
         // ------- Toggle logic: minimize / expand -------
         toggleMenu.setOnAction(e -> {
@@ -267,6 +248,7 @@ public class DashboardView {
         root.setCenter(mainContainer);
 
         Scene scene = new Scene(root, 1000, 650);
+        scene.getStylesheets().add(getClass().getResource("/application/resources/application.css").toExternalForm());
         return scene;
     }
 }
