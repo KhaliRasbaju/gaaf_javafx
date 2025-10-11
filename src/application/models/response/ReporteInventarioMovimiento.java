@@ -14,7 +14,7 @@ public class ReporteInventarioMovimiento {
     
     private Integer cantidad;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime fecha;
     
     private String observacion;

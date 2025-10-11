@@ -14,13 +14,13 @@ public class MunicipioService {
 	private final ObjectMapper mapper = new ObjectMapper();
 	
 	public List<Municipio> obtenerMunicipiosPorDepartamento(Long id) throws Exception {
-	        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/municipio-departamento/"+id);
+	        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/municipio-departamento/"+id, false);
 	    return mapper.readValue(response, new TypeReference<List<Municipio>>() {});
 	}
 	
 	
 	public List<Municipio> obtenerMunicipio(Long id) throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/municipio/"+id);
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/municipio/"+id, false);
     return mapper.readValue(response, new TypeReference<List<Municipio>>() {});
 }
 	

@@ -1,11 +1,10 @@
 package application.views;
 
-import application.controllers.PedidoController;
 import application.controllers.ProductoController;
-import application.controllers.ProveedorController;
-import application.services.PedidoService;
+import application.controllers.RegistrarFormController;
+import application.models.request.RegistrarRequest;
+import application.services.AutentificacionService;
 import application.services.ProductoService;
-import application.services.ProveedorService;
 import application.utils.SceneManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -28,53 +27,29 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.control.Tooltip;
 
 
-public class DashboardView {
+public class DashboardView extends DashboardViewBase{
 
     private boolean menuOpen = true;
 
     // ---------- CARGA DE VISTAS ----------
-    private void onActivateProductos(StackPane content) {
-        try {
-            ProductoService service = new ProductoService();
-            var productos = service.obtenerTodos();
+
+    public void onActivateUsuarios() {
+    	try {
+    		
+    		System.out.println("Paso Por aqui");
             content.getChildren().setAll(
-                    ProductoController.getScene(productos)
+            	RegistrarFormController.getScene()
             );
+            
         } catch (Exception ex) {
             System.out.println("Error tipo : " + ex);
         }
     }
 
-    private void onActivateProveedores(StackPane content) {
-        try {
-            ProveedorService service = new ProveedorService();
-            var proveedores = service.obtenerTodos();
-            content.getChildren().setAll(
-                    ProveedorController.createView(proveedores)
-            );
-        } catch (Exception ex) {
-            System.out.println("Error tipo : " + ex);
-        }
-    }
 
-  
-
-    private void onActivatePedidos(StackPane content) {
-        try {
-            PedidoService service = new PedidoService();
-            var pedidos = service.obtenerPedidos();
-            content.getChildren().setAll(
-                    PedidoController.getScene(pedidos)
-            );
-        } catch (Exception ex) {
-            System.out.println("Error tipo : " + ex);
-        }
-    }
-
-   
 
     // ---------- CREACIÓN DE BOTÓN (ICON + LABEL) ----------
-    private Button createMenuButton(String icon, String text) {
+    protected Button createMenuButton(String icon, String text) {
         Text iconText = new Text(icon);
         iconText.setFont(Font.font("Segoe UI Emoji", FontWeight.BOLD, 18));
         iconText.setFill(Color.rgb(229, 229, 229)); // Cambiado a gris claro
@@ -123,13 +98,11 @@ public class DashboardView {
         Text title = new Text("📊 Dashboard");
         title.getStyleClass().add("dashboard-title");
 
-        Button btnProductos = createMenuButton("📦", "Productos");
-        Button btnProveedor = createMenuButton("🚚", "Proveedores");
-        Button btnInventario = createMenuButton("📋", "Inventario");
-        Button btnPedido = createMenuButton("🛒", "Pedidos");
-        Button btnReporteInventario = createMenuButton("📑", "Reporte Inventario");
+       
+        Button btnUsuario = createMenuButton("👤", "Usuarios");
+       
 
-        vbox.getChildren().addAll(title, btnProductos, btnProveedor, btnInventario, btnPedido, btnReporteInventario);
+        vbox.getChildren().addAll(title, btnUsuario);
 
         // Pie de menú lateral: nombre y campana
         HBox sidebarFooter = new HBox();
@@ -145,16 +118,15 @@ public class DashboardView {
         vbox.getChildren().add(sidebarFooter);
 
         // ------- Main content -------
-        StackPane content = new StackPane();
+      
         content.getStyleClass().add("dashboard-content");
         Text placeholder = new Text("Selecciona una opción del menú");
         content.getChildren().add(placeholder);
         HBox.setHgrow(content, Priority.ALWAYS);
 
         // hook actions
-        btnProductos.setOnAction(e -> onActivateProductos(content));
-        btnProveedor.setOnAction(e -> onActivateProveedores(content));
-        btnPedido.setOnAction(e -> onActivatePedidos(content));
+        btnUsuario.setOnAction(e -> onActivateUsuarios());
+     
 
         HBox mainContainer = new HBox(vbox, content);
 
@@ -258,4 +230,28 @@ public class DashboardView {
         scene.getStylesheets().add(getClass().getResource("/application/resources/application.css").toExternalForm());
         return scene;
     }
+
+
+
+	@Override
+	protected void addMenuButtons() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	protected String getTitleText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	protected void onSalir() {
+		// TODO Auto-generated method stub
+		
+	}
 }

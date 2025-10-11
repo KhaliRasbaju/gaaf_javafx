@@ -16,13 +16,13 @@ public class ProveedorService {
 	private final ObjectMapper mapper = new ObjectMapper();
 	
 	public List<Proveedor> obtenerTodos() throws Exception{
-		String response = HttpClientUtil.get(ApiConfig.BASE_URL+"/proveedor");
+		String response = HttpClientUtil.get(ApiConfig.BASE_URL+"/proveedor", false);
 		return mapper.readValue(response, new TypeReference<List<Proveedor>>() {});
 	}
 	
 	public Proveedor crearProveedor(ProveedorRequest proveedor) throws Exception {
 		String jsonBody = mapper.writeValueAsString(proveedor);
-	    String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/proveedor/crear", jsonBody);
+	    String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/proveedor/crear", jsonBody, false);
 	    return mapper.readValue(response, Proveedor.class);
 	}
 	
@@ -33,7 +33,7 @@ public class ProveedorService {
 	}
 	
 	public Proveedor obtenerProveedor(Long nit) throws Exception {
-	    String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/proveedor/" + nit);
+	    String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/proveedor/" + nit, false);
 	    return mapper.readValue(response, Proveedor.class); 
 	}
 	

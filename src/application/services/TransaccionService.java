@@ -15,7 +15,7 @@ public class TransaccionService {
     // 🔹 CREAR TRANSACCIÓN (POST)
     public Transaccion crearTransaccion(TransaccionRequest transaccion) throws Exception {
         String jsonBody = mapper.writeValueAsString(transaccion);
-        String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/transaccion/crear", jsonBody);
+        String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/transaccion/crear", jsonBody, false);
         return mapper.readValue(response, Transaccion.class);
     }
 

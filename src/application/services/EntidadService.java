@@ -16,14 +16,14 @@ public class EntidadService {
 	 
  // 🔹 OBTENER TODAS LAS ENTIDADES (GET)
     public List<Common> obtenerEntidades() throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/entidad");
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/entidad", false);
         return mapper.readValue(response, new TypeReference<List<Common>>() {});
     }
 
     // 🔹 CREAR ENTIDAD (POST)
     public Common crearEntidad(CommonRequest entidad) throws Exception {
         String jsonBody = mapper.writeValueAsString(entidad);
-        String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/entidad/crear", jsonBody);
+        String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/entidad/crear", jsonBody, false);
         return mapper.readValue(response, Common.class);
     }
 

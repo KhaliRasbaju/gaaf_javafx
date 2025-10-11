@@ -19,7 +19,7 @@ public class ProductoService {
 	
 	public Producto crearProducto(ProductoRequest productoRequest) throws Exception {
 		String json = mapper.writeValueAsString(productoRequest);
-		String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/producto/crear", json);
+		String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/producto/crear", json, false);
 		return mapper.readValue(response, Producto.class);	
 	}
 	
@@ -30,12 +30,12 @@ public class ProductoService {
 	}
 
 	public Producto obtenerProducto(Long id) throws Exception{
-		String response = HttpClientUtil.get(ApiConfig.BASE_URL+"/producto/"+id);
+		String response = HttpClientUtil.get(ApiConfig.BASE_URL+"/producto/"+id, false);
 		return mapper.readValue(response, Producto.class);
 	}
 	
 	public List<Producto> obtenerTodos() throws Exception{
-		String response = HttpClientUtil.get(ApiConfig.BASE_URL+"/producto");
+		String response = HttpClientUtil.get(ApiConfig.BASE_URL+"/producto", false);
 		return mapper.readValue(response, new TypeReference<List<Producto>>() {});
 	}
 	

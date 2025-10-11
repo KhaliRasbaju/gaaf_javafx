@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import application.config.ApiConfig;
 import application.models.request.PedidoRequest;
@@ -13,25 +15,33 @@ import application.utils.HttpClientUtil;
 
 public class PedidoService {
 	private final ObjectMapper mapper = new ObjectMapper();
+	
+	
+	
 
-    public List<Pedido> obtenerPedidos() throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/pedido");
+    public PedidoService() {
+    	mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+	}
+
+	public List<Pedido> obtenerPedidos() throws Exception {
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/pedido", false);
         return mapper.readValue(response, new TypeReference<List<Pedido>>() {});
     }
 
     public Pedido crearPedido(PedidoRequest pedido) throws Exception {
         String jsonBody = mapper.writeValueAsString(pedido);
-        String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/pedido/crear", jsonBody);
+        String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/pedido/crear", jsonBody, false);
         return mapper.readValue(response, Pedido.class);
     }
 
     public Pedido recibirPedido(Long id) throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/pedido/recibir/" + id);
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/pedido/recibir/" + id, false);
         return mapper.readValue(response, Pedido.class);
     }
     
     public Pedido obtenerPedido(Long id) throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/pedido/" + id);
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/pedido/" + id, false);
         return mapper.readValue(response, Pedido.class);
     }
 

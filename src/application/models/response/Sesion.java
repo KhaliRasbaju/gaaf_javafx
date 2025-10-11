@@ -1,5 +1,8 @@
 package application.models.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Sesion {
 
 	private String usuario;
@@ -39,5 +42,14 @@ public class Sesion {
 	public void setRol(String rol) {
 		this.rol = rol;
 	}
+
+	@Override
+	public String toString() {
+		return "Usuario: " + this.usuario + "\n token: " +this.token+"\n rol: "+ this.rol;
+	}
+
+	
+
+	
 	
 }

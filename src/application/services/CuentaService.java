@@ -17,7 +17,7 @@ public class CuentaService {
 
     // 🔹 OBTENER TODAS LAS CUENTAS (GET)
     public List<Cuenta> obetenrCuentas() throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/cuenta");
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/cuenta", false);
         return mapper.readValue(response, new TypeReference<List<Cuenta>>() {});
     }
 
@@ -29,7 +29,7 @@ public class CuentaService {
     }
     
     public Cuenta obtenerCuenta(Long id) throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/cuenta/" + id);
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/cuenta/" + id, false);
         return mapper.readValue(response, Cuenta.class);
     }
 

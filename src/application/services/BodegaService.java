@@ -17,14 +17,14 @@ public class BodegaService {
 
 
     public List<Bodega> obtenerBodegas() throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/bodega");
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/bodega", false);
         return mapper.readValue(response, new TypeReference<List<Bodega>>() {});
     }
 
    
     public Bodega crearBodega(BodegaRequest bodega) throws Exception {
         String jsonBody = mapper.writeValueAsString(bodega);
-        String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/bodega/crear", jsonBody);
+        String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/bodega/crear", jsonBody, false);
         return mapper.readValue(response, Bodega.class);
     }
   
@@ -35,7 +35,7 @@ public class BodegaService {
     }
     
     public Bodega obtenerBodega(Long id) throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/bodega/"+id);
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/bodega/"+id, false);
         return mapper.readValue(response, Bodega.class);
     }
 

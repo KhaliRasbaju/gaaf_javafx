@@ -28,10 +28,10 @@
     -fx-background-color: transparent;
     -fx-cursor: hand;
     -fx-font-size: 14px;
-    -fx-text-fill: white;
+    -fx-text-fill: #5BB318;
 }
 .login-eye-button:hover {
-    -fx-text-fill: cyan;
+    -fx-text-fill: green;
     -fx-effect: dropshadow(gaussian, cyan, 15, 0.5, 0, 0);
 }
 .login-button {
@@ -102,16 +102,18 @@
 }
 .dashboard-sidebar-footer {
     -fx-background-color: transparent;
-    -fx-padding: 10 0 0 0;
+    -fx-padding: 50 0 0 0;
     -fx-spacing: 12;
-    -fx-alignment: center;
+    -fx-alignment: bottom-center;
+    -fx-pref-height: 100px;
 }
 .dashboard-bell-button {
     -fx-background-color: transparent;
     -fx-font-size: 22px;
     -fx-text-fill: #E5E5E5;
     -fx-cursor: hand;
-    -fx-padding: 0 8;
+    -fx-alignment: bottom-center;
+    -fx-padding: -7 8;
 }
 .dashboard-user-label {
     -fx-font-family: 'Orbitron';
@@ -130,3 +132,26 @@
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
+
+.icon-recibido {
+    -fx-text-fill: green;
+    -fx-font-size: 16px;
+    -fx-alignment: center;
+}
+
+.icon-pendiente {
+    -fx-text-fill: orange;
+    -fx-font-size: 16px;
+    -fx-alignment: center;
+}
+
+.button {
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.text-field, .password-field, .combo-box {
+    -fx-pref-width: 250;
+    -fx-padding: 8;
+}
+

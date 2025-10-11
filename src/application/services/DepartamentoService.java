@@ -15,12 +15,12 @@ public class DepartamentoService {
 
 
     public List<Common> obtenerDepartamentos() throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/departamento");
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/departamento", false);
         return mapper.readValue(response, new TypeReference<List<Common>>() {});
     }
     
     public Common obtenerDepartamento(Long id) throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/departamento/"+id);
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/departamento/"+id, false);
         return mapper.readValue(response, Common.class);
     }
 

@@ -1,5 +1,10 @@
 package application.views;
 
+import application.models.request.SesionRequest;
+import application.models.response.Sesion;
+import application.services.AutentificacionService;
+import application.services.StorageService;
+import application.session.SessionManager;
 import application.utils.SceneManager;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
@@ -15,6 +20,8 @@ import javafx.util.Duration;
 
 public class LoginView {
 
+	private final StorageService storage = new StorageService();
+	
     public Scene getScene() {
         // 🔹 Logo principal (reemplaza el texto "LOGIN GAAF")
         Image logoImg = new Image(getClass().getResource("/application/resources/logoGAAF.png").toExternalForm());
@@ -85,23 +92,45 @@ public class LoginView {
         loginButton.setOnAction(e -> {
             String user = usernameField.getText();
             String pass = passwordField.isVisible() ? passwordField.getText() : visiblePassword.getText();
+            
+            try {
+            	
+            	AutentificacionService service = new AutentificacionService();
+            	Sesion sesion = service.iniciarSesion(new SesionRequest(user, pass));
+            	SessionManager.getInstance().setSession(sesion.getToken(), sesion.getRol(), sesion.getUsuario());
+            	System.out.println(SessionManager.getInstance().getToken());
+            	storage.saveSession(sesion.getToken(), sesion.getRol());
+            	
+            	switch (sesion.getRol().toUpperCase()) {
+                case "COORDINADOR_COMPRAS":
+                    showNotification(loginButton.getScene(), "✔ Acceso Coord. Compras", Color.LIMEGREEN);
+                    SceneManager.changeScene(new DashboardComprasView().getScene(), "Panel Compras");
+                    break;
+                case "JEFE_BODEGA":
+                    showNotification(loginButton.getScene(), "✔ Acceso Jefe Bodega", Color.LIMEGREEN);
+                    SceneManager.changeScene(new DashboardBodegaView().getScene(), "Panel Bodega");
+                    break;
+                case "GERENTE":
+                    showNotification(loginButton.getScene(), "✔ Acceso Gerente", Color.LIMEGREEN);
+                    SceneManager.changeScene(new DashboardGerenteView().getScene(), "Panel Gerente");
+                    break;
+                case "ADMIN":
+                    showNotification(loginButton.getScene(), "✔ Acceso Administrador", Color.LIMEGREEN);
+                    SceneManager.changeScene(new DashboardView().getScene(), "Panel de Administrador");
+                    break;
+                default:
+                    showNotification(loginButton.getScene(), "❌ Rol desconocido: " + sesion.getRol(), Color.RED);
+                    break;
+            	}
+            } catch (Exception ex) {
+            	System.out.println(ex.getMessage());
+            	usernameField.setText("");
+            	passwordField.setText("");
+            	showNotification(loginButton.getScene(), "❌ Credenciales incorrectas", Color.RED);
+			}
+            
 
-            // Corrección: lógica de rol basada en usuario
-            if (user.equals("compras") && pass.equals("123")) {
-                showNotification(loginButton.getScene(), "✔ Acceso Coord. Compras", Color.LIMEGREEN);
-                SceneManager.changeScene(new DashboardComprasView().getScene(), "Panel Compras");
-            } else if (user.equals("bodega") && pass.equals("123")) {
-                showNotification(loginButton.getScene(), "✔ Acceso Jefe Bodega", Color.LIMEGREEN);
-                SceneManager.changeScene(new DashboardBodegaView().getScene(), "Panel Bodega");
-            } else if (user.equals("gerente") && pass.equals("123")) {
-                showNotification(loginButton.getScene(), "✔ Acceso Gerente", Color.LIMEGREEN);
-                SceneManager.changeScene(new DashboardGerenteView().getScene(), "Panel Gerente");
-            } else if (user.equals("admin") && pass.equals("123")) {
-                showNotification(loginButton.getScene(), "✔ Acceso autorizado", Color.LIMEGREEN);
-                SceneManager.changeScene(new DashboardView().getScene(), "Panel de Administrador");
-            } else {
-                showNotification(loginButton.getScene(), "❌ Credenciales incorrectas", Color.RED);
-            }
+           
         });
 
         // 🔹 Layout principal (logo reemplaza el título)
