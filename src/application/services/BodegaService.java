@@ -30,7 +30,7 @@ public class BodegaService {
   
     public Bodega editarBodega(Long id, BodegaRequest bodega) throws Exception {
         String jsonBody = mapper.writeValueAsString(bodega);
-        String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/bodega/editar/" + id, jsonBody);
+        String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/bodega/" + id, jsonBody);
         return mapper.readValue(response, Bodega.class);
     }
     

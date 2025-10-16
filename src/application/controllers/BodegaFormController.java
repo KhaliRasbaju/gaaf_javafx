@@ -1,6 +1,7 @@
 package application.controllers;
 
 import application.models.request.BodegaRequest;
+import application.models.response.Bodega;
 import application.services.BodegaService;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
@@ -56,69 +57,98 @@ public class BodegaFormController {
     private static void onActionRegistrar(BodegaRequest request) {
         try {
             BodegaService service = new BodegaService();
-            service.crearBodega(request);
+            System.out.println(service.crearBodega(request)); 
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
             throw new RuntimeException("Error tipo " + ex);
         }
     }
+    
+    private static void onActionActualizar(Long id, BodegaRequest request) {
+		try {
+			BodegaService service = new BodegaService();
+			service.editarBodega(id, request);
+		} catch (Exception ex) {
+			System.out.println("Error tipo: " + ex);
+		}
+	}
 
     /** 🔹 Construye y retorna el formulario de registro de bodega */
-    public static VBox getScene() {
-        // Título
-        Text titulo = new Text("🏢 Registro de Bodega");
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+    public static VBox getScene(String title, Bodega bodega) {
+    // 🔹 Título dinámico
+    Text titulo = new Text(String.format("🏢 %s de Bodega", title));
+    titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
-        // Campos
-        TextField txtNombre = new TextField();
-        txtNombre.setPromptText("Nombre de la bodega");
+    // 🔹 Campos
+    TextField txtNombre = new TextField();
+    txtNombre.setPromptText("Nombre de la bodega");
 
-        TextField txtUbicacion = new TextField();
-        txtUbicacion.setPromptText("Ubicación de la bodega");
+    TextField txtUbicacion = new TextField();
+    txtUbicacion.setPromptText("Ubicación de la bodega");
 
-        Button btnRegistrar = new Button("Registrar");
-        btnRegistrar.getStyleClass().add("login-button");
-        btnRegistrar.setPrefWidth(150);
+    // 🔹 Si la bodega no es nula → precargar datos
+    if (bodega != null) {
+        if (bodega.getNombre() != null) {
+            txtNombre.setText(bodega.getNombre());
+        }
+        if (bodega.getUbicacion() != null) {
+            txtUbicacion.setText(bodega.getUbicacion());
+        }
+    }
 
-        Label lblMensaje = new Label();
-        lblMensaje.setTextFill(Color.RED);
+    // 🔹 Botón (cambia el texto según si es registrar o editar)
+    Button btnAccion = new Button(bodega == null ? "Registrar" : "Actualizar");
+    btnAccion.getStyleClass().add("login-button");
+    btnAccion.setPrefWidth(150);
 
-        // Acción del botón
-        btnRegistrar.setOnAction(e -> {
-            if (txtNombre.getText().isEmpty() || txtUbicacion.getText().isEmpty()) {
-                lblMensaje.setText("⚠️ Por favor, completa todos los campos.");
-                return;
-            }
+    Label lblMensaje = new Label();
+    lblMensaje.setTextFill(Color.RED);
 
-            BodegaRequest request = new BodegaRequest(
-                    txtNombre.getText(),
-                    txtUbicacion.getText()
-            );
+    // 🔹 Acción del botón
+    btnAccion.setOnAction(e -> {
+        if (txtNombre.getText().isEmpty() || txtUbicacion.getText().isEmpty()) {
+            lblMensaje.setText("⚠️ Por favor, completa todos los campos.");
+            lblMensaje.setTextFill(Color.RED);
+            return;
+        }
 
-            onActionRegistrar(request);
-            showNotification(btnRegistrar.getScene(), "✅ Bodega registrada correctamente", Color.GREEN);
-
-            lblMensaje.setTextFill(Color.GREEN);
-            lblMensaje.setText("✅ Bodega registrada correctamente.");
-
-            txtNombre.clear();
-            txtUbicacion.clear();
-        });
-
-        // Diseño del layout
-        VBox root = new VBox(10);
-        root.setPadding(new Insets(30));
-        root.setAlignment(Pos.CENTER);
-        root.getChildren().addAll(
-                titulo,
-                txtNombre,
-                txtUbicacion,
-                btnRegistrar,
-                lblMensaje
+        BodegaRequest request = new BodegaRequest(
+            txtNombre.getText(),
+            txtUbicacion.getText()
         );
 
-        root.setStyle("-fx-background-color: #F8F9FA;");
-        return root;
-    }
+        // Si es nuevo registro
+        if (bodega == null) {
+            onActionRegistrar(request);
+            showNotification(btnAccion.getScene(), "✅ Bodega registrada correctamente", Color.GREEN);
+            lblMensaje.setTextFill(Color.GREEN);
+            lblMensaje.setText("✅ Bodega registrada correctamente.");
+            txtNombre.clear();
+            txtUbicacion.clear();
+        } 
+        // Si es edición
+        else {
+            onActionActualizar(bodega.getId(), request);
+            showNotification(btnAccion.getScene(), "✏️ Bodega actualizada correctamente", Color.BLUE);
+            lblMensaje.setTextFill(Color.BLUE);
+            lblMensaje.setText("✏️ Bodega actualizada correctamente.");
+        }
+    });
+
+    // 🔹 Diseño del layout
+    VBox root = new VBox(10);
+    root.setPadding(new Insets(30));
+    root.setAlignment(Pos.CENTER);
+    root.getChildren().addAll(
+        titulo,
+        txtNombre,
+        txtUbicacion,
+        btnAccion,
+        lblMensaje
+    );
+
+    root.setStyle("-fx-background-color: #F8F9FA;");
+    return root;
+}
 
 }

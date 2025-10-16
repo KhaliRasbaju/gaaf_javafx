@@ -1,5 +1,6 @@
 package application.models.response;
 
+
 public class Bodega {
 	
     private Long id;
