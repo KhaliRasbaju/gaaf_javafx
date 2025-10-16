@@ -17,7 +17,9 @@ import javafx.stage.Popup;
 import javafx.util.Duration;
 
 public class BodegaFormController {
-	private final StackPane content;
+	
+	
+
 	 /** 🔹 Convierte Color a formato HEX para aplicar en CSS dinámico */
     private static String toHex(Color color) {
         return String.format("#%02X%02X%02X",

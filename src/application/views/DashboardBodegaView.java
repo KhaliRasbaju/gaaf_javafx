@@ -1,7 +1,6 @@
 package application.views;
 
 import application.controllers.BodegaController;
-import application.controllers.BodegaFormController;
 import application.controllers.ReporteInventarioController;
 import application.controllers.ReporteInventarioMovimientoController;
 import application.services.BodegaService;
@@ -9,7 +8,6 @@ import application.services.ReporteInventarioMovimientoService;
 import application.services.ReporteInventarioProductoBodegaService;
 import application.utils.SceneManager;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 
 public class DashboardBodegaView extends DashboardViewBase {
 	
@@ -27,8 +25,8 @@ public class DashboardBodegaView extends DashboardViewBase {
 		try {
 			BodegaService service = new BodegaService();
 			var reporte = service.obtenerBodegas();
-			BodegaFormController form = new BodegaFormController();
-			content.getChildren().setAll(BodegaController.getScene(reporte));	
+			BodegaController controller = new BodegaController(content);
+			content.getChildren().setAll(controller.getScene(reporte));	
 		} catch (Exception ex) {
 			System.out.println("Error tipo: " + ex);
 		}

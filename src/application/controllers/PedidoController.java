@@ -3,6 +3,7 @@ package application.controllers;
 import java.util.List;
 
 import application.models.response.Pedido;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +18,13 @@ import javafx.scene.text.Text;
 
 public class PedidoController {
 	
+	private final StackPane content;
+	 
+	
+	public PedidoController(StackPane content) {
+		this.content = content;
+	}
+
 	@SuppressWarnings("unchecked")
 	public static VBox getScene(List<Pedido> pedidos) {
 

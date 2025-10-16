@@ -15,13 +15,13 @@ public class AutentificacionService {
 
 	public Usuario registrarUsuario(RegistrarRequest registrar) throws Exception {
         String jsonBody = mapper.writeValueAsString(registrar);
-        String response = HttpClientUtil.post(ApiConfig.BASE_AUTH_URL + "/registrar", jsonBody, false);
+        String response = HttpClientUtil.post(ApiConfig.BASE_AUTH_URL + "/auth/registrar", jsonBody, false);
         return mapper.readValue(response, Usuario.class);
     }
 	
 	public Sesion iniciarSesion(SesionRequest sesion) throws Exception{
 		String jsonBody = mapper.writeValueAsString(sesion);
-	    String response = HttpClientUtil.post(ApiConfig.BASE_AUTH_URL + "/iniciar", jsonBody, true);
+	    String response = HttpClientUtil.post(ApiConfig.BASE_AUTH_URL + "/auth/iniciar", jsonBody, true);
         return mapper.readValue(response, Sesion.class);
 	}
 }
