@@ -1,7 +1,10 @@
 package application.views;
 
+import application.controllers.BodegaController;
+import application.controllers.BodegaFormController;
 import application.controllers.ReporteInventarioController;
 import application.controllers.ReporteInventarioMovimientoController;
+import application.services.BodegaService;
 import application.services.ReporteInventarioMovimientoService;
 import application.services.ReporteInventarioProductoBodegaService;
 import application.utils.SceneManager;
@@ -20,7 +23,16 @@ public class DashboardBodegaView extends DashboardViewBase {
 			System.out.println("Error tipo: " + ex);
 		}
 	}
-	
+	private void onActionBodega() {
+		try {
+			BodegaService service = new BodegaService();
+			var reporte = service.obtenerBodegas();
+			BodegaFormController form = new BodegaFormController();
+			content.getChildren().setAll(BodegaController.getScene(reporte));	
+		} catch (Exception ex) {
+			System.out.println("Error tipo: " + ex);
+		}
+	}
 	private void onActionReporteInventarioMovimiento() {
 		try {
 			ReporteInventarioMovimientoService service = new ReporteInventarioMovimientoService();
@@ -39,7 +51,7 @@ public class DashboardBodegaView extends DashboardViewBase {
         Button btnReporteInventario = createMenuButton("\uD83D\uDCC4", "Reporte Inventario");
         Button btnReporteMovimiento = createMenuButton("\uD83D\uDD5B", "Reporte Movimientos");
         vbox.getChildren().addAll(btnBodegas, btnInventario, btnReporteInventario, btnReporteMovimiento);
-        // btnBodegas.setOnAction(e -> ... );
+        btnBodegas.setOnAction(e -> onActionBodega()); 
         btnReporteInventario.setOnAction(e -> onActionReporteInventario());
         btnReporteMovimiento.setOnAction(e -> onActionReporteInventarioMovimiento());
         addSidebarFooter("Jefe Bodega");
