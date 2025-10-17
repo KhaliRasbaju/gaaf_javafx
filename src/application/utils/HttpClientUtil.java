@@ -54,6 +54,7 @@ public class HttpClientUtil {
 		 
 		 
 		 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		 System.out.println(response);
         return response.body();
 	 }
 	 

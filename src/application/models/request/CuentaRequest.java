@@ -3,7 +3,7 @@ package application.models.request;
 
 public class CuentaRequest {
 
-	private String numero;
+	private Long numero;
 	
 	private String tipo;
 	
@@ -11,18 +11,22 @@ public class CuentaRequest {
 
 	public CuentaRequest() {}
 
-	public CuentaRequest(String numero, String tipo, Long idEntidad) {
+	public CuentaRequest(Long numero, String tipo, Long idEntidad) {
 		this.numero = numero;
 		this.tipo = tipo;
 		this.idEntidad = idEntidad;
 	}
 
-	public String getNumero() {
-		return numero;
+	
+	
+	public void setNumero(Long numero) {
+		this.numero = numero;
 	}
 
-	public void setNumero(String numero) {
-		this.numero = numero;
+
+
+	public Long getNumero() {
+		return numero;
 	}
 
 	public String getTipo() {

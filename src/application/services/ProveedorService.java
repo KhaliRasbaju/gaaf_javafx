@@ -23,13 +23,14 @@ public class ProveedorService {
 	public Proveedor crearProveedor(ProveedorRequest proveedor) throws Exception {
 		String jsonBody = mapper.writeValueAsString(proveedor);
 	    String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/proveedor/crear", jsonBody, false);
+	    System.out.println(response);
 	    return mapper.readValue(response, Proveedor.class);
 	}
 	
-	public Proveedor editarProveedor(Long nit, ProveedorRequest proveedor) throws Exception {
+	public ResponseCommon editarProveedor(Long nit, ProveedorRequest proveedor) throws Exception {
 	    String jsonBody = mapper.writeValueAsString(proveedor);
 	    String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/proveedor/editar/" + nit, jsonBody);
-	    return mapper.readValue(response, Proveedor.class);
+	    return mapper.readValue(response, ResponseCommon.class);
 	}
 	
 	public Proveedor obtenerProveedor(Long nit) throws Exception {

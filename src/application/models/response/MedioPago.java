@@ -17,8 +17,6 @@ public class MedioPago {
 		this.metodoPago = metodoPago;
 	}
 	
-	
-
 	public Long getId() {
 		return id;
 	}

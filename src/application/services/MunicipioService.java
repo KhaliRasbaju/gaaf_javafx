@@ -19,9 +19,9 @@ public class MunicipioService {
 	}
 	
 	
-	public List<Municipio> obtenerMunicipio(Long id) throws Exception {
+	public Municipio obtenerMunicipio(Long id) throws Exception {
         String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/municipio/"+id, false);
-    return mapper.readValue(response, new TypeReference<List<Municipio>>() {});
+    return mapper.readValue(response, Municipio.class);
 }
 	
 	    

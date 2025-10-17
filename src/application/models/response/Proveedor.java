@@ -12,7 +12,6 @@ public class Proveedor {
     
     private String correo;
     
-    private String direccion;
     
     private List<Ubicacion> ubicacion;
     
@@ -27,13 +26,12 @@ public class Proveedor {
         return nit;
     }
 
-    public Proveedor(Long nit, String nombre, String telefono, String correo, String direccion,
+    public Proveedor(Long nit, String nombre, String telefono, String correo, 
 			List<Ubicacion> ubicacion, List<Cuenta> cuenta) {
 		this.nit = nit;
 		this.nombre = nombre;
 		this.telefono = telefono;
 		this.correo = correo;
-		this.direccion = direccion;
 		this.ubicacion = ubicacion;
 		this.cuenta = cuenta;
 	}
@@ -66,16 +64,6 @@ public class Proveedor {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-    
-    
     
     public List<Ubicacion> getUbicacion() {
 		return ubicacion;

@@ -74,10 +74,13 @@ public class ProveedorRequest {
         this.ubicacion = ubicacion;
     }
 
-    @Override
-    public String toString() {
-        return nombre + " (" + nit + ")";
-    }
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
+
+    
 	
 
 }
