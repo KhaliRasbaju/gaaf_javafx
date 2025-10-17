@@ -4,12 +4,12 @@ public class Common {
 
 	private Long id;
 	
-	private Long nombre;
+	private String nombre;
 	
 	public Common() {
 	}
 
-	public Common(Long id, Long nombre) {
+	public Common(Long id, String nombre) {
 		this.id = id;
 		this.nombre = nombre;
 	}
@@ -23,11 +23,11 @@ public class Common {
 	}
 
 
-	public Long getNombre() {
+	public String getNombre() {
 		return nombre;
 	}
 	
-	public void setNombre(Long nombre) {
+	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 	

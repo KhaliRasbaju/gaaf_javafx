@@ -1,9 +1,17 @@
 package application.controllers;
 
+import java.util.List;
+
 import application.models.request.CuentaRequest;
 import application.models.request.ProveedorRequest;
 import application.models.request.UbicacionRequest;
+import application.models.response.Bodega;
+import application.models.response.Common;
+import application.models.response.Municipio;
 import application.models.response.Proveedor;
+import application.services.DepartamentoService;
+import application.services.EntidadService;
+import application.services.MunicipioService;
 import application.services.ProveedorService;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
@@ -63,8 +71,47 @@ public class ProveedorFormController {
             System.out.println("Error tipo: " + ex);
         }
     }
+    
+    private static List<Common> entidades() throws Exception {
+        try {
+            EntidadService service = new EntidadService();
+            System.out.println(service.obtenerEntidades());
+            return service.obtenerEntidades();
+        } catch (Exception ex) 
+        
+        {
+        	System.out.println("Error tipo: " + ex);
+        	throw new Exception("Error tipo: " + ex);   
+        }
+    }
+    
+    private static List<Common> departamento() throws Exception {
+        try {
+            DepartamentoService service = new DepartamentoService();
+            System.out.println(service.obtenerDepartamentos());
+            return service.obtenerDepartamentos();
+        } catch (Exception ex) 
+        
+        {
+        	System.out.println("Error tipo: " + ex);
+        	throw new Exception("Error tipo: " + ex);   
+        }
+    }
+    
+    private static List<Municipio> municipio(Long id) throws Exception {
+        try {
+            MunicipioService service = new MunicipioService();
+            System.out.println(service.obtenerMunicipiosPorDepartamento(id));
+            return service.obtenerMunicipiosPorDepartamento(id);
+        } catch (Exception ex) 
+        
+        {
+        	System.out.println("Error tipo: " + ex);
+        	throw new Exception("Error tipo: " + ex);   
+        }
+    }
 
-    public static VBox getScene(String title, Proveedor proveedor) {
+    public static VBox getScene(String title, Proveedor proveedor) throws Exception {
         Text titulo = new Text(String.format("🏢 %s Proveedor", title));
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
@@ -79,6 +126,41 @@ public class ProveedorFormController {
 
         TextField txtTelefono = new TextField();
         txtTelefono.setPromptText("Teléfono");
+        
+        TextField txtNumeroCuenta = new TextField();
+        txtNumeroCuenta.setPromptText("Numero de cuenta");
+        
+        ComboBox<String> cbTipo = new ComboBox<>();
+        cbTipo.getItems().addAll("CORRIENTE", "AHORROS", "DEPOSITO_ELECTRONICO", "EMPRESARIAL");
+        cbTipo.setPromptText("Selecciona un tipo de cuenta");
+        
+        ComboBox<String> cbEntidad = new ComboBox<>();
+        var entidades = entidades();
+        for (Common entidad : entidades) {
+			cbEntidad.getItems().add(entidad.getNombre());
+		}
+        
+        ComboBox<String> cbDepartamento = new ComboBox<>();
+        var departamentos = departamento();
+        for (Common departamento : departamentos) {
+			cbDepartamento.getItems().add(departamento.getNombre());
+		}
+        
+        cbDepartamento.setPromptText("Selecciona un departamento");
+        
+        Long idDepartamento = departamentos.stream()
+				.filter(departamento -> departamento.getNombre().equals(cbDepartamento.getValue()))
+				.findFirst()
+				.map(Common::getId)
+				.orElse(null);
+        
+        ComboBox<String> cbMunicipio = new ComboBox<>();
+        var municipios = municipio(idDepartamento);
+        for (Municipio municipio : municipios) {
+			cbMunicipio.getItems().add(municipio.getNombre());
+		}
+        
+        cbMunicipio.setPromptText("Selecciona un municipio");
 
         if (proveedor != null) {
             txtNit.setText(String.valueOf(proveedor.getNit()));
@@ -87,6 +169,8 @@ public class ProveedorFormController {
             txtCorreo.setText(proveedor.getCorreo());
             txtTelefono.setText(proveedor.getTelefono());
         }
+        
+        
 
         Button btnAccion = new Button(proveedor == null ? "Registrar" : "Actualizar");
         btnAccion.getStyleClass().add("login-button");
@@ -102,6 +186,12 @@ public class ProveedorFormController {
                 lblMensaje.setTextFill(Color.RED);
                 return;
             }
+            
+            Long idEntidad = entidades.stream()
+					.filter(entidad -> entidad.getNombre().equals(cbEntidad.getValue()))
+					.findFirst()
+					.map(Common::getId)
+					.orElse(null);
 
             ProveedorRequest request = new ProveedorRequest(
                     Long.parseLong(txtNit.getText()),
@@ -132,7 +222,7 @@ public class ProveedorFormController {
         VBox root = new VBox(10);
         root.setPadding(new Insets(30));
         root.setAlignment(Pos.CENTER);
-        root.getChildren().addAll(titulo, txtNit, txtNombre, txtCorreo, txtTelefono, btnAccion, lblMensaje);
+        root.getChildren().addAll(titulo, txtNit, txtNombre, txtCorreo, txtTelefono, cbEntidad, cbDepartamento, cbMunicipio, btnAccion, lblMensaje);
         root.setStyle("-fx-background-color: #F8F9FA;");
         return root;
     }
