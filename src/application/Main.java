@@ -18,7 +18,10 @@ public class Main extends Application {
 			Scene loginScene = new LoginView().getScene();
 			  primaryStage.setTitle("Inicio de Sesión");
 	            primaryStage.setScene(loginScene);
+	            primaryStage.setResizable(false);
+	            primaryStage.setMaximized(true);
 	            primaryStage.show();
+	       
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

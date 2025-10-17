@@ -100,7 +100,10 @@ public class BodegaController {
     
     // ✅ Método NO estático — pertenece al objeto
     public VBox getScene(List<Bodega> bodegas) {
-        Button btnAgregar = new Button("Agregar Bodega");
+    	// 🔹 Botón de agregar tipo “+” (usará estilos desde el CSS)
+    	Button btnAgregar = new Button("+");
+    	btnAgregar.getStyleClass().add("btn-agregar");
+    	
         TableView<Bodega> table = new TableView<>();
 
         TableColumn<Bodega, Long> colId = new TableColumn<>("ID");
@@ -118,42 +121,38 @@ public class BodegaController {
             private final Button btnEditar = new Button("✏️");
             private final Button btnEliminar = new Button("🗑️");
             private final HBox contenedor = new HBox(5, btnEditar, btnEliminar);
-            {
-            	contenedor.setAlignment(Pos.CENTER);
-                btnEditar.setStyle("-fx-cursor: hand; -fx-font-size: 14px;");
-                btnEliminar.setStyle("-fx-cursor: hand; -fx-font-size: 14px;");
 
-                // 🟢 Acción de editar
+            {
+                // 🔹 Aplicar clases CSS
+                btnEditar.getStyleClass().add("btn-editar");
+                btnEliminar.getStyleClass().add("btn-eliminar");
+
+                contenedor.setAlignment(Pos.CENTER);
+
+                // 🔹 Acción de editar
                 btnEditar.setOnAction(e -> {
-                	Bodega bodega = getTableView().getItems().get(getIndex());
-                    System.out.println("Editar: " + bodega.getId());
+                    Bodega bodega = getTableView().getItems().get(getIndex());
                     onActionEditar(bodega.getId());
                 });
 
-                // 🔴 Acción de eliminar
+                // 🔹 Acción de eliminar
                 btnEliminar.setOnAction(e -> {
-                	Bodega bodega = getTableView().getItems().get(getIndex());
-                    System.out.println("Eliminar: " + bodega.getNombre());
+                    Bodega bodega = getTableView().getItems().get(getIndex());
                     try {
-                    	var respuesta = onActionEliminar(bodega.getId(), btnAgregar);
-                    	if(respuesta.getStatus() != 200) {
-                    		System.out.println("Paso");
-                    		System.out.println(respuesta.getStatus());
-                    		System.out.println(respuesta.getMessage());
-            				showNotification(btnEliminar.getScene(), String.format("❎ %s", respuesta.getMessage()), Color.RED);
-            			} else {
-            				System.out.println("Paso 2");
-                    		System.out.println(respuesta.getStatus());
-                    		System.out.println(respuesta.getMessage());
-            				showNotification(btnEliminar.getScene(), String.format("✅ %s", respuesta.getMessage()), Color.GREEN);
-            				getTableView().getItems().remove(bodega);            				
-            			}						
-					} catch (Exception ex) {
-						System.out.println("Error tipo: " + ex);
-					}
+                        var respuesta = onActionEliminar(bodega.getId(), btnEliminar);
+                        if (respuesta.getStatus() != 200) {
+                            showNotification(btnEliminar.getScene(),
+                                    String.format("❎ %s", respuesta.getMessage()), Color.RED);
+                        } else {
+                            showNotification(btnEliminar.getScene(),
+                                    String.format("✅ %s", respuesta.getMessage()), Color.GREEN);
+                            getTableView().getItems().remove(bodega);
+                        }
+                    } catch (Exception ex) {
+                        System.out.println("Error tipo: " + ex);
+                    }
                 });
             }
-            
 
             @Override
             protected void updateItem(Void item, boolean empty) {

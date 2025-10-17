@@ -155,3 +155,67 @@
     -fx-padding: 8;
 }
 
+.btn-agregar {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 50%;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
+}
+
+/* Hover: tono más brillante y sombra más pronunciada */
+.btn-agregar:hover {
+    -fx-background-color: #34d058;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
+}
+
+/* Click: tono un poco más oscuro */
+.btn-agregar:pressed {
+    -fx-background-color: #218838;
+}
+
+/* ✏️ Botón Editar */
+.btn-editar {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 50%;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
+}
+.btn-editar:hover {
+    -fx-background-color: #0d6efd;
+}
+.btn-editar:pressed {
+    -fx-background-color: #0a58ca;
+}
+
+/* 🗑️ Botón Eliminar */
+.btn-eliminar {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 50%;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
+}
+.btn-eliminar:hover {
+    -fx-background-color: #bb2d3b;
+}
+.btn-eliminar:pressed {
+    -fx-background-color: #a52834;
+}
+
+.button {
+    -fx-font-family: "Segoe UI Emoji";
+}
