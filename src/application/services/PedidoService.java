@@ -49,4 +49,11 @@ public class PedidoService {
         var response = HttpClientUtil.delete(ApiConfig.BASE_URL + "/pedido/" + id);
         return mapper.readValue(response, ResponseCommon.class);
     }
+    
+    public Pedido editarPedido(Long id, PedidoRequest pedido) throws Exception {
+        String jsonBody = mapper.writeValueAsString(pedido);
+        String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/pedido/" + id, jsonBody);
+        return mapper.readValue(response, Pedido.class);
+    }
+
 }

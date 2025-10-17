@@ -36,36 +36,39 @@ public class DashboardComprasView extends DashboardViewBase {
 	}
 	
 	private void onActionProveedor() {
-		try {
-			ProveedorService service = new ProveedorService();
-			var proveedores = service.obtenerTodos();
-			content.getChildren().setAll(ProveedorController.getScene(proveedores));
-		} catch (Exception ex) {
-			System.out.println("Error tipo: " + ex);
-		}
+	    try {
+	        ProveedorService service = new ProveedorService();
+	        var proveedores = service.obtenerTodos();
+	        ProveedorController controller = new ProveedorController(content);
+	        content.getChildren().setAll(controller.getScene(proveedores));
+	    } catch (Exception ex) {
+	        System.out.println("Error tipo: " + ex);
+	    }
 	}
+
 	private void onActionPedido() {
-		try {
-			
-			PedidoService service = new PedidoService();
-			var pedidos = service.obtenerPedidos();
-			content.getChildren().setAll(PedidoController.getScene(pedidos));
-			
-		} catch (Exception ex) {
-			System.out.println("Error tipo: " + ex);
-		}
+	    try {
+	        PedidoService service = new PedidoService();
+	        var pedidos = service.obtenerPedidos();
+	        PedidoController controller = new PedidoController(content);
+	        content.getChildren().setAll(controller.getScene(pedidos));
+	    } catch (Exception ex) {
+	        System.out.println("Error tipo: " + ex);
+	    }
 	}
-	
+
+
 	private void onActionProducto() {
-		try {
-			ProductoService service = new ProductoService();
-			var productos = service.obtenerTodos();
-			content.getChildren().setAll(ProductoController.getScene(productos));
-		} catch (Exception ex) {
-			System.out.println("Error tipo: " + ex);
-		}
+	    try {
+	        ProductoService service = new ProductoService();
+	        var productos = service.obtenerTodos();
+	        ProductoController controller = new ProductoController(content);
+	        content.getChildren().setAll(controller.getScene(productos));
+
+	    } catch (Exception ex) {
+	        System.out.println("Error tipo: " + ex);
+	    }
 	}
-	
     @Override
     protected void addMenuButtons() {
         Button btnProductos = createMenuButton("\uD83D\uDCBC", "Productos");

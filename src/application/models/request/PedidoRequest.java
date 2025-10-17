@@ -66,5 +66,25 @@ public class PedidoRequest {
 	public void setDetalle(List<DetallePedidoRequest> detalle) {
 		this.detalle = detalle;
 	}
+	
+	private LocalDateTime fechaEntrega;
+	private boolean recibido;
+
+	public LocalDateTime getFechaEntrega() {
+	    return fechaEntrega;
+	}
+
+	public void setFechaEntrega(LocalDateTime fechaEntrega) {
+	    this.fechaEntrega = fechaEntrega;
+	}
+
+	public boolean isRecibido() {
+	    return recibido;
+	}
+
+	public void setRecibido(boolean recibido) {
+	    this.recibido = recibido;
+	}
+
 
 }
