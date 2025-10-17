@@ -125,9 +125,7 @@ public class BodegaFormController {
             lblMensaje.setText("✅ Bodega registrada correctamente.");
             txtNombre.clear();
             txtUbicacion.clear();
-        } 
-        // Si es edición
-        else {
+        } else {
             onActionActualizar(bodega.getId(), request);
             showNotification(btnAccion.getScene(), "✏️ Bodega actualizada correctamente", Color.BLUE);
             lblMensaje.setTextFill(Color.BLUE);
