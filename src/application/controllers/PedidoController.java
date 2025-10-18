@@ -54,6 +54,7 @@ public class PedidoController {
     private ResponseCommon onActionRecibir(Long id) throws Exception {
 		try {
 			PedidoService service = new PedidoService();
+			System.out.println(id);
 			return service.recibirPedido(id);
 		} catch (Exception ex) {
 			System.out.println("Error tipo: " + ex);
@@ -100,6 +101,8 @@ public class PedidoController {
     @SuppressWarnings("unchecked")
     public VBox getScene(List<Pedido> pedidos) {
 
+    	Label lblTitulo = new Label("Lista de Pedidos");
+		lblTitulo.getStyleClass().add("form-title");
         Button btnAgregar = new Button("+");
         btnAgregar.getStyleClass().add("btn-agregar");
         btnAgregar.setAlignment(Pos.CENTER);
@@ -129,6 +132,7 @@ public class PedidoController {
                 btnRecibir.getStyleClass().add("btn-recibir");
                 btnRecibir.setOnAction(e -> {
                     Pedido pedido = getTableView().getItems().get(getIndex());
+                   
                     try {
                         var resp = onActionRecibir(pedido.getId());
                         if (resp.getStatus() == 200) {
@@ -185,8 +189,8 @@ public class PedidoController {
      
         TableColumn<Pedido, Void> colAcciones = new TableColumn<>("Acciones");
         colAcciones.setCellFactory(param -> new TableCell<>() {
-            private final Button btnEditar = new Button("✏️");
-            private final Button btnEliminar = new Button("🗑️");
+            private final Button btnEditar = new Button("\u270E");  
+        	private final Button btnEliminar = new Button("\u2716");
             private final HBox contenedor = new HBox(5, btnEditar, btnEliminar);
 
             {
@@ -243,10 +247,15 @@ public class PedidoController {
 
         ObservableList<Pedido> data = FXCollections.observableArrayList(pedidos);
         table.setItems(data);
+        
+        HBox contenedorBoton = new HBox(btnAgregar);
+        contenedorBoton.setAlignment(Pos.CENTER_RIGHT);
+        contenedorBoton.setPadding(new Insets(0, 0, 10, 0)); 
 
         btnAgregar.setOnAction(e -> onActionAgregar());
 
-        VBox layout = new VBox(10, btnAgregar, table);
+        VBox layout = new VBox(10,lblTitulo, contenedorBoton, table);
+        layout.setAlignment(Pos.TOP_CENTER);
         layout.setPadding(new Insets(10));
 
         return layout;

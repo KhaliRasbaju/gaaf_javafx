@@ -2,8 +2,6 @@ package application.controllers;
 
 import application.models.request.CommonRequest;
 import application.models.response.Common;
-import application.models.response.ResponseCommon;
-import application.services.EntidadService;
 import application.services.EntidadService;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;

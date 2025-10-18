@@ -1,7 +1,6 @@
 package application.controllers;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import application.models.response.Producto;
 import application.services.PedidoService;
 import application.services.ProveedorService;
 import application.services.ProductoService;
-import application.services.EntidadService;
 import application.services.MetodoPagoService;
 
 import javafx.animation.FadeTransition;
@@ -72,11 +70,21 @@ public class PedidoFormController {
     private static void onActionRegistrar(PedidoRequest request) {
         try {
             PedidoService service = new PedidoService();
-            System.out.println(service.crearPedido(request));
+            service.crearPedido(request);
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
         }
     }
+    
+    
+    private static void onActionEditar(Long idPedido, PedidoRequest request) {
+		try {
+			PedidoService service = new PedidoService();
+			service.editarPedido(idPedido, request);
+		} catch (Exception ex) {
+			System.out.println("Error tipo: " + ex);
+		}
+	}
 
     // Obtener listas auxiliares
     private static List<Proveedor> proveedores() throws Exception {
@@ -146,7 +154,11 @@ public class PedidoFormController {
 
         TextField txtReferencia = new TextField();
         txtReferencia.setPromptText("Referencia del pago");
-        txtReferencia.setVisible(false);
+        
+        if(pedido != null) {
+        	txtReferencia.setVisible(false);
+        }
+        
 
       
 
@@ -325,8 +337,10 @@ public class PedidoFormController {
                             idProductoSeleccionado
                     );
                     listaDetalles.add(nuevo);
+                    tablaDetalles.refresh();
                     showNotification(cbProducto.getScene(), "✅ Detalle agregado", Color.GREEN);
                 }
+                tablaDetalles.refresh();
 
                 // Limpia los campos
                 txtFermentacion.clear();
@@ -358,6 +372,7 @@ public class PedidoFormController {
                     }
                 }
             }
+            tablaDetalles.refresh();
         });
         
         if (pedido != null) {
@@ -405,12 +420,23 @@ public class PedidoFormController {
         Button btnAccion = new Button(title);
         btnAccion.getStyleClass().add("login-button");
         btnAccion.setPrefWidth(150);
+        
+       
 
         Label lblMensaje = new Label();
         lblMensaje.setTextFill(Color.RED);
 
         btnAccion.setOnAction(e -> {
+        	
+        	
+        	
             try {
+            	
+            	if(listaDetalles.isEmpty()) {
+            		showNotification(btnAccion.getScene(), "Debe haber detalle del pedido", Color.ORANGE);
+            		return;
+            	}
+            	
                 nitProveedor = listaProveedores.stream()
                         .filter(p -> cbProveedor.getValue().contains(String.valueOf(p.getNit())))
                         .findFirst()
@@ -436,11 +462,9 @@ public class PedidoFormController {
 
                 if (pedido == null) {
                     onActionRegistrar(request);
-//                	System.out.println(request.toString());
-//                	System.out.println(request.getDetalle().toString());
                     showNotification(btnAccion.getScene(), "✅ Pedido registrado correctamente", Color.GREEN);
                 } else {
-                    // Aquí podrías añadir lógica para actualizar pedidos existentes
+                	onActionEditar(pedido.getId(),request);
                     showNotification(btnAccion.getScene(), "✏️ Pedido actualizado correctamente", Color.GREEN);
                 }
 

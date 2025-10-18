@@ -103,8 +103,8 @@ public class DashboardComprasView extends DashboardViewBase {
     protected void addMenuButtons() {
         Button btnProductos = createMenuButton("\uD83D\uDCBC", "Productos");
         Button btnProveedor = createMenuButton("\uD83D\uDE9A", "Proveedores");
-        Button btnEntidadBancaria = createMenuButton("\uD83D\uDE9A", "Entidad Bancaria");
-        Button btnMetodoPago = createMenuButton("\uD83D\uDE9A", "Metodo de Pago");
+        Button btnEntidadBancaria = createMenuButton("\uD83C\uDFE6", "Entidad Bancaria"); 
+        Button btnMetodoPago = createMenuButton("\uD83D\uDCB3", "Metodo de Pago");   
         Button btnPedido = createMenuButton("\uD83D\uDED2", "Pedidos");
         Button btnReporteCompras = createMenuButton("\uD83D\uDCC4", "Reporte Compras");
         Button btnReportePedidoProveedor = createMenuButton("\uD83D\uDCE6", "Reporte Pedidos - Proveedor");

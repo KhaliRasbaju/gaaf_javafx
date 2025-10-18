@@ -4,7 +4,6 @@ import java.util.List;
 import application.models.response.Common;
 import application.models.response.ResponseCommon;
 import application.services.EntidadService;
-import application.services.EntidadService;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -112,6 +111,8 @@ public class EntidadBancariaController {
 
     // ✅ Muestra la tabla con entidades bancarias
     public VBox getScene(List<Common> entidades) {
+    	Label lblTitulo = new Label("Lista de Entidades Bancarias");
+		lblTitulo.getStyleClass().add("form-title");
         Button btnAgregar = new Button("+");
         btnAgregar.getStyleClass().add("btn-agregar");
 
@@ -127,8 +128,8 @@ public class EntidadBancariaController {
         TableColumn<Common, Void> colAcciones = new TableColumn<>("Acciones");
 
         colAcciones.setCellFactory(param -> new TableCell<>() {
-            private final Button btnEditar = new Button("✏️");
-            private final Button btnEliminar = new Button("🗑️");
+        	private final Button btnEditar = new Button("\u270E");  
+        	private final Button btnEliminar = new Button("\u2716");
             private final HBox contenedor = new HBox(5, btnEditar, btnEliminar);
 
             {
@@ -174,13 +175,18 @@ public class EntidadBancariaController {
         });
 
         table.getColumns().addAll(colId, colNombre, colAcciones);
+        
+        HBox contenedorBoton = new HBox(btnAgregar);
+        contenedorBoton.setAlignment(Pos.CENTER_RIGHT);
+        contenedorBoton.setPadding(new Insets(0, 0, 10, 0)); 
 
         ObservableList<Common> data = FXCollections.observableArrayList(entidades);
         table.setItems(data);
 
         btnAgregar.setOnAction(e -> onActionEntidadBancaria());
 
-        VBox layout = new VBox(10, btnAgregar, table);
+        VBox layout = new VBox(10, lblTitulo,contenedorBoton, table);
+        layout.setAlignment(Pos.TOP_CENTER);
         layout.setPadding(new Insets(10));
         return layout;
     }

@@ -97,6 +97,10 @@ public class ProductoController {
 
     // ✅ Muestra la tabla con sus acciones
     public VBox getScene(List<Producto> productos) {
+    	
+    	Label lblTitulo = new Label("Lista de Productos");
+		lblTitulo.getStyleClass().add("form-title");
+    	
         Button btnAgregar = new Button("+");
         btnAgregar.getStyleClass().add("btn-agregar");
 
@@ -118,8 +122,8 @@ public class ProductoController {
         TableColumn<Producto, Void> colAcciones = new TableColumn<>("Acciones");
 
         colAcciones.setCellFactory(param -> new TableCell<>() {
-            private final Button btnEditar = new Button("✏️");
-            private final Button btnEliminar = new Button("🗑️");
+        	private final Button btnEditar = new Button("\u270E");  
+        	private final Button btnEliminar = new Button("\u2716");
             private final HBox contenedor = new HBox(5, btnEditar, btnEliminar);
 
             {
@@ -154,17 +158,22 @@ public class ProductoController {
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 setGraphic(empty ? null : contenedor);
+                setAlignment(Pos.CENTER);
             }
         });
 
         table.getColumns().addAll(colId, colNombre, colTipo, colDescripcion, colAcciones);
 
+        HBox contenedorBoton = new HBox(btnAgregar);
+        contenedorBoton.setAlignment(Pos.CENTER_RIGHT);
+        contenedorBoton.setPadding(new Insets(0, 0, 10, 0)); 
         ObservableList<Producto> data = FXCollections.observableArrayList(productos);
         table.setItems(data);
 
         btnAgregar.setOnAction(e -> onActionProducto());
 
-        VBox layout = new VBox(10, btnAgregar, table);
+        VBox layout = new VBox(10, lblTitulo,contenedorBoton, table);
+        layout.setAlignment(Pos.TOP_CENTER);
         layout.setPadding(new Insets(10));
         return layout;
     }

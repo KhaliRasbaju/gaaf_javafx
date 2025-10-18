@@ -7,6 +7,8 @@ import application.models.response.ReporteInventarioMovimiento;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,6 +18,9 @@ public class ReporteInventarioMovimientoController {
 
     public static VBox getScene(List<ReporteInventarioMovimiento> movimientos) {
 
+    	Label lblTitulo = new Label("Reporte del Movimiento en el Iventario");
+		lblTitulo.getStyleClass().add("form-title");
+    	
         TableView<ReporteInventarioMovimiento> table = new TableView<>();
 
         // Columna Producto
@@ -58,6 +63,8 @@ public class ReporteInventarioMovimientoController {
         // Ajustes visuales
         table.setPadding(new Insets(10, 10, 10, 10)); 
 
-        return new VBox(10, table);
+        VBox layout = new VBox(10, lblTitulo,table);
+        layout.setAlignment(Pos.TOP_CENTER);
+        return layout;
     }
 }

@@ -6,6 +6,8 @@ import application.models.response.ReporteInventarioProductoBodega;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,6 +17,9 @@ public class ReporteInventarioController {
 	
 	public static VBox getScene(List<ReporteInventarioProductoBodega> reportes) {
 
+		Label lblTitulo = new Label("Reporte del Inventario");
+		lblTitulo.getStyleClass().add("form-title");
+		
 	    TableView<ReporteInventarioProductoBodega> table = new TableView<>();
 	
 	    // Columna Bodega
@@ -43,6 +48,8 @@ public class ReporteInventarioController {
 	    // Padding y espaciado
 	    table.setPadding(new Insets(10, 10, 10, 10));
 
-        return new VBox(10, table);
+	    VBox layout = new VBox(10,lblTitulo ,table);
+        layout.setAlignment(Pos.TOP_CENTER);
+        return layout;
     }
 }

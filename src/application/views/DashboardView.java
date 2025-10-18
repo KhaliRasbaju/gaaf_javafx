@@ -1,10 +1,7 @@
 package application.views;
 
-import application.controllers.ProductoController;
-import application.controllers.RegistrarFormController;
-import application.models.request.RegistrarRequest;
-import application.services.AutentificacionService;
-import application.services.ProductoService;
+import application.controllers.UsuarioController;
+import application.services.UsuarioService;
 import application.utils.SceneManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -23,7 +20,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-import javafx.scene.layout.StackPane;
 import javafx.scene.control.Tooltip;
 
 
@@ -36,9 +32,13 @@ public class DashboardView extends DashboardViewBase{
     public void onActivateUsuarios() {
     	try {
     		
+    		UsuarioService service = new UsuarioService();
+    		var usuarios = service.obtenerUsuarios();
+    		
+    		UsuarioController controller = new UsuarioController(content);
     		System.out.println("Paso Por aqui");
             content.getChildren().setAll(
-            	RegistrarFormController.getScene()
+            	controller.getScene(usuarios)
             );
             
         } catch (Exception ex) {
@@ -90,32 +90,40 @@ public class DashboardView extends DashboardViewBase{
 
     public Scene getScene() {
         // ------- Sidebar (menu) -------
-        VBox vbox = new VBox(12);
-        vbox.setPadding(new Insets(18));
-        vbox.setPrefWidth(200);
-        vbox.getStyleClass().add("dashboard-sidebar");
+    	VBox vbox = new VBox(12);
+    	vbox.setPadding(new Insets(18));
+    	vbox.setPrefWidth(200);
+    	vbox.getStyleClass().add("dashboard-sidebar");
 
-        Text title = new Text("📊 Dashboard");
-        title.getStyleClass().add("dashboard-title");
+    	Text title = new Text("📊 Dashboard");
+    	title.getStyleClass().add("dashboard-title");
 
-       
-        Button btnUsuario = createMenuButton("👤", "Usuarios");
-       
+    	Button btnUsuario = createMenuButton("👤", "Usuarios");
 
-        vbox.getChildren().addAll(title, btnUsuario);
+    	// Este spacer "empuja" el footer hacia abajo
+    	Region spacer = new Region();
+    	VBox.setVgrow(spacer, Priority.ALWAYS);
 
-        // Pie de menú lateral: nombre y campana
-        HBox sidebarFooter = new HBox();
-        sidebarFooter.setSpacing(12);
-        sidebarFooter.setAlignment(Pos.CENTER);
-        sidebarFooter.getStyleClass().add("dashboard-sidebar-footer");
-        Text userLabel = new Text("Administrador");
-        userLabel.getStyleClass().add("dashboard-user-label");
-        userLabel.setFill(Color.WHITE); // Asegura que el texto sea blanco
-        Button bellButton = new Button("🔔");
-        bellButton.getStyleClass().add("dashboard-bell-button");
-        sidebarFooter.getChildren().addAll(userLabel, bellButton);
-        vbox.getChildren().add(sidebarFooter);
+    	vbox.getChildren().addAll(title, btnUsuario, spacer);
+
+    	// Pie de menú lateral: nombre y campana
+    	HBox sidebarFooter = new HBox();
+    	sidebarFooter.setSpacing(12);
+    	sidebarFooter.setAlignment(Pos.CENTER_LEFT);
+    	sidebarFooter.getStyleClass().add("dashboard-sidebar-footer");
+
+    	Text userLabel = new Text("Administrador");
+    	userLabel.getStyleClass().add("dashboard-user-label");
+    	userLabel.setFill(Color.WHITE);
+
+    	Button bellButton = new Button("🔔");
+    	bellButton.getStyleClass().add("dashboard-bell-button");
+
+    	sidebarFooter.getChildren().addAll(userLabel, bellButton);
+    	sidebarFooter.setPadding(new Insets(10, 10, 10, 10));
+
+    	// Agregar al VBox al final
+    	vbox.getChildren().add(sidebarFooter);
 
         // ------- Main content -------
       
@@ -175,10 +183,10 @@ public class DashboardView extends DashboardViewBase{
             t.play();
         });
 
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
+        Region spacerRegion = new Region();
+        HBox.setHgrow(spacerRegion, Priority.ALWAYS);
 
-        HBox headerBox = new HBox(16, toggleMenu, empresaLogo, spacer, salir);
+        HBox headerBox = new HBox(16, toggleMenu, empresaLogo, spacerRegion, salir);
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setPadding(new Insets(12));
         headerBox.getStyleClass().add("dashboard-header");

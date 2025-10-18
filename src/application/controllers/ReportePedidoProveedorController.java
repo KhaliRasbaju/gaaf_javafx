@@ -7,6 +7,8 @@ import application.models.response.ReportePedidoProveedor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,6 +17,9 @@ import javafx.scene.layout.VBox;
 public class ReportePedidoProveedorController {
 	
 	public static VBox getScene(List<ReportePedidoProveedor> pedidos) {
+		
+		Label lblTitulo = new Label("Reporte de Pedido asociado a Proveedor");
+		lblTitulo.getStyleClass().add("form-title");
 
         TableView<ReportePedidoProveedor> table = new TableView<>();
 
@@ -90,6 +95,8 @@ public class ReportePedidoProveedorController {
 
         // Ajustes visuales
         table.setPadding(new Insets(10, 10, 10, 10));
-        return new VBox(10, table);
+        VBox layout = new VBox(10, lblTitulo,table);
+        layout.setAlignment(Pos.TOP_CENTER);
+        return layout;
     }
 }

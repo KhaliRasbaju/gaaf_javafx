@@ -7,6 +7,8 @@ import application.models.response.ReporteCompra;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -17,6 +19,10 @@ public class ReporteCompraController {
 
     @SuppressWarnings("unchecked")
 	public static VBox getScene(List<ReporteCompra> reportes) {
+    	
+    	Label lblTitulo = new Label("Reporte compras");
+		lblTitulo.getStyleClass().add("form-title");
+    	
         TableView<ReporteCompra> table = new TableView<>();
 
         // === Definir columnas ===
@@ -91,8 +97,8 @@ public class ReporteCompraController {
         table.setPadding(new Insets(10));
         table.setStyle("-fx-font-size: 13px;");
 
-        VBox container = new VBox(table);
-//        container.setPadding(new Insets(20));
-        return container;
+        VBox layout = new VBox(10, lblTitulo,table);
+        layout.setAlignment(Pos.TOP_CENTER);
+        return layout;
     }
 }

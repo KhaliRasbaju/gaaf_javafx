@@ -52,7 +52,7 @@ public class PedidoService {
     
     public Pedido editarPedido(Long id, PedidoRequest pedido) throws Exception {
         String jsonBody = mapper.writeValueAsString(pedido);
-        String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/pedido/" + id, jsonBody);
+        String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/pedido/editar/" + id, jsonBody);
         return mapper.readValue(response, Pedido.class);
     }
 

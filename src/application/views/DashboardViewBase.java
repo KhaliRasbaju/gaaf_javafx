@@ -173,16 +173,28 @@ public abstract class DashboardViewBase {
     }
 
     protected void addSidebarFooter(String roleName) {
+ 
+    	Region spacer = new Region();
+    	VBox.setVgrow(spacer, Priority.ALWAYS);
+
+    	vbox.getChildren().addAll(spacer);
+        
         HBox sidebarFooter = new HBox();
-        sidebarFooter.setSpacing(12);
-        sidebarFooter.setAlignment(Pos.CENTER);
-        sidebarFooter.getStyleClass().add("dashboard-sidebar-footer");
-        Text userLabel = new Text(roleName);
-        userLabel.getStyleClass().add("dashboard-user-label");
-        userLabel.setFill(Color.WHITE); // Asegura que el texto sea blanco en todas las views
-        Button bellButton = new Button("🔔");
-        bellButton.getStyleClass().add("dashboard-bell-button");
-        sidebarFooter.getChildren().addAll(userLabel, bellButton);
-        vbox.getChildren().add(sidebarFooter);
+    	sidebarFooter.setSpacing(12);
+    	sidebarFooter.setAlignment(Pos.CENTER_LEFT);
+    	sidebarFooter.getStyleClass().add("dashboard-sidebar-footer");
+
+    	Text userLabel = new Text(roleName);
+    	userLabel.getStyleClass().add("dashboard-user-label");
+    	userLabel.setFill(Color.WHITE);
+
+    	Button bellButton = new Button("🔔");
+    	bellButton.getStyleClass().add("dashboard-bell-button");
+
+    	sidebarFooter.getChildren().addAll(userLabel, bellButton);
+    	sidebarFooter.setPadding(new Insets(10, 10, 10, 10));
+
+    	// Agregar al VBox al final
+    	vbox.getChildren().add(sidebarFooter);
     }
 }

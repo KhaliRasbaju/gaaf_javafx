@@ -5,7 +5,6 @@ import java.util.List;
 import application.models.request.CuentaRequest;
 import application.models.request.ProveedorRequest;
 import application.models.request.UbicacionRequest;
-import application.models.response.Bodega;
 import application.models.response.Common;
 import application.models.response.Municipio;
 import application.models.response.Proveedor;
@@ -23,7 +22,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.util.Duration;
 

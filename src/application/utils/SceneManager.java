@@ -2,7 +2,6 @@ package application.utils;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 

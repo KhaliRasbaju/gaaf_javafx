@@ -2,9 +2,7 @@ package application.controllers;
 
 import application.models.request.TransaccionRequest;
 import application.models.response.ResponseCommon;
-import application.models.response.Transaccion;
 import application.models.response.Bodega;
-import application.models.response.Common;
 import application.models.response.Producto;
 import application.services.TransaccionService;
 import application.services.ProductoService;
@@ -67,12 +65,15 @@ public class TransaccionFormController {
     }
     
     
-    private static void onActionCrear(TransaccionRequest request) {
+    private static ResponseCommon onActionCrear(TransaccionRequest request) throws Exception {
 		try {
 			TransaccionService service = new TransaccionService();
-			service.crearTransaccion(request);
+			return service.crearTransaccion(request);
 		} catch (Exception ex) {
+			
 			System.out.println("Error tipo: " + ex);
+			
+			throw new Exception("Error tipo: " + ex);
 		}
 	}
     
@@ -230,16 +231,21 @@ public class TransaccionFormController {
 
                 TransaccionRequest request = new TransaccionRequest(
                         idProducto,
-                        idPedido != null ? idPedido: 0L,
+                        idPedido != null ? idPedido: null,
                         txtObservacion.getText(),
                         tipo,
                         idBodega,
                         Integer.parseInt(txtCantidad.getText())
                 );
 
-                onActionCrear(request);
-                showNotification(btnRegistrar.getScene(), "✅ Transacción registrada exitosamente", Color.GREEN);
-
+                var response = onActionCrear(request);
+              
+                if(response.getStatus() != 200) {
+                	showNotification(btnRegistrar.getScene(), response.getMessage(), Color.RED);
+                } else {
+                	  showNotification(btnRegistrar.getScene(), response.getMessage(), Color.GREEN);
+                }
+                
                 cmbProducto.setValue(null);
                 cmbBodega.setValue(null);
                 cmbTipo.setValue(null);

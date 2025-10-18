@@ -8,7 +8,6 @@ import application.services.BodegaService;
 import javafx.animation.FadeTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -100,6 +99,9 @@ public class BodegaController {
     
     // ✅ Método NO estático — pertenece al objeto
     public VBox getScene(List<Bodega> bodegas) {
+    	Label lblTitulo = new Label("Lista de Bodegas");
+		lblTitulo.getStyleClass().add("form-title");
+		lblTitulo.setAlignment(Pos.CENTER);
     	// 🔹 Botón de agregar tipo “+” (usará estilos desde el CSS)
     	Button btnAgregar = new Button("+");
     	btnAgregar.getStyleClass().add("btn-agregar");
@@ -118,8 +120,8 @@ public class BodegaController {
         TableColumn<Bodega, Void> colAcciones = new TableColumn<>("Acciones");
 
         colAcciones.setCellFactory(param -> new TableCell<>() {
-            private final Button btnEditar = new Button("✏️");
-            private final Button btnEliminar = new Button("🗑️");
+        	private final Button btnEditar = new Button("\u270E");  
+        	private final Button btnEliminar = new Button("\u2716");
             private final HBox contenedor = new HBox(5, btnEditar, btnEliminar);
 
             {
@@ -166,6 +168,10 @@ public class BodegaController {
         });
 
         table.getColumns().addAll(colId, colNombre, colUbicacion, colAcciones);
+        
+        HBox contenedorBoton = new HBox(btnAgregar);
+        contenedorBoton.setAlignment(Pos.CENTER_RIGHT);
+        contenedorBoton.setPadding(new Insets(0, 0, 10, 0)); 
 
         ObservableList<Bodega> data = FXCollections.observableArrayList(bodegas);
         table.setItems(data);
@@ -173,7 +179,8 @@ public class BodegaController {
         // ✅ Llamamos a onActionBodega() sin problema porque ya no es estático
         btnAgregar.setOnAction(e -> onActionBodega());
 
-        VBox layout = new VBox(10, btnAgregar, table);
+        VBox layout = new VBox(10, lblTitulo,contenedorBoton, table);
+        layout.setAlignment(Pos.TOP_CENTER);
         layout.setPadding(new Insets(10));
         return layout;
     }
