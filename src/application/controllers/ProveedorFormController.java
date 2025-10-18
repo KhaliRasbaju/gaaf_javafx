@@ -18,6 +18,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -38,6 +39,8 @@ public class ProveedorFormController {
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue() * 255));
     }
+    
+    
 
     private static void showNotification(Scene scene, String text, Color color) {
         Label notification = new Label(text);
@@ -132,156 +135,142 @@ public class ProveedorFormController {
 
 
     public static VBox getScene(String title, Proveedor proveedor) throws Exception {
-        Text titulo = new Text(String.format("🏢 %s Proveedor", title));
-        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
+        // --- TÍTULO ---
+        Label lblTitulo = new Label(String.format("🏢 %s Proveedor", title));
+        lblTitulo.getStyleClass().add("form-title");
+
+        // --- CAMPOS ---
         TextField txtNit = new TextField();
         txtNit.setPromptText("NIT");
+        txtNit.getStyleClass().add("form-field");
 
         TextField txtNombre = new TextField();
         txtNombre.setPromptText("Nombre");
+        txtNombre.getStyleClass().add("form-field");
 
         TextField txtCorreo = new TextField();
         txtCorreo.setPromptText("Correo");
+        txtCorreo.getStyleClass().add("form-field");
 
         TextField txtTelefono = new TextField();
         txtTelefono.setPromptText("Teléfono");
-        
+        txtTelefono.getStyleClass().add("form-field");
+
         TextField txtNumeroCuenta = new TextField();
-        txtNumeroCuenta.setPromptText("Numero de cuenta");
-        
+        txtNumeroCuenta.setPromptText("Número de cuenta");
+        txtNumeroCuenta.getStyleClass().add("form-field");
+
         ComboBox<String> cbTipo = new ComboBox<>();
         cbTipo.getItems().addAll("CORRIENTE", "AHORROS", "DEPOSITO_ELECTRONICO", "EMPRESARIAL");
-        cbTipo.setPromptText("Selecciona un tipo de cuenta");
-        
+        cbTipo.setPromptText("Tipo de cuenta");
+        cbTipo.getStyleClass().add("form-field");
+
         ComboBox<String> cbEntidad = new ComboBox<>();
         var entidades = entidades();
         for (Common entidad : entidades) {
-			cbEntidad.getItems().add(entidad.getNombre());
-		}
-        cbEntidad.setPromptText("Selecciona una entidad bancaria");
-        
+            cbEntidad.getItems().add(entidad.getNombre());
+        }
+        cbEntidad.setPromptText("Entidad bancaria");
+        cbEntidad.getStyleClass().add("form-field");
+
         ComboBox<String> cbDepartamento = new ComboBox<>();
         var departamentos = departamento();
         for (Common departamento : departamentos) {
-			cbDepartamento.getItems().add(departamento.getNombre());
-		}
-        
-        
-        
-        cbDepartamento.setPromptText("Selecciona un departamento");
-        
-        ComboBox<String> cbMunicipio = new ComboBox<>();
-        cbMunicipio.setPromptText("Selecciona un municipio");
-        cbMunicipio.setVisible(false);
-        
-        TextField txtDireccion = new TextField();
-        txtDireccion.setPromptText("Direccion");
+            cbDepartamento.getItems().add(departamento.getNombre());
+        }
+        cbDepartamento.setPromptText("Departamento");
+        cbDepartamento.getStyleClass().add("form-field");
 
-        
+        ComboBox<String> cbMunicipio = new ComboBox<>();
+        cbMunicipio.setPromptText("Municipio");
+        cbMunicipio.setVisible(false);
+        cbMunicipio.getStyleClass().add("form-field");
+
+        TextField txtDireccion = new TextField();
+        txtDireccion.setPromptText("Dirección");
+        txtDireccion.getStyleClass().add("form-field");
+
+        // --- EVENTO DEPTO → MUNICIPIOS ---
         cbDepartamento.setOnAction(event -> {
             String nombreDepto = cbDepartamento.getValue();
-
-            // Obtener el ID del departamento seleccionado
             idDepartamento = departamentos.stream()
                     .filter(dep -> dep.getNombre().equals(nombreDepto))
                     .findFirst()
                     .map(Common::getId)
                     .orElse(null);
-            
-            System.out.println(idDepartamento);
 
             if (idDepartamento == null) {
                 cbMunicipio.getItems().clear();
                 cbMunicipio.setVisible(false);
-                cbMunicipio.getParent().requestLayout(); // 🔧 Forzar redibujado
+                cbMunicipio.getParent().requestLayout();
                 return;
             }
-            try {
-                // Cargar municipios asociados
-                var municipios = municipios(idDepartamento);
-                cbMunicipio.getItems().clear();
-                for (Municipio m : municipios) {
-                    cbMunicipio.getItems().add(m.getNombre());
-                    System.out.println(m.getNombre());
-                }
 
-                // Mostrar el ComboBox si hay municipios
+            try {
+                var listaMunicipios = municipios(idDepartamento);
+                cbMunicipio.getItems().clear();
+                for (Municipio m : listaMunicipios) {
+                    cbMunicipio.getItems().add(m.getNombre());
+                }
                 cbMunicipio.setVisible(true);
                 cbMunicipio.managedProperty().bind(cbMunicipio.visibleProperty());
                 cbMunicipio.getParent().requestLayout();
-
             } catch (Exception ex) {
-                System.out.println("Error al cargar municipios: " + ex.getMessage());
                 cbMunicipio.setVisible(false);
                 cbMunicipio.getParent().requestLayout();
             }
         });
-        
 
-
+        // --- DATOS EXISTENTES (editar) ---
         if (proveedor != null) {
-   
             txtNit.setText(String.valueOf(proveedor.getNit()));
             txtNit.setDisable(true);
             txtNombre.setText(proveedor.getNombre());
             txtCorreo.setText(proveedor.getCorreo());
             txtTelefono.setText(proveedor.getTelefono());
-            proveedor.getCuenta().stream().forEach(c -> {
-            	try {
-					txtNumeroCuenta.setText(c.getNumero());
-					cbTipo.setValue(c.getTipo());
-					cbEntidad.setValue(c.getEntidad().getNombre());
-				} catch (Exception ex) {
-					
-					System.out.println("Error tipo: " + ex);
-				}
+
+            proveedor.getCuenta().forEach(c -> {
+                try {
+                    txtNumeroCuenta.setText(c.getNumero());
+                    cbTipo.setValue(c.getTipo());
+                    cbEntidad.setValue(c.getEntidad().getNombre());
+                } catch (Exception ignored) {}
             });
-            
+
             proveedor.getUbicacion().forEach(u -> {
                 try {
                     txtDireccion.setText(u.getDireccion());
-
-                    // Seleccionar departamento
                     cbDepartamento.setValue(u.getMunicipio().getDepartameto());
 
-                    // 🔹 Buscar el ID del departamento
                     idDepartamento = departamento().stream()
-                        .filter(dep -> dep.getNombre().equals(u.getMunicipio().getDepartameto()))
-                        .findFirst()
-                        .map(Common::getId)
-                        .orElse(null);
+                            .filter(dep -> dep.getNombre().equals(u.getMunicipio().getDepartameto()))
+                            .findFirst()
+                            .map(Common::getId)
+                            .orElse(null);
 
                     if (idDepartamento != null) {
-                        // 🔹 Cargar todos los municipios del departamento
                         var listaMunicipios = municipios(idDepartamento);
                         cbMunicipio.getItems().clear();
                         for (Municipio m : listaMunicipios) {
                             cbMunicipio.getItems().add(m.getNombre());
                         }
-
-                        // Seleccionar el municipio correspondiente
                         cbMunicipio.setValue(u.getMunicipio().getNombre());
                         cbMunicipio.setVisible(true);
                         cbMunicipio.managedProperty().bind(cbMunicipio.visibleProperty());
-                        cbMunicipio.getParent().requestLayout();
                     }
-
-                } catch (Exception ex) {
-                    System.out.println("Error tipo: " + ex);
-                }
+                } catch (Exception ignored) {}
             });
         }
-        
-        
 
+        // --- BOTÓN ---
         Button btnAccion = new Button(proveedor == null ? "Registrar" : "Actualizar");
-        btnAccion.getStyleClass().add("login-button");
-        btnAccion.setPrefWidth(150);
+        btnAccion.getStyleClass().add("form-button");
 
         Label lblMensaje = new Label();
         lblMensaje.setTextFill(Color.RED);
 
+        // --- EVENTO BOTÓN ---
         btnAccion.setOnAction(e -> {
             if (txtNit.getText().isEmpty() || txtNombre.getText().isEmpty()
                     || txtCorreo.getText().isEmpty() || txtTelefono.getText().isEmpty()) {
@@ -289,79 +278,106 @@ public class ProveedorFormController {
                 lblMensaje.setTextFill(Color.RED);
                 return;
             }
-            
-             idEntidad = entidades.stream()
-					.filter(entidad -> entidad.getNombre().equals(cbEntidad.getValue()))
-					.findFirst()
-					.map(Common::getId)
-					.orElse(null);
-            
-   
-             try {
-             
-            	 idMunicipio = municipios(idDepartamento).stream()
-            			 .filter(municipio -> municipio.getNombre().equals(cbMunicipio.getValue()))
-            			 .findFirst()
-            			 .map(Municipio::getId)
-            			 .orElse(null);
-            	 
-            	 System.out.println("Municipio: " + cbMunicipio.getValue());
-            	 System.out.println(idMunicipio);
-            	 System.out.println("Ubicacion :" + txtDireccion.getText());
-            	 
-            	 CuentaRequest cuentaRequest = new CuentaRequest(Long.parseLong(txtNumeroCuenta.getText()), cbTipo.getValue(), idEntidad);
-            	 UbicacionRequest ubicacionRequest = new UbicacionRequest(txtDireccion.getText(), idMunicipio);
-            	 
-            	 System.out.println(ubicacionRequest.getIdMunicipio());
-            	 System.out.println(ubicacionRequest.getDireccion());
-            	 
-            	 
-            	 
-            	 
-            	 
-            	 
-            	 ProveedorRequest request = new ProveedorRequest(
-            			 Long.parseLong(txtNit.getText()),
-            			 txtNombre.getText(),
-            			 txtCorreo.getText(),
-            			 txtTelefono.getText(),
-            			 cuentaRequest,
-            			 ubicacionRequest
-            			 );
-            	 
-            	 System.out.println(request.toString());
-            	 
-            	 if (proveedor == null) {
-            		 onActionRegistrar(request);
-            		 showNotification(btnAccion.getScene(), "✅ Proveedor registrado correctamente", Color.GREEN);
-            		 txtNit.clear();
-            		 txtNombre.clear();
-            		 txtCorreo.clear();
-            		 txtTelefono.clear();
-            		 txtDireccion.clear();
-            	 } else {
-            		 onActionActualizar(proveedor.getNit(), request);
-            		 showNotification(btnAccion.getScene(), "✏️ Proveedor actualizado correctamente", Color.GREEN);
-            		 txtNit.clear();
-            		 txtNombre.clear();
-            		 txtCorreo.clear();
-            		 txtTelefono.clear();
-            		 txtDireccion.clear();
-            		 
-            	 }
-             } catch (Exception ex) {
-            	 System.out.println("Error tipo 3: " + ex);
-            	 showNotification(btnAccion.getScene(), "❎ Error en el registro del proveedor", Color.RED);
-             }
+
+            idEntidad = entidades.stream()
+                    .filter(entidad -> entidad.getNombre().equals(cbEntidad.getValue()))
+                    .findFirst()
+                    .map(Common::getId)
+                    .orElse(null);
+
+            try {
+                idMunicipio = municipios(idDepartamento).stream()
+                        .filter(m -> m.getNombre().equals(cbMunicipio.getValue()))
+                        .findFirst()
+                        .map(Municipio::getId)
+                        .orElse(null);
+
+                CuentaRequest cuentaRequest = new CuentaRequest(
+                        Long.parseLong(txtNumeroCuenta.getText()), cbTipo.getValue(), idEntidad);
+
+                UbicacionRequest ubicacionRequest = new UbicacionRequest(
+                        txtDireccion.getText(), idMunicipio);
+
+                ProveedorRequest request = new ProveedorRequest(
+                        Long.parseLong(txtNit.getText()),
+                        txtNombre.getText(),
+                        txtCorreo.getText(),
+                        txtTelefono.getText(),
+                        cuentaRequest,
+                        ubicacionRequest
+                );
+
+                if (proveedor == null) {
+                    onActionRegistrar(request);
+                    showNotification(btnAccion.getScene(), "✅ Proveedor registrado correctamente", Color.GREEN);
+                } else {
+                    onActionActualizar(proveedor.getNit(), request);
+                    showNotification(btnAccion.getScene(), "✏️ Proveedor actualizado correctamente", Color.GREEN);
+                }
+
+                txtNit.clear();
+                txtNombre.clear();
+                txtCorreo.clear();
+                txtTelefono.clear();
+                txtDireccion.clear();
+
+            } catch (Exception ex2) {
+                showNotification(btnAccion.getScene(), "❎ Error en el registro del proveedor", Color.RED);
+            }
         });
 
-        VBox root = new VBox(10);
-        root.setPadding(new Insets(30));
-        root.setAlignment(Pos.CENTER);
-        root.getChildren().addAll(titulo, txtNit, txtNombre, txtCorreo, txtTelefono, txtNumeroCuenta,cbTipo, cbEntidad, cbDepartamento, 
-        		cbMunicipio, txtDireccion, 
-        		btnAccion, lblMensaje);
-        root.setStyle("-fx-background-color: #F8F9FA;");
-        return root;
+        // --- GRIDPANE (2 COLUMNAS) ---
+        GridPane grid = new GridPane();
+        grid.setHgap(25);
+        grid.setVgap(14);
+        grid.setAlignment(Pos.CENTER);
+
+        // Primera columna izquierda
+        grid.add(new Label("NIT:"), 0, 0);
+        grid.add(txtNit, 1, 0);
+
+        grid.add(new Label("Nombre:"), 0, 1);
+        grid.add(txtNombre, 1, 1);
+
+        grid.add(new Label("Correo:"), 0, 2);
+        grid.add(txtCorreo, 1, 2);
+
+        grid.add(new Label("Teléfono:"), 0, 3);
+        grid.add(txtTelefono, 1, 3);
+
+        // Segunda columna derecha (continuación)
+        grid.add(new Label("Número de cuenta:"), 0, 4);
+        grid.add(txtNumeroCuenta, 1, 4);
+
+        grid.add(new Label("Tipo de cuenta:"), 0, 5);
+        grid.add(cbTipo, 1, 5);
+
+        grid.add(new Label("Entidad bancaria:"), 0, 6);
+        grid.add(cbEntidad, 1, 6);
+
+        grid.add(new Label("Departamento:"), 0, 7);
+        grid.add(cbDepartamento, 1, 7);
+
+        grid.add(new Label("Municipio:"), 0, 8);
+        grid.add(cbMunicipio, 1, 8);
+
+        grid.add(new Label("Dirección:"), 0, 9);
+        grid.add(txtDireccion, 1, 9);
+
+        // --- ENVOLTORIO PRINCIPAL ---
+        VBox wrapper = new VBox(20);
+        wrapper.setAlignment(Pos.CENTER);
+        wrapper.getStyleClass().add("form-container");
+        wrapper.getChildren().addAll(lblTitulo, grid, btnAccion, lblMensaje);
+
+        VBox layout = new VBox(wrapper);
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-background-color: #f3f4f6;");
+        layout.setPrefHeight(600);
+        layout.setPrefWidth(900);
+
+        return layout;
     }
+
+
 }

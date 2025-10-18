@@ -66,6 +66,8 @@
 .dashboard-menu-button:hover {
     -fx-background-color: rgba(14,165,233,0.06);
 }
+
+
 .dashboard-header {
     -fx-background-color: rgb(91, 179, 24);
     -fx-border-color: rgb(91, 179, 24);
@@ -218,4 +220,53 @@
 
 .button {
     -fx-font-family: "Segoe UI Emoji";
+}
+
+/* ---- Global Forms ---- */
+.form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 25;
+    -fx-spacing: 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+.form-title {
+    -fx-font-size: 20px;
+    -fx-font-family: 'Segoe UI';
+    -fx-font-weight: bold;
+    -fx-text-fill: #2E2E2E;
+    -fx-padding: 0 0 5 0;
+}
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+.form-field {
+    -fx-padding: 7;
+    -fx-background-radius: 6;
+    -fx-pref-width: 240;
+}
+
+.form-textarea {
+    -fx-padding: 8;
+    -fx-background-radius: 6;
+    -fx-pref-row-count: 3;
+    -fx-pref-width: 500;
+}
+
+.form-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+.form-button:hover {
+    -fx-background-color: #34d058;
 }

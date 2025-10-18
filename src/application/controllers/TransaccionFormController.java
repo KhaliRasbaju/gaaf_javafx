@@ -118,7 +118,8 @@ public class TransaccionFormController {
 
     // ✅ Crea el formulario de transacción
     public VBox getScene() throws Exception {
-        // Campos
+
+        // --- CAMPOS ---
         ComboBox<Producto> cmbProducto = new ComboBox<>();
         ComboBox<Bodega> cmbBodega = new ComboBox<>();
         ComboBox<String> cmbTipo = new ComboBox<>();
@@ -126,7 +127,13 @@ public class TransaccionFormController {
         TextField txtCantidad = new TextField();
         TextArea txtObservacion = new TextArea();
 
-
+        // Aplicación de clases CSS
+        cmbProducto.getStyleClass().add("form-field");
+        cmbBodega.getStyleClass().add("form-field");
+        cmbTipo.getStyleClass().add("form-field");
+        txtIdPedido.getStyleClass().add("form-field");
+        txtCantidad.getStyleClass().add("form-field");
+        txtObservacion.getStyleClass().add("form-textarea");
 
         List<Producto> productos = productos();
         List<Bodega> bodegas = bodegas();
@@ -171,33 +178,27 @@ public class TransaccionFormController {
         txtIdPedido.setPromptText("ID Pedido (opcional)");
         txtCantidad.setPromptText("Cantidad");
         txtObservacion.setPromptText("Observación");
-        txtObservacion.setPrefRowCount(3);
 
         Button btnRegistrar = new Button("Registrar");
-        btnRegistrar.getStyleClass().add("btn-guardar");
+        btnRegistrar.getStyleClass().add("form-button");
 
+        // --- EVENTO BOTÓN ---
         btnRegistrar.setOnAction(e -> {
             try {
-            	
-            	idBodega = bodegas.stream()
-            			.filter(b -> b.getNombre().equals(cmbBodega.getValue()))
-            			.findFirst()
-            			.map(Bodega::getId)
-            			.orElse(null);
-            	
-            	idProducto = productos.stream()
-            			.filter(p -> p.getNombre().equals(cmbProducto.getValue()))
-            			.findFirst()
-            			.map(Producto::getId)
-            			.orElse(null);
-            	
-            	
-            	
-                var producto = producto(idBodega);
+                idBodega = bodegas.stream()
+                        .filter(b -> b.getNombre().equals(cmbBodega.getValue().getNombre()))
+                        .findFirst()
+                        .map(Bodega::getId)
+                        .orElse(null);
+
+                idProducto = productos.stream()
+                        .filter(p -> p.getNombre().equals(cmbProducto.getValue().getNombre()))
+                        .findFirst()
+                        .map(Producto::getId)
+                        .orElse(null);
+
+                var producto = producto(idProducto);
                 var bodega = bodega(idBodega);
-                
-              
-          
                 Long idPedido = txtIdPedido.getText().isEmpty() ? null : Long.parseLong(txtIdPedido.getText());
 
                 if (producto == null || bodega == null || cmbTipo.getValue() == null) {
@@ -215,40 +216,52 @@ public class TransaccionFormController {
                 );
 
                 onActionCrear(request);
-
                 showNotification(btnRegistrar.getScene(), "✅ Transacción registrada exitosamente", Color.GREEN);
 
-                // Limpieza del formulario
                 cmbProducto.setValue(null);
                 cmbBodega.setValue(null);
                 cmbTipo.setValue(null);
                 txtIdPedido.clear();
                 txtCantidad.clear();
                 txtObservacion.clear();
-
             } catch (Exception ex) {
                 System.out.println("Error tipo: " + ex);
                 showNotification(btnRegistrar.getScene(), "❌ Error al registrar la transacción", Color.RED);
             }
         });
 
-        VBox form = new VBox(10,
-                new Label("Registrar Transacción"),
-                cmbProducto,
-                cmbBodega,
-                cmbTipo,
-                txtIdPedido,
-                txtCantidad,
-                txtObservacion,
-                btnRegistrar
-        );
+        // --- GRIDPANE (2 columnas organizadas) ---
+        GridPane grid = new GridPane();
+        grid.setHgap(20);
+        grid.setVgap(12);
 
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
-        form.setMaxWidth(400);
-        form.setStyle("-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, #00000055, 5, 0, 0, 1);");
+        grid.add(new Label("Producto:"), 0, 0);
+        grid.add(cmbProducto, 1, 0);
 
-        VBox layout = new VBox(form);
+        grid.add(new Label("Bodega:"), 0, 1);
+        grid.add(cmbBodega, 1, 1);
+
+        grid.add(new Label("Tipo:"), 0, 2);
+        grid.add(cmbTipo, 1, 2);
+
+        grid.add(new Label("ID Pedido:"), 0, 3);
+        grid.add(txtIdPedido, 1, 3);
+
+        grid.add(new Label("Cantidad:"), 0, 4);
+        grid.add(txtCantidad, 1, 4);
+
+        // Observación abarca las 2 columnas
+        grid.add(new Label("Observación:"), 0, 5);
+        grid.add(txtObservacion, 1, 5);
+
+        VBox wrapper = new VBox(20);
+        wrapper.setAlignment(Pos.CENTER);
+        wrapper.getStyleClass().add("form-container");
+        wrapper.getChildren().addAll(new Label("Registrar Transacción") {{
+            getStyleClass().add("form-title");
+        }}, grid, btnRegistrar);
+
+        VBox layout = new VBox(wrapper);
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: #f3f4f6;");
         return layout;

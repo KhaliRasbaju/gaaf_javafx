@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -79,8 +80,9 @@ public class ProductoFormController {
         TextField txtNombre = new TextField();
         txtNombre.setPromptText("Nombre del producto");
 
-        TextField txtTipo = new TextField();
-        txtTipo.setPromptText("Tipo de producto");
+        ComboBox<String> cbTipo = new ComboBox<>();
+        cbTipo.getItems().addAll("CACAO", "INGREDIENTES_COMPLEMENTARIOS");
+        cbTipo.setPromptText("Selecciona un tipo");
 
         TextField txtDescripcion = new TextField();
         txtDescripcion.setPromptText("Descripción del producto");
@@ -88,7 +90,7 @@ public class ProductoFormController {
         // 🔹 Precargar datos si se está editando
         if (producto != null) {
             if (producto.getNombre() != null) txtNombre.setText(producto.getNombre());
-            if (producto.getTipo() != null) txtTipo.setText(producto.getTipo());
+            if (producto.getTipo() != null) cbTipo.setValue(producto.getTipo());
             if (producto.getDescripcion() != null) txtDescripcion.setText(producto.getDescripcion());
         }
 
@@ -102,7 +104,7 @@ public class ProductoFormController {
 
         // 🔹 Acción del botón
         btnAccion.setOnAction(e -> {
-            if (txtNombre.getText().isEmpty() || txtTipo.getText().isEmpty() || txtDescripcion.getText().isEmpty()) {
+            if (txtNombre.getText().isEmpty() || cbTipo.getValue().isEmpty() || txtDescripcion.getText().isEmpty()) {
                 lblMensaje.setText("⚠️ Por favor, completa todos los campos.");
                 lblMensaje.setTextFill(Color.RED);
                 return;
@@ -110,7 +112,7 @@ public class ProductoFormController {
 
             ProductoRequest request = new ProductoRequest(
                 txtNombre.getText(),
-                txtTipo.getText(),
+                cbTipo.getValue(),
                 txtDescripcion.getText()
             );
 
@@ -120,7 +122,7 @@ public class ProductoFormController {
                 lblMensaje.setTextFill(Color.GREEN);
                 lblMensaje.setText("✅ Producto registrado correctamente.");
                 txtNombre.clear();
-                txtTipo.clear();
+                cbTipo.setValue(null);
                 txtDescripcion.clear();
             } else {
                 onActionActualizar(request, producto.getId());
@@ -137,7 +139,7 @@ public class ProductoFormController {
         root.getChildren().addAll(
             titulo,
             txtNombre,
-            txtTipo,
+            cbTipo,
             txtDescripcion,
             btnAccion,
             lblMensaje
