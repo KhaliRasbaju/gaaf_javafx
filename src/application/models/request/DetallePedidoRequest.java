@@ -76,4 +76,15 @@ public class DetallePedidoRequest {
 		this.estadoCacao = estadoCacao;
 	}
 	
+	@Override
+	public String toString() {
+	    return "DetallePedidoRequest{" +
+	            "fermentacion=" + fermentacion +
+	            ", peso=" + peso +
+	            ", cantidad=" + cantidad +
+	            ", humedad=" + humedad +
+	            ", estadoCacao=" + estadoCacao +
+	            ", idProducto=" + idProducto +
+	            '}';
+	}
 }

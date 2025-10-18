@@ -86,5 +86,17 @@ public class PedidoRequest {
 	    this.recibido = recibido;
 	}
 
+	@Override
+	public String toString() {
+	    return "PedidoRequest{" +
+	            "nitProveedor=" + nitProveedor +
+	            ", valor=" + valor +
+	            ", fechaPedido=" + fechaPedido +
+	            ", medioPago=" + medioPago +
+	            ", detalle=" + detalle +
+	            ", fechaEntrega=" + fechaEntrega +
+	            ", recibido=" + recibido +
+	            '}';
+	}
 
 }

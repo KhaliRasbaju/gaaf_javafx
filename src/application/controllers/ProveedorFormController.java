@@ -18,7 +18,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -134,37 +136,92 @@ public class ProveedorFormController {
     }
 
 
-    public static VBox getScene(String title, Proveedor proveedor) throws Exception {
+    public static ScrollPane getScene(String title, Proveedor proveedor) throws Exception {
+    	
+    	 // --- TÍTULO ---
+        Label titulo = new Label(String.format("🏢 %s Proveedor", title));
+        titulo.getStyleClass().add("form-title");
 
-        // --- TÍTULO ---
-        Label lblTitulo = new Label(String.format("🏢 %s Proveedor", title));
-        lblTitulo.getStyleClass().add("form-title");
 
+        GridPane gridInfo = new GridPane();
+        gridInfo.getStyleClass().add("form-container");
+        gridInfo.setHgap(25);
+        gridInfo.setVgap(15);
+        gridInfo.setPadding(new Insets(25));
+        gridInfo.setAlignment(Pos.CENTER);
+        
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(50);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(50);
+        gridInfo.getColumnConstraints().addAll(col1, col2);
+    	
+       
         // --- CAMPOS ---
         TextField txtNit = new TextField();
         txtNit.setPromptText("NIT");
         txtNit.getStyleClass().add("form-field");
+        Label lblNit = new Label("NIT");
+        lblNit.getStyleClass().add("form-label");
+        gridInfo.add(lblNit, 0, 0);
+        gridInfo.add(txtNit, 0, 1);
+
 
         TextField txtNombre = new TextField();
         txtNombre.setPromptText("Nombre");
         txtNombre.getStyleClass().add("form-field");
+        Label lblNombre = new Label("Nombre");
+        lblNombre.getStyleClass().add("form-label");
+        gridInfo.add(lblNombre, 1, 0);
+        gridInfo.add(txtNombre, 1, 1);
 
         TextField txtCorreo = new TextField();
         txtCorreo.setPromptText("Correo");
         txtCorreo.getStyleClass().add("form-field");
+        Label lblCorreo = new Label("Correo");
+        lblCorreo.getStyleClass().add("form-label");
+        gridInfo.add(lblCorreo, 0, 2);
+        gridInfo.add(txtCorreo, 0, 3);
 
         TextField txtTelefono = new TextField();
         txtTelefono.setPromptText("Teléfono");
         txtTelefono.getStyleClass().add("form-field");
+        Label lblTelefono = new Label("Teléfono");
+        lblTelefono.getStyleClass().add("form-label");
+        gridInfo.add(lblTelefono, 1, 2);
+        gridInfo.add(txtTelefono, 1, 3);
 
+       
+        
+        GridPane gridCuenta = new GridPane();
+        gridCuenta.getStyleClass().add("form-container");
+        gridCuenta.setHgap(25);
+        gridCuenta.setVgap(15);
+        gridCuenta.setPadding(new Insets(25));
+        gridCuenta.setAlignment(Pos.CENTER);
+        
+        ColumnConstraints colCb1 = new ColumnConstraints();
+        colCb1.setPercentWidth(50);
+        ColumnConstraints colCb2 = new ColumnConstraints();
+        colCb2.setPercentWidth(50);
+        gridCuenta.getColumnConstraints().addAll(colCb1, colCb2);
+        
         TextField txtNumeroCuenta = new TextField();
         txtNumeroCuenta.setPromptText("Número de cuenta");
         txtNumeroCuenta.getStyleClass().add("form-field");
+        Label lblNumeroCuenta = new Label("Número de cuenta");
+        lblNumeroCuenta.getStyleClass().add("form-label");
+        gridCuenta.add(lblNumeroCuenta, 1, 0);
+        gridCuenta.add(txtNumeroCuenta, 1, 1);
 
         ComboBox<String> cbTipo = new ComboBox<>();
         cbTipo.getItems().addAll("CORRIENTE", "AHORROS", "DEPOSITO_ELECTRONICO", "EMPRESARIAL");
         cbTipo.setPromptText("Tipo de cuenta");
         cbTipo.getStyleClass().add("form-field");
+        Label lblTipoCuenta = new Label("Tipo de cuenta");
+        lblTipoCuenta.getStyleClass().add("form-label");
+        gridCuenta.add(lblTipoCuenta, 0, 2);
+        gridCuenta.add(cbTipo, 0, 3);
 
         ComboBox<String> cbEntidad = new ComboBox<>();
         var entidades = entidades();
@@ -173,6 +230,24 @@ public class ProveedorFormController {
         }
         cbEntidad.setPromptText("Entidad bancaria");
         cbEntidad.getStyleClass().add("form-field");
+        Label lblEntidad = new Label("Entidad bancaria");
+        lblEntidad.getStyleClass().add("form-label");
+        gridCuenta.add(lblEntidad, 0, 0);
+        gridCuenta.add(cbEntidad, 0, 1);
+        
+        GridPane gridUbicacion = new GridPane();
+        gridUbicacion.getStyleClass().add("form-container");
+        gridUbicacion.setHgap(25);
+        gridUbicacion.setVgap(15);
+        gridUbicacion.setPadding(new Insets(25));
+        gridUbicacion.setAlignment(Pos.CENTER);
+
+        ColumnConstraints colUb1 = new ColumnConstraints();
+        colUb1.setPercentWidth(50);
+        ColumnConstraints colUb2 = new ColumnConstraints();
+        colUb2.setPercentWidth(50);
+        gridUbicacion.getColumnConstraints().addAll(colUb1, colUb2);
+        
 
         ComboBox<String> cbDepartamento = new ComboBox<>();
         var departamentos = departamento();
@@ -181,15 +256,29 @@ public class ProveedorFormController {
         }
         cbDepartamento.setPromptText("Departamento");
         cbDepartamento.getStyleClass().add("form-field");
+        Label lblDepartamento = new Label("Departamento");
+        lblDepartamento.getStyleClass().add("form-label");
+        gridUbicacion.add(lblDepartamento, 1, 0);
+        gridUbicacion.add(cbDepartamento, 1, 1);
 
         ComboBox<String> cbMunicipio = new ComboBox<>();
         cbMunicipio.setPromptText("Municipio");
         cbMunicipio.setVisible(false);
         cbMunicipio.getStyleClass().add("form-field");
+        Label lblMunicipio = new Label("Ciudad");
+        lblMunicipio.getStyleClass().add("form-label");
+        gridUbicacion.add(lblMunicipio, 0, 0);
+        gridUbicacion.add(cbMunicipio, 0, 1);
+
+
 
         TextField txtDireccion = new TextField();
         txtDireccion.setPromptText("Dirección");
         txtDireccion.getStyleClass().add("form-field");
+        Label lblDireccion = new Label("Dirección");
+        lblDireccion.getStyleClass().add("form-label");
+        gridUbicacion.add(lblDireccion, 0, 2);
+        gridUbicacion.add(txtDireccion, 0, 3, 2, 1);
 
         // --- EVENTO DEPTO → MUNICIPIOS ---
         cbDepartamento.setOnAction(event -> {
@@ -266,6 +355,9 @@ public class ProveedorFormController {
         // --- BOTÓN ---
         Button btnAccion = new Button(proveedor == null ? "Registrar" : "Actualizar");
         btnAccion.getStyleClass().add("form-button");
+        HBox contBoton = new HBox(btnAccion);
+        contBoton.setAlignment(Pos.CENTER);
+        contBoton.setPadding(new Insets(10, 0, 20, 0));
 
         Label lblMensaje = new Label();
         lblMensaje.setTextFill(Color.RED);
@@ -326,57 +418,21 @@ public class ProveedorFormController {
             }
         });
 
-        // --- GRIDPANE (2 COLUMNAS) ---
-        GridPane grid = new GridPane();
-        grid.setHgap(25);
-        grid.setVgap(14);
-        grid.setAlignment(Pos.CENTER);
-
-        // Primera columna izquierda
-        grid.add(new Label("NIT:"), 0, 0);
-        grid.add(txtNit, 1, 0);
-
-        grid.add(new Label("Nombre:"), 0, 1);
-        grid.add(txtNombre, 1, 1);
-
-        grid.add(new Label("Correo:"), 0, 2);
-        grid.add(txtCorreo, 1, 2);
-
-        grid.add(new Label("Teléfono:"), 0, 3);
-        grid.add(txtTelefono, 1, 3);
-
-        // Segunda columna derecha (continuación)
-        grid.add(new Label("Número de cuenta:"), 0, 4);
-        grid.add(txtNumeroCuenta, 1, 4);
-
-        grid.add(new Label("Tipo de cuenta:"), 0, 5);
-        grid.add(cbTipo, 1, 5);
-
-        grid.add(new Label("Entidad bancaria:"), 0, 6);
-        grid.add(cbEntidad, 1, 6);
-
-        grid.add(new Label("Departamento:"), 0, 7);
-        grid.add(cbDepartamento, 1, 7);
-
-        grid.add(new Label("Municipio:"), 0, 8);
-        grid.add(cbMunicipio, 1, 8);
-
-        grid.add(new Label("Dirección:"), 0, 9);
-        grid.add(txtDireccion, 1, 9);
+       
 
         // --- ENVOLTORIO PRINCIPAL ---
-        VBox wrapper = new VBox(20);
-        wrapper.setAlignment(Pos.CENTER);
-        wrapper.getStyleClass().add("form-container");
-        wrapper.getChildren().addAll(lblTitulo, grid, btnAccion, lblMensaje);
+        VBox root = new VBox(20, titulo, gridInfo, gridUbicacion, gridCuenta, contBoton, lblMensaje);
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setPadding(new Insets(30));
+        root.setStyle("-fx-background-color: #F8F9FA;");
 
-        VBox layout = new VBox(wrapper);
-        layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: #f3f4f6;");
-        layout.setPrefHeight(600);
-        layout.setPrefWidth(900);
+        ScrollPane scroll = new ScrollPane(root);
+        scroll.setFitToWidth(true);
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setStyle("-fx-background-color: transparent;");
 
-        return layout;
+        return scroll;
     }
 
 

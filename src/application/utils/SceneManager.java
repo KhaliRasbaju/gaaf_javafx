@@ -2,6 +2,7 @@ package application.utils;
 
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -18,7 +19,9 @@ public class SceneManager {
 		scene.getStylesheets().add(SceneManager.class.getResource("/application/resources/application.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setResizable(true);
-
+        
+     
+		
         // Esperar al siguiente ciclo de JavaFX y luego forzar el tamaño al de la pantalla
         Platform.runLater(() -> {
             // Obtener dimensiones de la pantalla principal

@@ -35,9 +35,9 @@ public class PedidoService {
         return mapper.readValue(response, Pedido.class);
     }
 
-    public Pedido recibirPedido(Long id) throws Exception {
-        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/pedido/recibir/" + id, false);
-        return mapper.readValue(response, Pedido.class);
+    public ResponseCommon recibirPedido(Long id) throws Exception {
+        String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/pedido/recibir/" + id);
+        return mapper.readValue(response, ResponseCommon.class);
     }
     
     public Pedido obtenerPedido(Long id) throws Exception {

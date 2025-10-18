@@ -126,6 +126,7 @@ public class TransaccionFormController {
         TextField txtIdPedido = new TextField();
         TextField txtCantidad = new TextField();
         TextArea txtObservacion = new TextArea();
+        txtIdPedido.setVisible(false);
 
         // Aplicación de clases CSS
         cmbProducto.getStyleClass().add("form-field");
@@ -140,6 +141,7 @@ public class TransaccionFormController {
 
         cmbProducto.setItems(FXCollections.observableArrayList(productos));
         cmbProducto.setPromptText("Seleccione un producto");
+
         cmbProducto.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Producto item, boolean empty) {
@@ -154,23 +156,26 @@ public class TransaccionFormController {
                 setText(empty || item == null ? "Seleccione un producto" : item.getNombre());
             }
         });
-
-        cmbBodega.setItems(FXCollections.observableArrayList(bodegas));
-        cmbBodega.setPromptText("Seleccione una bodega");
+        
+        
         cmbBodega.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Bodega item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty || item == null ? null : item.getNombre());
+                setText(empty || item == null ? null : String.format("%s (%s)", item.getNombre(), item.getUbicacion()));
             }
         });
         cmbBodega.setButtonCell(new ListCell<>() {
             @Override
             protected void updateItem(Bodega item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty || item == null ? "Seleccione una bodega" : item.getNombre());
+                // En el botón mostramos nombre + ubicación
+                setText(empty || item == null ? "Seleccione una bodega"
+                        : item.getNombre());
             }
         });
+        cmbBodega.setItems(FXCollections.observableArrayList(bodegas));
+        cmbBodega.setPromptText("Seleccione una bodega");
 
         cmbTipo.setItems(FXCollections.observableArrayList("ENTRADA", "MERMA", "PRODUCCION"));
         cmbTipo.setPromptText("Seleccione tipo");
@@ -182,36 +187,53 @@ public class TransaccionFormController {
         Button btnRegistrar = new Button("Registrar");
         btnRegistrar.getStyleClass().add("form-button");
 
+     // --- GRIDPANE 2 COLUMNAS ---
+        GridPane grid = new GridPane();
+        grid.getStyleClass().add("form-container");
+        grid.setHgap(20);
+        grid.setVgap(15);
+        
+        Label lblMensaje = new Label();
+        lblMensaje.setTextFill(Color.RED);
+        Label lblIdPedido = new Label("ID Pedido:");
+        grid.add(lblIdPedido, 0, 3);
+        grid.add(txtIdPedido, 1, 3);
+        lblIdPedido.setVisible(false);
+       
+        cmbTipo.setOnAction(e -> {
+        	System.out.println(cmbTipo.getValue());
+        	 if(cmbTipo.getValue().equals("ENTRADA")) {
+             	txtIdPedido.setVisible(true);
+             	lblIdPedido.setVisible(true);
+             }else {
+            	txtIdPedido.setVisible(false);
+             	lblIdPedido.setVisible(false);
+             }
+
+        });
+        
         // --- EVENTO BOTÓN ---
         btnRegistrar.setOnAction(e -> {
             try {
-                idBodega = bodegas.stream()
-                        .filter(b -> b.getNombre().equals(cmbBodega.getValue().getNombre()))
-                        .findFirst()
-                        .map(Bodega::getId)
-                        .orElse(null);
+                 idBodega = cmbBodega.getValue() != null ? cmbBodega.getValue().getId() : null;
+                 idProducto = cmbProducto.getValue() != null ? cmbProducto.getValue().getId() : null;
+                String tipo = cmbTipo.getValue();
 
-                idProducto = productos.stream()
-                        .filter(p -> p.getNombre().equals(cmbProducto.getValue().getNombre()))
-                        .findFirst()
-                        .map(Producto::getId)
-                        .orElse(null);
-
-                var producto = producto(idProducto);
-                var bodega = bodega(idBodega);
-                Long idPedido = txtIdPedido.getText().isEmpty() ? null : Long.parseLong(txtIdPedido.getText());
-
-                if (producto == null || bodega == null || cmbTipo.getValue() == null) {
-                    showNotification(btnRegistrar.getScene(), "⚠️ Todos los campos obligatorios deben completarse.", Color.RED);
+                if (idBodega == null || tipo == null || txtCantidad.getText().isEmpty()) {
+                    lblMensaje.setText("⚠️ Todos los campos obligatorios deben completarse.");
+                    lblMensaje.setTextFill(Color.RED);
                     return;
                 }
+               
+            
+                 idPedido = txtIdPedido.getText().isEmpty() ? null : Long.parseLong(txtIdPedido.getText());
 
                 TransaccionRequest request = new TransaccionRequest(
-                        producto.getId(),
-                        idPedido,
+                        idProducto,
+                        idPedido != null ? idPedido: 0L,
                         txtObservacion.getText(),
-                        cmbTipo.getValue(),
-                        bodega.getId(),
+                        tipo,
+                        idBodega,
                         Integer.parseInt(txtCantidad.getText())
                 );
 
@@ -224,16 +246,14 @@ public class TransaccionFormController {
                 txtIdPedido.clear();
                 txtCantidad.clear();
                 txtObservacion.clear();
+                lblMensaje.setText("");
             } catch (Exception ex) {
                 System.out.println("Error tipo: " + ex);
                 showNotification(btnRegistrar.getScene(), "❌ Error al registrar la transacción", Color.RED);
             }
         });
 
-        // --- GRIDPANE (2 columnas organizadas) ---
-        GridPane grid = new GridPane();
-        grid.setHgap(20);
-        grid.setVgap(12);
+        
 
         grid.add(new Label("Producto:"), 0, 0);
         grid.add(cmbProducto, 1, 0);
@@ -241,29 +261,30 @@ public class TransaccionFormController {
         grid.add(new Label("Bodega:"), 0, 1);
         grid.add(cmbBodega, 1, 1);
 
+        
         grid.add(new Label("Tipo:"), 0, 2);
         grid.add(cmbTipo, 1, 2);
+    
 
-        grid.add(new Label("ID Pedido:"), 0, 3);
-        grid.add(txtIdPedido, 1, 3);
+       
+		grid.add(new Label("Cantidad:"), 0, 4);
+		grid.add(txtCantidad, 1, 4);
+        
 
-        grid.add(new Label("Cantidad:"), 0, 4);
-        grid.add(txtCantidad, 1, 4);
-
-        // Observación abarca las 2 columnas
         grid.add(new Label("Observación:"), 0, 5);
         grid.add(txtObservacion, 1, 5);
-
-        VBox wrapper = new VBox(20);
-        wrapper.setAlignment(Pos.CENTER);
-        wrapper.getStyleClass().add("form-container");
-        wrapper.getChildren().addAll(new Label("Registrar Transacción") {{
+        grid.setAlignment(Pos.CENTER);
+        // --- VBOX PRINCIPAL ---
+        VBox root = new VBox(15, new Label("Registrar Transacción") {{
             getStyleClass().add("form-title");
-        }}, grid, btnRegistrar);
+        }}, grid, btnRegistrar, lblMensaje);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(30));
+        root.setStyle("-fx-background-color: #F8F9FA;");
 
-        VBox layout = new VBox(wrapper);
-        layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: #f3f4f6;");
-        return layout;
+        return root;
     }
+
+
+
 }

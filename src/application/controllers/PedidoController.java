@@ -30,6 +30,71 @@ public class PedidoController {
     public PedidoController(StackPane content) {
         this.content = content;
     }
+    
+    private void onActionAgregar() {
+        try {
+        	PedidoFormController controller = new PedidoFormController();
+            content.getChildren().setAll(controller.getScene("Registrar", null));
+        } catch (Exception ex) {
+            System.out.println("Error tipo: " + ex);
+        }
+    }
+
+    private void onActionEditar(Long id) {
+        try {
+            PedidoService service = new PedidoService();
+            Pedido pedido = service.obtenerPedido(id);
+            PedidoFormController controller = new PedidoFormController();
+            content.getChildren().setAll(controller.getScene("Editar", pedido));
+        } catch (Exception ex) {
+            System.out.println("Error tipo: " + ex);
+        }
+    }
+    
+    private ResponseCommon onActionRecibir(Long id) throws Exception {
+		try {
+			PedidoService service = new PedidoService();
+			return service.recibirPedido(id);
+		} catch (Exception ex) {
+			System.out.println("Error tipo: " + ex);
+			throw new Exception("Error tipo: "+ ex);
+		}
+	}
+
+    private ResponseCommon onActionEliminar(Long id) throws Exception {
+        PedidoService service = new PedidoService();
+        return service.eliminarPedido(id);
+    }
+
+    // 🔹 Convierte un color a formato hexadecimal
+    private static String toHex(Color color) {
+        return String.format("#%02X%02X%02X",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
+    }
+
+    /** 🔹 Muestra una notificación tipo "toast" */
+    private static void showNotification(Scene scene, String text, Color color) {
+        Label notification = new Label(text);
+        notification.getStyleClass().add("notification-toast");
+        notification.setStyle("-fx-background-color: " + toHex(color) + ";"
+                + "-fx-text-fill: white; -fx-padding: 10px; -fx-background-radius: 8px;");
+
+        Popup popup = new Popup();
+        popup.getContent().add(notification);
+        popup.setAutoFix(true);
+
+        double x = scene.getWindow().getX() + scene.getWidth() / 2 - 100;
+        double y = scene.getWindow().getY() + scene.getHeight() - 100;
+        popup.show(scene.getWindow(), x, y);
+
+        FadeTransition fade = new FadeTransition(Duration.seconds(2.5), notification);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.0);
+        fade.setOnFinished(ev -> popup.hide());
+        fade.play();
+    }
 
     // 🔹 Escena principal (tabla)
     @SuppressWarnings("unchecked")
@@ -37,6 +102,7 @@ public class PedidoController {
 
         Button btnAgregar = new Button("+");
         btnAgregar.getStyleClass().add("btn-agregar");
+        btnAgregar.setAlignment(Pos.CENTER);
 
         TableView<Pedido> table = new TableView<>();
 
@@ -54,6 +120,49 @@ public class PedidoController {
 
         TableColumn<Pedido, String> colFechaEntrega = new TableColumn<>("Fecha Entrega");
         colFechaEntrega.setCellValueFactory(new PropertyValueFactory<>("fechaEntrega"));
+        
+        colFechaEntrega.setCellFactory(col -> new TableCell<>() {
+            private final Button btnRecibir = new Button("Recibir");
+            private final Label lblFecha = new Label();
+
+            {
+                btnRecibir.getStyleClass().add("btn-recibir");
+                btnRecibir.setOnAction(e -> {
+                    Pedido pedido = getTableView().getItems().get(getIndex());
+                    try {
+                        var resp = onActionRecibir(pedido.getId());
+                        if (resp.getStatus() == 200) {
+                            // Actualizamos la fechaEntrega en la tabla
+                            pedido.setFechaEntrega("Actualizando ...");
+                            getTableView().refresh();
+                            showNotification(btnRecibir.getScene(), resp.getMessage(), Color.GREEN);
+                        } else {
+                            showNotification(btnRecibir.getScene(), "❌ " + resp.getMessage(), Color.RED);
+                        }
+                    } catch (Exception ex) {
+                        System.out.println("Error tipo: " + ex);
+                        showNotification(btnRecibir.getScene(), "❌ Error al recibir pedido", Color.RED);
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(String fechaEntrega, boolean empty) {
+                super.updateItem(fechaEntrega, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    if (fechaEntrega == null || fechaEntrega.isEmpty()) {
+                        setGraphic(btnRecibir);
+                        setAlignment(Pos.CENTER);
+                    } else {
+                        lblFecha.setText(fechaEntrega);
+                        setGraphic(lblFecha);
+                        setAlignment(Pos.CENTER);
+                    }
+                }
+            }
+        });
 
         TableColumn<Pedido, Boolean> colRecibido = new TableColumn<>("Recibido");
         colRecibido.setCellValueFactory(new PropertyValueFactory<>("recibido"));
@@ -73,6 +182,7 @@ public class PedidoController {
             }
         });
 
+     
         TableColumn<Pedido, Void> colAcciones = new TableColumn<>("Acciones");
         colAcciones.setCellFactory(param -> new TableCell<>() {
             private final Button btnEditar = new Button("✏️");
@@ -82,6 +192,8 @@ public class PedidoController {
             {
                 btnEditar.getStyleClass().add("btn-editar");
                 btnEliminar.getStyleClass().add("btn-eliminar");
+                btnEditar.setAlignment(Pos.CENTER);
+                btnEliminar.setAlignment(Pos.CENTER);
                 contenedor.setAlignment(Pos.CENTER);
 
                 btnEditar.setOnAction(e -> {
@@ -108,10 +220,24 @@ public class PedidoController {
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty) setGraphic(null);
-                else setGraphic(contenedor);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    Pedido pedido = getTableView().getItems().get(getIndex());
+                    if (pedido.getRecibido()) { 
+                        Label lblSinAccion = new Label("Sin acciones");
+                        lblSinAccion.setTextFill(Color.GRAY);
+                        lblSinAccion.setStyle("-fx-font-style: italic;");
+                        setGraphic(lblSinAccion);
+                        setAlignment(Pos.CENTER);
+                    } else {
+                        setGraphic(contenedor);
+                        setAlignment(Pos.CENTER);
+                    }
+                }
             }
         });
+
 
         table.getColumns().addAll(colId, colNitProveedor, colValor, colFechaPedido, colFechaEntrega, colRecibido, colAcciones);
 
@@ -126,49 +252,5 @@ public class PedidoController {
         return layout;
     }
 
-    private void onActionAgregar() {
-        try {
-            content.getChildren().setAll(PedidoFormController.getScene("Registrar", null));
-        } catch (Exception ex) {
-            System.out.println("Error tipo: " + ex);
-        }
-    }
-
-    private void onActionEditar(Long id) {
-        try {
-            PedidoService service = new PedidoService();
-            Pedido pedido = service.obtenerPedido(id);
-            content.getChildren().setAll(PedidoFormController.getScene("Editar", pedido));
-        } catch (Exception ex) {
-            System.out.println("Error tipo: " + ex);
-        }
-    }
-
-    private ResponseCommon onActionEliminar(Long id) throws Exception {
-        PedidoService service = new PedidoService();
-        return service.eliminarPedido(id);
-    }
-
-    private static void showNotification(Scene scene, String text, Color color) {
-        Label notification = new Label(text);
-        notification.setStyle("-fx-background-color: " + toHex(color) + "; -fx-text-fill: white; -fx-padding: 10px;");
-        notification.setAlignment(Pos.CENTER);
-
-        Popup popup = new Popup();
-        popup.getContent().add(notification);
-        popup.show(scene.getWindow());
-
-        FadeTransition fade = new FadeTransition(Duration.seconds(2.5), notification);
-        fade.setFromValue(1.0);
-        fade.setToValue(0.0);
-        fade.setOnFinished(e -> popup.hide());
-        fade.play();
-    }
-
-    private static String toHex(Color color) {
-        return String.format("#%02X%02X%02X",
-                (int) (color.getRed() * 255),
-                (int) (color.getGreen() * 255),
-                (int) (color.getBlue() * 255));
-    }
+    
 }

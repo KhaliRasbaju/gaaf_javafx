@@ -13,6 +13,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Popup;
 import javafx.animation.FadeTransition;
 import javafx.util.Duration;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 public class MetodoPagoFormController {
@@ -80,53 +83,81 @@ public class MetodoPagoFormController {
 	}
 	
 	
-    public static VBox getScene(String accion, Common metodoPago) {
-        Label lblTitulo = new Label(accion + " Método de Pago");
-        lblTitulo.getStyleClass().add("form-title");
+	public static VBox getScene(String accion, Common metodoPago) {
+	    Label lblTitulo = new Label(accion + " Método de Pago");
+	    lblTitulo.getStyleClass().add("form-title");
 
-        TextField txtNombre = new TextField();
-        txtNombre.setPromptText("Nombre del método de pago");
+	    // --- GRID FORMULARIO ---
+	    GridPane grid = new GridPane();
+	    grid.getStyleClass().add("form-container");
+	    grid.setHgap(25);
+	    grid.setVgap(15);
+	    grid.setPadding(new Insets(25));
+	    grid.setAlignment(Pos.CENTER);
 
-        if (metodoPago != null && metodoPago.getNombre() != null)
-            txtNombre.setText(metodoPago.getNombre());
+	    ColumnConstraints col1 = new ColumnConstraints();
+	    col1.setPercentWidth(50);
+	    ColumnConstraints col2 = new ColumnConstraints();
+	    col2.setPercentWidth(50);
+	    grid.getColumnConstraints().addAll(col1, col2);
 
-        Button btnAccion = new Button(accion);
-        btnAccion.getStyleClass().add("login-button");
-        btnAccion.setPrefWidth(150);
+	    // --- Campos ---
+	    Label lblNombre = new Label("Nombre del método de pago");
+	    lblNombre.getStyleClass().add("form-label");
+	    grid.add(lblNombre, 0, 0);
 
-        Label lblMensaje = new Label();
+	    TextField txtNombre = new TextField();
+	    txtNombre.setPromptText("Nombre del método de pago");
+	    txtNombre.getStyleClass().add("form-field");
+	    if (metodoPago != null && metodoPago.getNombre() != null)
+	        txtNombre.setText(metodoPago.getNombre());
+	    grid.add(txtNombre, 0, 1, 2, 1); // ocupa 2 columnas para centrar
 
-        btnAccion.setOnAction(e -> {
-            if (txtNombre.getText().isEmpty()) {
-                lblMensaje.setText("⚠️ El nombre es obligatorio.");
-                lblMensaje.setTextFill(Color.RED);
-                return;
-            }
+	    // --- Botón ---
+	    Button btnAccion = new Button(accion);
+	    btnAccion.getStyleClass().add("form-button");
+	    btnAccion.setPrefWidth(200);
 
-          
-            try {
-            	
-            	CommonRequest request = new CommonRequest(txtNombre.getText());
-            	
-                if (metodoPago == null) {
-                   
-                	onActionCrear(request);
-                	showNotification(btnAccion.getScene(), "✅ Metodo de pago creado correctamente", Color.GREEN);
-                    txtNombre.clear();
-                } else {
-                    var response  = onActionEditar(metodoPago.getId(), request);
-                    showNotification(btnAccion.getScene(), response.getMessage(), Color.GREEN);
-                	txtNombre.clear();
-                }
-            } catch (Exception ex) {
-            	showNotification(btnAccion.getScene(), "❎ Error al guardar el metodo de pago", Color.RED);
-                System.out.println("Error: " + ex);
-            }
-        });
+	    HBox contBoton = new HBox(btnAccion);
+	    contBoton.setAlignment(Pos.CENTER);
+	    contBoton.setPadding(new Insets(10, 0, 0, 0));
 
-        VBox form = new VBox(10, lblTitulo, txtNombre, btnAccion, lblMensaje);
-        form.setAlignment(Pos.CENTER);
-        form.setPadding(new Insets(20));
-        return form;
-    }
+	    Label lblMensaje = new Label();
+	    lblMensaje.setTextFill(Color.RED);
+
+	    // --- Acción del botón ---
+	    btnAccion.setOnAction(e -> {
+	        if (txtNombre.getText().isEmpty()) {
+	            lblMensaje.setText("⚠️ El nombre es obligatorio.");
+	            lblMensaje.setTextFill(Color.RED);
+	            return;
+	        }
+
+	        try {
+	            CommonRequest request = new CommonRequest(txtNombre.getText());
+
+	            if (metodoPago == null) {
+	                onActionCrear(request);
+	                showNotification(btnAccion.getScene(), "✅ Método de pago creado correctamente", Color.GREEN);
+	                txtNombre.clear();
+	            } else {
+	                var response = onActionEditar(metodoPago.getId(), request);
+	                showNotification(btnAccion.getScene(), response.getMessage(), Color.GREEN);
+	                txtNombre.clear();
+	            }
+	        } catch (Exception ex) {
+	            showNotification(btnAccion.getScene(), "❎ Error al guardar el método de pago", Color.RED);
+	            System.out.println("Error: " + ex);
+	        }
+	    });
+
+	    // --- Layout principal ---
+	    VBox root = new VBox(20, lblTitulo, grid, contBoton, lblMensaje);
+	    root.setAlignment(Pos.TOP_CENTER);
+	    root.setPadding(new Insets(35));
+	    root.setStyle("-fx-background-color: #F8F9FA;");
+
+	    return root;
+	}
+
 }

@@ -4,6 +4,7 @@ package application.utils;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpResponse;
 
 import application.session.SessionManager;
@@ -50,6 +51,20 @@ public class HttpClientUtil {
 				 .header("Authorization", "Bearer " + getToken())
 				 .header("Content-Type", "application/json")
 				 .PUT(HttpRequest.BodyPublishers.ofString(jsonBody))
+				 .build();
+		 
+		 
+		 HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		 System.out.println(response);
+        return response.body();
+	 }
+	 
+	 public static String put(String url) throws Exception {
+		 HttpRequest request = HttpRequest.newBuilder()
+				 .uri(new URI(url))
+				 .header("Authorization", "Bearer " + getToken())
+				 .header("Content-Type", "application/json")
+				 .PUT(null)
 				 .build();
 		 
 		 

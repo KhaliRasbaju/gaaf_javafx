@@ -225,48 +225,38 @@
 /* ---- Global Forms ---- */
 .form-container {
     -fx-background-color: white;
-    -fx-background-radius: 12;
     -fx-padding: 25;
-    -fx-spacing: 18;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
 }
 
 .form-title {
-    -fx-font-size: 20px;
-    -fx-font-family: 'Segoe UI';
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-text-fill: #2E2E2E;
-    -fx-padding: 0 0 5 0;
+    -fx-text-fill: #333;
 }
 
 .form-label {
     -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #333333;
+    -fx-text-fill: #444;
 }
 
 .form-field {
-    -fx-padding: 7;
+    -fx-pref-width: 250;
+    -fx-pref-height: 35;
     -fx-background-radius: 6;
-    -fx-pref-width: 240;
-}
-
-.form-textarea {
-    -fx-padding: 8;
-    -fx-background-radius: 6;
-    -fx-pref-row-count: 3;
-    -fx-pref-width: 500;
+    -fx-border-radius: 6;
 }
 
 .form-button {
-    -fx-background-color: #28a745;
+    -fx-background-color: #007bff;
     -fx-text-fill: white;
-    -fx-font-size: 15px;
     -fx-font-weight: bold;
+    -fx-padding: 10 20;
     -fx-background-radius: 8;
-    -fx-padding: 8 16;
-    -fx-cursor: hand;
 }
+
 .form-button:hover {
-    -fx-background-color: #34d058;
+    -fx-background-color: #0056b3;
 }
