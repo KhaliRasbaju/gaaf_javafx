@@ -72,11 +72,12 @@ public class EntidadBancariaController {
     }
 
     // 🔹 Acción para editar entidad bancaria
-    private void onActionEditar(Long id) {
+    private  void onActionEditar(Long id) throws Exception {
         try {
             EntidadService service = new EntidadService();
             Common entidad = service.obtenerEntidad(id);
-            content.getChildren().setAll(EntidadBancariaFormController.getScene("Editar", entidad));
+            EntidadBancariaFormController controller = new EntidadBancariaFormController(content);
+            content.getChildren().setAll(controller.getScene("Editar", entidad));
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
         }
@@ -93,6 +94,21 @@ public class EntidadBancariaController {
             throw new Exception(ex);
         }
     }
+    
+    private static Common entidad(Long id) throws Exception {
+		try {
+			
+			EntidadService service = new EntidadService();
+			return service.obtenerEntidad(id);
+			
+		} catch (Exception ex) {
+			
+			System.out.println("Error tipo: " + ex);
+			throw new Exception("Error tipo: "+ ex);
+		}
+	}
+    
+    
 
     // ✅ Muestra la tabla con entidades bancarias
     public VBox getScene(List<Common> entidades) {
@@ -116,13 +132,20 @@ public class EntidadBancariaController {
             private final HBox contenedor = new HBox(5, btnEditar, btnEliminar);
 
             {
+            	
+            	
                 btnEditar.getStyleClass().add("btn-editar");
                 btnEliminar.getStyleClass().add("btn-eliminar");
                 contenedor.setAlignment(Pos.CENTER);
 
                 btnEditar.setOnAction(e -> {
-                    Common entidad = getTableView().getItems().get(getIndex());
-                    onActionEditar(entidad.getId());
+                	try {
+                		Common entidad = getTableView().getItems().get(getIndex());
+                		System.out.println(entidad.getId());
+                		onActionEditar(entidad.getId());
+					} catch (Exception ex) {
+						System.out.println("Error tipo: "+ ex);
+					}
                 });
 
                 btnEliminar.setOnAction(e -> {

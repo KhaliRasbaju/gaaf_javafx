@@ -35,7 +35,7 @@ public class EntidadService {
     }
     
     public Common obtenerEntidad(Long id) throws Exception {
-        String response = HttpClientUtil.delete(ApiConfig.BASE_URL + "/entidad-bancaria/" + id);
+        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/entidad-bancaria/" + id, false);
         return mapper.readValue(response, Common.class);
     }
     

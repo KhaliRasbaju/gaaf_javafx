@@ -41,6 +41,7 @@ public class ProveedorService {
 
 	public ResponseCommon eliminarProveedor(Long nit) throws Exception {
 	    String response = HttpClientUtil.delete(ApiConfig.BASE_URL + "/proveedor/" + nit);
+	    System.out.println(response);
 	    return mapper.readValue(response, ResponseCommon.class); 
 	}
 

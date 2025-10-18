@@ -25,13 +25,13 @@ import java.util.List;
 public class TransaccionFormController {
 
     private final StackPane content;
-    private final String modo;
-    private final Transaccion transaccion;
+    private static Long idProducto;
+    private static Long idBodega;
+    private static Long idPedido;
+  
 
-    public TransaccionFormController(StackPane content, String modo, Transaccion transaccion) {
+    public TransaccionFormController(StackPane content) {
         this.content = content;
-        this.modo = modo;
-        this.transaccion = transaccion;
     }
 
     // ✅ Carga la escena del formulario
@@ -65,9 +65,59 @@ public class TransaccionFormController {
         fade.setOnFinished(ev -> popup.hide());
         fade.play();
     }
+    
+    
+    private static void onActionCrear(TransaccionRequest request) {
+		try {
+			TransaccionService service = new TransaccionService();
+			service.crearTransaccion(request);
+		} catch (Exception ex) {
+			System.out.println("Error tipo: " + ex);
+		}
+	}
+    
+    
+    private static List<Bodega> bodegas() throws Exception{
+    	try {
+    		BodegaService service = new BodegaService();
+    		return service.obtenerBodegas();
+		} catch (Exception ex) {
+			throw new Exception("Error tipo: " + ex);
+		}
+    }
+    
+    private static Bodega bodega(Long id) throws Exception{
+    	try {
+    		BodegaService service = new BodegaService();
+    		return service.obtenerBodega(id);
+		} catch (Exception ex) {
+			throw new Exception("Error tipo: " + ex);
+		}
+    }
+    
+    private static List<Producto> productos() throws Exception {
+		try {
+			ProductoService service = new ProductoService();
+			return service.obtenerProductos();
+		} catch (Exception ex) {
+			System.out.println("Error tipo: " + ex);
+			throw new Exception("Error tipo: " + ex);
+		}
+	}
+    
+    private static Producto producto(Long id) throws Exception {
+    	try {
+    		ProductoService service = new ProductoService();
+    		return service.obtenerProducto(id);
+		} catch (Exception ex) {
+			throw new Exception("Error tipo: " + ex);
+		}
+    }
+    
+   
 
     // ✅ Crea el formulario de transacción
-    private VBox getScene() throws Exception {
+    public VBox getScene() throws Exception {
         // Campos
         ComboBox<Producto> cmbProducto = new ComboBox<>();
         ComboBox<Bodega> cmbBodega = new ComboBox<>();
@@ -76,12 +126,10 @@ public class TransaccionFormController {
         TextField txtCantidad = new TextField();
         TextArea txtObservacion = new TextArea();
 
-        // Cargar combos desde servicios
-        ProductoService productoService = new ProductoService();
-        BodegaService bodegaService = new BodegaService();
 
-        List<Producto> productos = productoService.obtenerProductos();
-        List<Bodega> bodegas = bodegaService.obtenerBodegas();
+
+        List<Producto> productos = productos();
+        List<Bodega> bodegas = bodegas();
 
         cmbProducto.setItems(FXCollections.observableArrayList(productos));
         cmbProducto.setPromptText("Seleccione un producto");
@@ -117,7 +165,7 @@ public class TransaccionFormController {
             }
         });
 
-        cmbTipo.setItems(FXCollections.observableArrayList("ENTRADA", "SALIDA"));
+        cmbTipo.setItems(FXCollections.observableArrayList("ENTRADA", "MERMA", "PRODUCCION"));
         cmbTipo.setPromptText("Seleccione tipo");
 
         txtIdPedido.setPromptText("ID Pedido (opcional)");
@@ -130,14 +178,29 @@ public class TransaccionFormController {
 
         btnRegistrar.setOnAction(e -> {
             try {
-                Producto producto = cmbProducto.getValue();
-                Bodega bodega = cmbBodega.getValue();
-                String tipo = cmbTipo.getValue();
-                String observacion = txtObservacion.getText();
-                Integer cantidad = Integer.parseInt(txtCantidad.getText());
+            	
+            	idBodega = bodegas.stream()
+            			.filter(b -> b.getNombre().equals(cmbBodega.getValue()))
+            			.findFirst()
+            			.map(Bodega::getId)
+            			.orElse(null);
+            	
+            	idProducto = productos.stream()
+            			.filter(p -> p.getNombre().equals(cmbProducto.getValue()))
+            			.findFirst()
+            			.map(Producto::getId)
+            			.orElse(null);
+            	
+            	
+            	
+                var producto = producto(idBodega);
+                var bodega = bodega(idBodega);
+                
+              
+          
                 Long idPedido = txtIdPedido.getText().isEmpty() ? null : Long.parseLong(txtIdPedido.getText());
 
-                if (producto == null || bodega == null || tipo == null) {
+                if (producto == null || bodega == null || cmbTipo.getValue() == null) {
                     showNotification(btnRegistrar.getScene(), "⚠️ Todos los campos obligatorios deben completarse.", Color.RED);
                     return;
                 }
@@ -145,14 +208,13 @@ public class TransaccionFormController {
                 TransaccionRequest request = new TransaccionRequest(
                         producto.getId(),
                         idPedido,
-                        observacion,
-                        tipo,
+                        txtObservacion.getText(),
+                        cmbTipo.getValue(),
                         bodega.getId(),
-                        cantidad
+                        Integer.parseInt(txtCantidad.getText())
                 );
 
-                TransaccionService service = new TransaccionService();
-                Transaccion respuesta = service.crearTransaccion(request);
+                onActionCrear(request);
 
                 showNotification(btnRegistrar.getScene(), "✅ Transacción registrada exitosamente", Color.GREEN);
 

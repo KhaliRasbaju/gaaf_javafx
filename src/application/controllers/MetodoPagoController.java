@@ -76,7 +76,8 @@ public class MetodoPagoController {
         try {
             MetodoPagoService service = new MetodoPagoService();
             Common metodoPago = service.obtenerMetodo(id);
-            content.getChildren().setAll(MetodoPagoFormController.getScene("Editar", metodoPago));
+            MetodoPagoFormController controller = new MetodoPagoFormController(content);
+            content.getChildren().setAll(controller.getScene("Editar", metodoPago));
         } catch (Exception ex) {
             System.out.println("Error al editar método de pago: " + ex);
         }

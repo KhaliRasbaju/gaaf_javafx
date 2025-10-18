@@ -44,7 +44,10 @@ public class DashboardBodegaView extends DashboardViewBase {
 	
 	private void onActionTransaccion() {
 	    try {
-	        content.getChildren().setAll(TransaccionFormController.getScene(content, "CREAR", null));
+	    	
+	    	TransaccionFormController controller = new TransaccionFormController(content);
+	    	
+	        content.getChildren().setAll(controller.getScene());
 	    } catch (Exception ex) {
 	        System.out.println("Error tipo: " + ex);
 	    }

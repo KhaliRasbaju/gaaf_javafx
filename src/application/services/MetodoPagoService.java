@@ -28,14 +28,14 @@ public class MetodoPagoService {
 	        return mapper.readValue(response, Common.class);
 	    }
 
-	    public Common editarMetodo(Long id, CommonRequest entidad) throws Exception {
+	    public ResponseCommon editarMetodo(Long id, CommonRequest entidad) throws Exception {
 	        String jsonBody = mapper.writeValueAsString(entidad);
 	        String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/metodo-pago/editar/" + id, jsonBody);
-	        return mapper.readValue(response, Common.class);
+	        return mapper.readValue(response, ResponseCommon.class);
 	    }
 	    
 	    public Common obtenerMetodo(Long id) throws Exception {
-	        String response = HttpClientUtil.delete(ApiConfig.BASE_URL + "/metodo-pago/" + id);
+	        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/metodo-pago/" + id, false);
 	        return mapper.readValue(response, Common.class);
 	    }
 	  
