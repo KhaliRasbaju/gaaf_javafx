@@ -1,10 +1,14 @@
 package application.views;
 
+import application.controllers.EntidadBancariaController;
+import application.controllers.MetodoPagoController;
 import application.controllers.PedidoController;
 import application.controllers.ProductoController;
 import application.controllers.ProveedorController;
 import application.controllers.ReporteCompraController;
 import application.controllers.ReportePedidoProveedorController;
+import application.services.EntidadService;
+import application.services.MetodoPagoService;
 import application.services.PedidoService;
 import application.services.ProductoService;
 import application.services.ProveedorService;
@@ -38,7 +42,7 @@ public class DashboardComprasView extends DashboardViewBase {
 	private void onActionProveedor() {
 	    try {
 	        ProveedorService service = new ProveedorService();
-	        var proveedores = service.obtenerTodos();
+	        var proveedores = service.obtenerProveedores();
 	        ProveedorController controller = new ProveedorController(content);
 	        content.getChildren().setAll(controller.getScene(proveedores));
 	    } catch (Exception ex) {
@@ -61,7 +65,7 @@ public class DashboardComprasView extends DashboardViewBase {
 	private void onActionProducto() {
 	    try {
 	        ProductoService service = new ProductoService();
-	        var productos = service.obtenerTodos();
+	        var productos = service.obtenerProductos();
 	        ProductoController controller = new ProductoController(content);
 	        content.getChildren().setAll(controller.getScene(productos));
 
@@ -69,16 +73,46 @@ public class DashboardComprasView extends DashboardViewBase {
 	        System.out.println("Error tipo: " + ex);
 	    }
 	}
+	
+	private void onActionMetodoPago() {
+	    try {
+	        MetodoPagoService service = new MetodoPagoService();
+	        var metodos = service.obtenerMetodos();
+	        MetodoPagoController controller = new MetodoPagoController(content);
+	        content.getChildren().setAll(controller.getScene(metodos));
+
+	    } catch (Exception ex) {
+	        System.out.println("Error tipo: " + ex);
+	    }
+	}
+	
+	private void onActionEntidadBancaria() {
+	    try {
+	        EntidadService service = new EntidadService();
+	        var entidades = service.obtenerEntidades();
+	        EntidadBancariaController controller = new EntidadBancariaController(content);
+	        content.getChildren().setAll(controller.getScene(entidades));
+
+	    } catch (Exception ex) {
+	        System.out.println("Error tipo: " + ex);
+	    }
+	}
+
+
     @Override
     protected void addMenuButtons() {
         Button btnProductos = createMenuButton("\uD83D\uDCBC", "Productos");
         Button btnProveedor = createMenuButton("\uD83D\uDE9A", "Proveedores");
+        Button btnEntidadBancaria = createMenuButton("\uD83D\uDE9A", "Entidad Bancaria");
+        Button btnMetodoPago = createMenuButton("\uD83D\uDE9A", "Metodo de Pago");
         Button btnPedido = createMenuButton("\uD83D\uDED2", "Pedidos");
         Button btnReporteCompras = createMenuButton("\uD83D\uDCC4", "Reporte Compras");
         Button btnReportePedidoProveedor = createMenuButton("\uD83D\uDCE6", "Reporte Pedidos - Proveedor");
-        vbox.getChildren().addAll(btnProductos, btnProveedor, btnPedido, btnReporteCompras, btnReportePedidoProveedor);
+        vbox.getChildren().addAll(btnProductos, btnProveedor,btnEntidadBancaria, btnMetodoPago, btnPedido, btnReporteCompras, btnReportePedidoProveedor);
         btnProductos.setOnAction(e -> onActionProducto());
         btnProveedor.setOnAction(e -> onActionProveedor());
+        btnEntidadBancaria.setOnAction(e -> onActionEntidadBancaria());
+        btnMetodoPago.setOnAction(e -> onActionMetodoPago());
         btnPedido.setOnAction(e -> onActionPedido());
         btnReporteCompras.setOnAction(e -> onActionReporteCompra());
         btnReportePedidoProveedor.setOnAction(e -> onActionReportePedidosProveedor());

@@ -34,7 +34,7 @@ public class ProductoService {
 		return mapper.readValue(response, Producto.class);
 	}
 	
-	public List<Producto> obtenerTodos() throws Exception{
+	public List<Producto> obtenerProductos() throws Exception{
 		String response = HttpClientUtil.get(ApiConfig.BASE_URL+"/producto", false);
 		return mapper.readValue(response, new TypeReference<List<Producto>>() {});
 	}
@@ -43,6 +43,7 @@ public class ProductoService {
 		String response = HttpClientUtil.delete(ApiConfig.BASE_URL+"/producto/"+id.toString());
 		return mapper.readValue(response, ResponseCommon.class);
 	}
+
 	
 
 	

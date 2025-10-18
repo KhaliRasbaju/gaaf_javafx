@@ -43,5 +43,6 @@ public class MetodoPagoService {
 	        String response = HttpClientUtil.delete(ApiConfig.BASE_URL + "/metodo-pago/" + id);
 	        return mapper.readValue(response, ResponseCommon.class);
 	    }
-	
+
+
 }

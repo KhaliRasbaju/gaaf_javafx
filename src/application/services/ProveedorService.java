@@ -15,7 +15,7 @@ public class ProveedorService {
 	
 	private final ObjectMapper mapper = new ObjectMapper();
 	
-	public List<Proveedor> obtenerTodos() throws Exception{
+	public List<Proveedor> obtenerProveedores() throws Exception{
 		String response = HttpClientUtil.get(ApiConfig.BASE_URL+"/proveedor", false);
 		return mapper.readValue(response, new TypeReference<List<Proveedor>>() {});
 	}
@@ -43,5 +43,8 @@ public class ProveedorService {
 	    String response = HttpClientUtil.delete(ApiConfig.BASE_URL + "/proveedor/" + nit);
 	    return mapper.readValue(response, ResponseCommon.class); 
 	}
+
+
+	
 
 }

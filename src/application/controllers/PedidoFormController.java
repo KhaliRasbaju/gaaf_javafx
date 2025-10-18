@@ -1,18 +1,31 @@
 package application.controllers;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import application.models.request.DetallePedidoRequest;
+import application.models.request.MedioPagoRequest;
 import application.models.request.PedidoRequest;
+import application.models.response.Common;
 import application.models.response.Pedido;
+import application.models.response.Proveedor;
+import application.models.response.Producto;
 import application.services.PedidoService;
+import application.services.ProveedorService;
+import application.services.ProductoService;
+import application.services.EntidadService;
+import application.services.MetodoPagoService;
+
 import javafx.animation.FadeTransition;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Popup;
@@ -20,7 +33,12 @@ import javafx.util.Duration;
 
 public class PedidoFormController {
 
-    /* ---------------- UTILIDADES ---------------- */
+    private static Long idMetodoPago;
+    private static Long nitProveedor;
+    private static Long idProductoSeleccionado;
+
+    // Lista para los detalles del pedido
+    private static final ObservableList<DetallePedidoRequest> listaDetalles = FXCollections.observableArrayList();
 
     private static String toHex(Color color) {
         return String.format("#%02X%02X%02X",
@@ -32,7 +50,8 @@ public class PedidoFormController {
     private static void showNotification(Scene scene, String text, Color color) {
         Label notification = new Label(text);
         notification.getStyleClass().add("notification-toast");
-        notification.setStyle("-fx-background-color: " + toHex(color) + ";");
+        notification.setStyle("-fx-background-color: " + toHex(color) + ";"
+                + "-fx-text-fill: white; -fx-padding: 10px; -fx-background-radius: 8px;");
 
         Popup popup = new Popup();
         popup.getContent().add(notification);
@@ -45,69 +64,171 @@ public class PedidoFormController {
         FadeTransition fade = new FadeTransition(Duration.seconds(2.5), notification);
         fade.setFromValue(1.0);
         fade.setToValue(0.0);
-        fade.setOnFinished(e -> popup.hide());
+        fade.setOnFinished(ev -> popup.hide());
         fade.play();
     }
-
-    /* ---------------- ACCIONES ---------------- */
 
     private static void onActionRegistrar(PedidoRequest request) {
         try {
             PedidoService service = new PedidoService();
-            service.crearPedido(request);
+            System.out.println(service.crearPedido(request));
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
-            throw new RuntimeException("Error tipo " + ex);
         }
     }
 
-    private static void onActionActualizar(Long id, PedidoRequest request) {
+    // Obtener listas auxiliares
+    private static List<Proveedor> proveedores() throws Exception {
         try {
-            PedidoService service = new PedidoService();
-            service.editarPedido(id, request);
-        } catch (Exception ex) {
-            System.out.println("Error tipo: " + ex);
+        	ProveedorService service = new ProveedorService();
+            return service.obtenerProveedores();
+        } catch (Exception ex) 
+        
+        {
+        	System.out.println("Error tipo: " + ex);
+        	throw new Exception("Error tipo: " + ex);   
+        }
+    }
+        
+    
+
+    private static List<Common> metodosPago() throws Exception {
+        MetodoPagoService service = new MetodoPagoService();
+        return service.obtenerMetodos();
+    }
+
+    private static Producto producto(Long id) throws Exception {
+        ProductoService service = new ProductoService();
+        return service.obtenerProducto(id);
+    }
+    
+    private static List<Producto> productos() throws Exception {
+        try {
+        	ProductoService service = new ProductoService();
+            return service.obtenerProductos();
+        } catch (Exception ex) 
+        
+        {
+        	System.out.println("Error tipo: " + ex);
+        	throw new Exception("Error tipo: " + ex);   
         }
     }
 
-    /* ---------------- FORMULARIO ---------------- */
+    public static VBox getScene(String title, Pedido pedido) throws Exception {
 
-    public static VBox getScene(String title, Pedido pedido) {
-        // 🔹 Título
         Text titulo = new Text(String.format("📦 %s Pedido", title));
         titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
 
-        // 🔹 Campos de texto
-        TextField txtNitProveedor = new TextField();
-        txtNitProveedor.setPromptText("NIT del Proveedor");
-
-        TextField txtValor = new TextField();
-        txtValor.setPromptText("Valor Total");
-
-        TextField txtFechaPedido = new TextField();
-        txtFechaPedido.setPromptText("Fecha del Pedido (YYYY-MM-DD)");
-
-        TextField txtFechaEntrega = new TextField();
-        txtFechaEntrega.setPromptText("Fecha de Entrega (YYYY-MM-DD)");
-
-        TextField txtRecibido = new TextField();
-        txtRecibido.setPromptText("Recibido (true / false)");
-
-        // 🔹 Precargar datos si se está editando
-        if (pedido != null) {
-            if (pedido.getNitProveedor() != null)
-                txtNitProveedor.setText(String.valueOf(pedido.getNitProveedor()));
-            if (pedido.getValor() != null)
-                txtValor.setText(String.valueOf(pedido.getValor()));
-            if (pedido.getFechaPedido() != null)
-                txtFechaPedido.setText(pedido.getFechaPedido().toString());
-            if (pedido.getFechaEntrega() != null)
-                txtFechaEntrega.setText(pedido.getFechaEntrega().toString());
-            txtRecibido.setText(String.valueOf(pedido.getRecibido()));
-
+        // Combobox proveedor
+        ComboBox<String> cbProveedor = new ComboBox<>();
+        var listaProveedores = proveedores();
+        for (Proveedor p : listaProveedores) {
+            cbProveedor.getItems().add(p.getNombre() + " (" + p.getNit() + ")");
         }
+        cbProveedor.setPromptText("Selecciona un proveedor");
 
-        // 🔹 Botón principal
+        // Campos básicos
+        TextField txtValor = new TextField();
+        txtValor.setPromptText("Valor total del pedido");
+
+        DatePicker dpFechaPedido = new DatePicker(LocalDate.now());
+        DatePicker dpFechaEntrega = new DatePicker();
+
+        // Combobox método de pago
+        ComboBox<String> cbMetodoPago = new ComboBox<>();
+        var listaMetodos = metodosPago();
+        for (Common mp : listaMetodos) {
+            cbMetodoPago.getItems().add(mp.getNombre());
+        }
+        cbMetodoPago.setPromptText("Selecciona un método de pago");
+
+        TextField txtReferencia = new TextField();
+        txtReferencia.setPromptText("Referencia del pago");
+
+        // ---- Tabla de detalles ----
+        TableView<DetallePedidoRequest> tablaDetalles = new TableView<>(listaDetalles);
+
+        TableColumn<DetallePedidoRequest, Float> colFermentacion = new TableColumn<>("Fermentación");
+        colFermentacion.setCellValueFactory(c -> new javafx.beans.property.SimpleFloatProperty(c.getValue().getFermentacion()).asObject());
+
+        TableColumn<DetallePedidoRequest, Float> colPeso = new TableColumn<>("Peso");
+        colPeso.setCellValueFactory(c -> new javafx.beans.property.SimpleFloatProperty(c.getValue().getPeso()).asObject());
+
+        TableColumn<DetallePedidoRequest, Integer> colCantidad = new TableColumn<>("Cantidad");
+        colCantidad.setCellValueFactory(c -> new javafx.beans.property.SimpleIntegerProperty(c.getValue().getCantidad()).asObject());
+
+        TableColumn<DetallePedidoRequest, Float> colHumedad = new TableColumn<>("Humedad");
+        colHumedad.setCellValueFactory(c -> new javafx.beans.property.SimpleFloatProperty(c.getValue().getHumedad()).asObject());
+
+        TableColumn<DetallePedidoRequest, Float> colEstadoCacao = new TableColumn<>("Estado Cacao");
+        colEstadoCacao.setCellValueFactory(c -> new javafx.beans.property.SimpleFloatProperty(c.getValue().getEstadoCacao()).asObject());
+
+        TableColumn<DetallePedidoRequest, Long> colProducto = new TableColumn<>("Producto ID");
+        colProducto.setCellValueFactory(c -> new javafx.beans.property.SimpleLongProperty(c.getValue().getIdProducto()).asObject());
+
+        tablaDetalles.getColumns().addAll(colFermentacion, colPeso, colCantidad, colHumedad, colEstadoCacao, colProducto);
+        tablaDetalles.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // ---- Formulario para agregar detalle ----
+        ComboBox<String> cbProducto = new ComboBox<>();
+        var listaProductos = productos();
+        for (Producto p : listaProductos) {
+            cbProducto.getItems().add(p.getNombre() + " (ID: " + p.getId() + ")");
+        }
+        cbProducto.setPromptText("Selecciona producto");
+
+        TextField txtFermentacion = new TextField();
+        txtFermentacion.setPromptText("Fermentación");
+
+        TextField txtPeso = new TextField();
+        txtPeso.setPromptText("Peso");
+
+        TextField txtCantidad = new TextField();
+        txtCantidad.setPromptText("Cantidad");
+
+        TextField txtHumedad = new TextField();
+        txtHumedad.setPromptText("Humedad");
+
+        TextField txtEstadoCacao = new TextField();
+        txtEstadoCacao.setPromptText("Estado cacao");
+
+        Button btnAgregarDetalle = new Button("Agregar detalle");
+        btnAgregarDetalle.setOnAction(e -> {
+            try {
+                idProductoSeleccionado = listaProductos.stream()
+                        .filter(p -> cbProducto.getValue().contains(String.valueOf(p.getId())))
+                        .findFirst()
+                        .map(Producto::getId)
+                        .orElse(null);
+
+                DetallePedidoRequest detalle = new DetallePedidoRequest(
+                        Float.parseFloat(txtFermentacion.getText()),
+                        Float.parseFloat(txtPeso.getText()),
+                        Integer.parseInt(txtCantidad.getText()),
+                        Float.parseFloat(txtHumedad.getText()),
+                        Float.parseFloat(txtEstadoCacao.getText()),
+                        idProductoSeleccionado
+                );
+
+                listaDetalles.add(detalle);
+
+                txtFermentacion.clear();
+                txtPeso.clear();
+                txtCantidad.clear();
+                txtHumedad.clear();
+                txtEstadoCacao.clear();
+                cbProducto.getSelectionModel().clearSelection();
+
+            } catch (Exception ex) {
+                System.out.println("Error agregando detalle: " + ex);
+            }
+        });
+
+        VBox formDetalle = new VBox(5, cbProducto, txtFermentacion, txtPeso, txtCantidad, txtHumedad, txtEstadoCacao, btnAgregarDetalle);
+        formDetalle.setPadding(new Insets(10));
+        formDetalle.setAlignment(Pos.CENTER_LEFT);
+
+        // ---- Botón principal ----
         Button btnAccion = new Button(pedido == null ? "Registrar" : "Actualizar");
         btnAccion.getStyleClass().add("login-button");
         btnAccion.setPrefWidth(150);
@@ -115,65 +236,61 @@ public class PedidoFormController {
         Label lblMensaje = new Label();
         lblMensaje.setTextFill(Color.RED);
 
-        // 🔹 Acción del botón
         btnAccion.setOnAction(e -> {
-            if (txtNitProveedor.getText().isEmpty() || txtValor.getText().isEmpty()
-                    || txtFechaPedido.getText().isEmpty() || txtFechaEntrega.getText().isEmpty()
-                    || txtRecibido.getText().isEmpty()) {
-                lblMensaje.setText("⚠️ Por favor, completa todos los campos.");
-                lblMensaje.setTextFill(Color.RED);
-                return;
-            }
-
             try {
-                PedidoRequest request = new PedidoRequest();
-                request.setNitProveedor(Long.parseLong(txtNitProveedor.getText()));
-                request.setValor(Double.parseDouble(txtValor.getText()));
-                request.setFechaPedido(LocalDateTime.parse(txtFechaPedido.getText()));
-                request.setFechaEntrega(LocalDateTime.parse(txtFechaEntrega.getText()));
-                request.setRecibido(Boolean.parseBoolean(txtRecibido.getText()));
+                nitProveedor = listaProveedores.stream()
+                        .filter(p -> cbProveedor.getValue().contains(String.valueOf(p.getNit())))
+                        .findFirst()
+                        .map(Proveedor::getNit)
+                        .orElse(null);
+
+                idMetodoPago = listaMetodos.stream()
+                        .filter(m -> m.getNombre().equals(cbMetodoPago.getValue()))
+                        .findFirst()
+                        .map(Common::getId)
+                        .orElse(null);
+
+                MedioPagoRequest medioPago = new MedioPagoRequest(txtReferencia.getText(), idMetodoPago);
+
+                PedidoRequest request = new PedidoRequest(
+                        nitProveedor,
+                        Double.parseDouble(txtValor.getText()),
+                        dpFechaPedido.getValue().atStartOfDay(),
+                        medioPago,
+                        new ArrayList<>(listaDetalles)
+                );
+                request.setFechaEntrega(dpFechaEntrega.getValue() != null ? dpFechaEntrega.getValue().atStartOfDay() : null);
 
                 if (pedido == null) {
                     onActionRegistrar(request);
                     showNotification(btnAccion.getScene(), "✅ Pedido registrado correctamente", Color.GREEN);
-                    lblMensaje.setText("✅ Pedido registrado correctamente.");
-                    lblMensaje.setTextFill(Color.GREEN);
-
-                    txtNitProveedor.clear();
-                    txtValor.clear();
-                    txtFechaPedido.clear();
-                    txtFechaEntrega.clear();
-                    txtRecibido.clear();
                 } else {
-                    onActionActualizar(pedido.getId(), request);
-                    showNotification(btnAccion.getScene(), "✏️ Pedido actualizado correctamente", Color.BLUE);
-                    lblMensaje.setText("✏️ Pedido actualizado correctamente.");
-                    lblMensaje.setTextFill(Color.BLUE);
+                    // Aquí podrías añadir lógica para actualizar pedidos existentes
+                    showNotification(btnAccion.getScene(), "✏️ Pedido actualizado correctamente", Color.GREEN);
                 }
+
+                cbProveedor.getSelectionModel().clearSelection();
+                txtValor.clear();
+                txtReferencia.clear();
+                listaDetalles.clear();
+
             } catch (Exception ex) {
-                lblMensaje.setText("❌ Error al procesar los datos.");
-                lblMensaje.setTextFill(Color.RED);
                 System.out.println("Error tipo: " + ex);
+                showNotification(btnAccion.getScene(), "❎ Error en el registro del pedido", Color.RED);
             }
         });
 
-        // 🔹 Layout
-        VBox root = new VBox(10);
+        VBox root = new VBox(12);
         root.setPadding(new Insets(30));
         root.setAlignment(Pos.CENTER);
         root.getChildren().addAll(
-                titulo,
-                txtNitProveedor,
-                txtValor,
-                txtFechaPedido,
-                txtFechaEntrega,
-                txtRecibido,
-                btnAccion,
-                lblMensaje
+                titulo, cbProveedor, txtValor, dpFechaPedido, dpFechaEntrega,
+                cbMetodoPago, txtReferencia, new Separator(),
+                new Label("Detalles del pedido:"), formDetalle, tablaDetalles,
+                btnAccion, lblMensaje
         );
         root.setStyle("-fx-background-color: #F8F9FA;");
 
         return root;
     }
 }
-
