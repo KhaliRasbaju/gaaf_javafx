@@ -2,6 +2,7 @@ package application.views;
 
 import application.controllers.ReporteCompraController;
 import application.controllers.ReporteInventarioController;
+import application.services.ProductoService;
 import application.services.ReporteCompraService;
 import application.services.ReporteInventarioProductoBodegaService;
 import application.utils.SceneManager;
@@ -11,12 +12,12 @@ public class DashboardGerenteView extends DashboardViewBase {
 
     private void onActionReporteInventario() {
         try {
+        	ProductoService serviceP = new ProductoService();
+			var productos = serviceP.obtenerProductos();
             System.out.println("→ Clic en Reporte Inventario");
             ReporteInventarioProductoBodegaService service = new ReporteInventarioProductoBodegaService();
-            var reporte = service.obtenerReporteReporteInventarioProductoBodega();
-            
-            // ✅ Usamos el content del padre (no uno nuevo)
-            content.getChildren().setAll(ReporteInventarioController.getScene(reporte));
+            var reporte = service.obtenerReporteReporteInventarioProductoBodega(null, null, null, null).getContent();          
+            content.getChildren().setAll(ReporteInventarioController.getScene(reporte, productos));
         } catch (Exception ex) {
             System.out.println("Error tipo : " + ex);
             ex.printStackTrace();
@@ -26,11 +27,11 @@ public class DashboardGerenteView extends DashboardViewBase {
     private void onActionReporteCompra() {
         try {
             System.out.println("→ Clic en Reporte Inventario");
+            ProductoService serviceP = new ProductoService();
+			var productos = serviceP.obtenerProductos();
             ReporteCompraService service = new ReporteCompraService();
-            var reporte = service.obtenerReporteCompras();
-            
-            // ✅ Usamos el content del padre (no uno nuevo)
-            content.getChildren().setAll(ReporteCompraController.getScene(reporte));
+            var reporte = service.obtenerReporteCompras(null, null, null, null, null, null, null).getContent();        
+            content.getChildren().setAll(ReporteCompraController.getScene(reporte, productos));
         } catch (Exception ex) {
             System.out.println("Error tipo : " + ex);
             ex.printStackTrace();

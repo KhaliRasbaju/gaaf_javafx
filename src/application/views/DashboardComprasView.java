@@ -22,18 +22,22 @@ public class DashboardComprasView extends DashboardViewBase {
 	
 	private void onActionReporteCompra() {
 		try {
+			ProductoService serviceP = new ProductoService();
+			var productos = serviceP.obtenerProductos();
 			ReporteCompraService service = new ReporteCompraService();
-			var reporte = service.obtenerReporteCompras();
-			content.getChildren().setAll(ReporteCompraController.getScene(reporte));
+			var reporte = service.obtenerReporteCompras(null, null, null, null, null, null, null).getContent();
+			content.getChildren().setAll(ReporteCompraController.getScene(reporte, productos));
 		} catch (Exception ex) {
 			System.out.println("Error tipo: " + ex);
 		}
 	}
 	private void onActionReportePedidosProveedor() {
 		try {
+			MetodoPagoService serviceM = new MetodoPagoService();
+			var metodos = serviceM.obtenerMetodos();
 			ReportePedidoProveedorService service = new ReportePedidoProveedorService();
-			var reporte = service.obtenerReportePedidoProveedor();
-			content.getChildren().setAll(ReportePedidoProveedorController.getScene(reporte));
+			var reporte = service.obtenerReportePedidoProveedor(null, null, null, null, null, null).getContent();
+			content.getChildren().setAll(ReportePedidoProveedorController.getScene(reporte, metodos));
 		} catch (Exception ex) {
 			System.out.println("Error tipo: " + ex);
 		}

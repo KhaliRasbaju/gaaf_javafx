@@ -263,3 +263,85 @@
 .form-button:hover {
     -fx-background-color: #0056b3;
 }
+
+
+/* ==== Estilos para Filtros de Reporte ==== */
+/* ---- Estilo mejorado para barra de filtros ---- */
+.filtros-container {
+    -fx-background-color: #ffffff;
+    -fx-padding: 10 15;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(0,0,0,0.05);
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 2);
+    -fx-alignment: center-left;
+}
+
+.filtros-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #444;
+    -fx-font-weight: bold;
+    -fx-padding: 4 6 0 0;
+}
+
+.filtros-combo, .filtros-textfield, .filtros-date {
+    -fx-pref-width: 150;
+    -fx-pref-height: 26;
+    -fx-background-color: #f9f9f9;
+    -fx-background-radius: 5;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+    -fx-font-size: 12px;
+    -fx-padding: 2 6;
+}
+
+
+.filtros-combo:hover, .filtros-textfield:hover, .filtros-date:hover {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #5bb318;
+}
+
+.filtros-combo:focused, .filtros-textfield:focused, .filtros-date:focused {
+    -fx-border-color: #5bb318;
+    -fx-effect: dropshadow(gaussian, rgba(91,179,24,0.2), 4, 0, 0, 1);
+}
+
+.filtros-title {
+    -fx-font-family: 'Orbitron';
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #5bb318;
+    -fx-padding: 10 0 5 0;
+}
+
+.filtros-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #555;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+/* ======= Botón Restablecer estilo minimal ======= */
+.filtros-reset-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5BB318;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-border-color: #5BB318;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-padding: 4 14;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(91,179,24,0.15), 2, 0, 0, 1);
+    -fx-transition: all 0.3s ease;
+}
+
+.filtros-reset-button:hover {
+    -fx-background-color: #5BB318;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(91,179,24,0.3), 4, 0, 0, 2);
+}
+
+.filtros-reset-button:pressed {
+    -fx-background-color: #4ea016;
+}

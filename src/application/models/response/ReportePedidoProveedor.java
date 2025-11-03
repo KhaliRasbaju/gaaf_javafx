@@ -1,151 +1,125 @@
 package application.models.response;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.List;
 
 public class ReportePedidoProveedor {
 
-
-	private Long idPedido;
+	private List<PedidoProveedor> content;
+	private PageableCommon pageable;
+	private Long totalElements;
+	private Integer totalPages;
+	private Boolean last;
+	private Integer size;
+	private Integer number;
+	private SortCommon sort;
+	private Integer numberOfElements;
+	private Boolean first;
+	private Boolean empty;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime fechaPedido;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime fechaEntrega;
-	
-    private String estado;
-    
-    private String proveedor;
-    
-    private String contactoProveedor;
-    
-    private String referenciaPago;
-    
-    private String metodoPago;
-    
-    private String nuemroCuenta;
-    
-    private String tipoCuenta;
-    
-    private String entidadBancaria;
-    
-    private Double valorPedido;
-        
 	public ReportePedidoProveedor() {}
 
-	public ReportePedidoProveedor(Long idPedido, LocalDateTime fechaPedido, LocalDateTime fechaEntrega, String estado,
-			String proveedor, String contactoProveedor, String referenciaPago, String metodoPago, String nuemroCuenta,
-			String tipoCuenta, String entidadBancaria, Double valorPedido) {
-		this.idPedido = idPedido;
-		this.fechaPedido = fechaPedido;
-		this.fechaEntrega = fechaEntrega;
-		this.estado = estado;
-		this.proveedor = proveedor;
-		this.contactoProveedor = contactoProveedor;
-		this.referenciaPago = referenciaPago;
-		this.metodoPago = metodoPago;
-		this.nuemroCuenta = nuemroCuenta;
-		this.tipoCuenta = tipoCuenta;
-		this.entidadBancaria = entidadBancaria;
-		this.valorPedido = valorPedido;
+	public ReportePedidoProveedor(List<PedidoProveedor> content, PageableCommon pageable, Long totalElements,
+			Integer totalPages, Boolean last, Integer size, Integer number, SortCommon sort, Integer numberOfElements,
+			Boolean first, Boolean empty) {
+		this.content = content;
+		this.pageable = pageable;
+		this.totalElements = totalElements;
+		this.totalPages = totalPages;
+		this.last = last;
+		this.size = size;
+		this.number = number;
+		this.sort = sort;
+		this.numberOfElements = numberOfElements;
+		this.first = first;
+		this.empty = empty;
 	}
 
-	public Long getIdPedido() {
-		return idPedido;
+	public List<PedidoProveedor> getContent() {
+		return content;
 	}
 
-	public void setIdPedido(Long idPedido) {
-		this.idPedido = idPedido;
+	public PageableCommon getPageable() {
+		return pageable;
 	}
 
-	public LocalDateTime getFechaPedido() {
-		return fechaPedido;
+	public Long getTotalElements() {
+		return totalElements;
 	}
 
-	public void setFechaPedido(LocalDateTime fechaPedido) {
-		this.fechaPedido = fechaPedido;
+	public Integer getTotalPages() {
+		return totalPages;
 	}
 
-	public LocalDateTime getFechaEntrega() {
-		return fechaEntrega;
+	public Boolean getLast() {
+		return last;
 	}
 
-	public void setFechaEntrega(LocalDateTime fechaEntrega) {
-		this.fechaEntrega = fechaEntrega;
+	public Integer getSize() {
+		return size;
 	}
 
-	public String getEstado() {
-		return estado;
+	public Integer getNumber() {
+		return number;
 	}
 
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public SortCommon getSort() {
+		return sort;
 	}
 
-	public String getProveedor() {
-		return proveedor;
+	public Integer getNumberOfElements() {
+		return numberOfElements;
 	}
 
-	public void setProveedor(String proveedor) {
-		this.proveedor = proveedor;
+	public Boolean getFirst() {
+		return first;
 	}
 
-	public String getContactoProveedor() {
-		return contactoProveedor;
+	public Boolean getEmpty() {
+		return empty;
 	}
 
-	public void setContactoProveedor(String contactoProveedor) {
-		this.contactoProveedor = contactoProveedor;
+	public void setContent(List<PedidoProveedor> content) {
+		this.content = content;
 	}
 
-	public String getReferenciaPago() {
-		return referenciaPago;
+	public void setPageable(PageableCommon pageable) {
+		this.pageable = pageable;
 	}
 
-	public void setReferenciaPago(String referenciaPago) {
-		this.referenciaPago = referenciaPago;
+	public void setTotalElements(Long totalElements) {
+		this.totalElements = totalElements;
 	}
 
-	public String getMetodoPago() {
-		return metodoPago;
+	public void setTotalPages(Integer totalPages) {
+		this.totalPages = totalPages;
 	}
 
-	public void setMetodoPago(String metodoPago) {
-		this.metodoPago = metodoPago;
+	public void setLast(Boolean last) {
+		this.last = last;
 	}
 
-	public String getNuemroCuenta() {
-		return nuemroCuenta;
+	public void setSize(Integer size) {
+		this.size = size;
 	}
 
-	public void setNuemroCuenta(String nuemroCuenta) {
-		this.nuemroCuenta = nuemroCuenta;
+	public void setNumber(Integer number) {
+		this.number = number;
 	}
 
-	public String getTipoCuenta() {
-		return tipoCuenta;
+	public void setSort(SortCommon sort) {
+		this.sort = sort;
 	}
 
-	public void setTipoCuenta(String tipoCuenta) {
-		this.tipoCuenta = tipoCuenta;
+	public void setNumberOfElements(Integer numberOfElements) {
+		this.numberOfElements = numberOfElements;
 	}
 
-	public String getEntidadBancaria() {
-		return entidadBancaria;
+	public void setFirst(Boolean first) {
+		this.first = first;
 	}
 
-	public void setEntidadBancaria(String entidadBancaria) {
-		this.entidadBancaria = entidadBancaria;
+	public void setEmpty(Boolean empty) {
+		this.empty = empty;
 	}
-
-	public Double getValorPedido() {
-		return valorPedido;
-	}
-
-	public void setValorPedido(Double valorPedido) {
-		this.valorPedido = valorPedido;
-	}
-
+	
 }

@@ -5,6 +5,7 @@ import application.controllers.ReporteInventarioController;
 import application.controllers.ReporteInventarioMovimientoController;
 import application.controllers.TransaccionFormController;
 import application.services.BodegaService;
+import application.services.ProductoService;
 import application.services.ReporteInventarioMovimientoService;
 import application.services.ReporteInventarioProductoBodegaService;
 import application.utils.SceneManager;
@@ -15,9 +16,11 @@ public class DashboardBodegaView extends DashboardViewBase {
 	
 	private void onActionReporteInventario() {
 		try {
+			ProductoService serviceP = new ProductoService();
+			var productos = serviceP.obtenerProductos();
 			ReporteInventarioProductoBodegaService service = new ReporteInventarioProductoBodegaService();
-			var reporte = service.obtenerReporteReporteInventarioProductoBodega();
-			content.getChildren().setAll(ReporteInventarioController.getScene(reporte));	
+			var reporte = service.obtenerReporteReporteInventarioProductoBodega(null, null, null, null).getContent();
+			content.getChildren().setAll(ReporteInventarioController.getScene(reporte, productos));	
 		} catch (Exception ex) {
 			System.out.println("Error tipo: " + ex);
 		}
@@ -34,9 +37,11 @@ public class DashboardBodegaView extends DashboardViewBase {
 	}
 	private void onActionReporteInventarioMovimiento() {
 		try {
+			ProductoService serviceP = new ProductoService();
+			var productos = serviceP.obtenerProductos();
 			ReporteInventarioMovimientoService service = new ReporteInventarioMovimientoService();
-			var reporte = service.obtenerReporteInventarioMovimiento();
-			content.getChildren().setAll(ReporteInventarioMovimientoController.getScene(reporte));
+			var reporte = service.obtenerReporteInventarioMovimiento(null, null, null, null, null).getContent();
+			content.getChildren().setAll(ReporteInventarioMovimientoController.getScene(reporte, productos));
 		} catch (Exception ex) {
 			System.out.println("Error tipo: " + ex);
 		}

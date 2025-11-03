@@ -1,58 +1,125 @@
 package application.models.response;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.List;
 
 public class ReporteInventarioProductoBodega {
 
-	private String bodega;
-	
-    private String producto;
+	private List<InventarioProductoBodega> content;
+    private PageableCommon pageable;
+    private Long totalElements;
+    private Integer totalPages;
+    private Boolean last;
+    private Integer size;
+    private Integer number;
+    private SortCommon sort;
+    private Integer numberOfElements;
+    private Boolean first;
+    private Boolean empty;
     
-    private Integer cantidad;
-    
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime fecha;
-    
-    public ReporteInventarioProductoBodega() {}
+	public ReporteInventarioProductoBodega() {}
 
-	public ReporteInventarioProductoBodega(String bodega, String producto, Integer cantidad, LocalDateTime fecha) {
-		this.bodega = bodega;
-		this.producto = producto;
-		this.cantidad = cantidad;
-		this.fecha = fecha;
+	public ReporteInventarioProductoBodega(List<InventarioProductoBodega> content, PageableCommon pageable,
+			Long totalElements, Integer totalPages, Boolean last, Integer size, Integer number, SortCommon sort,
+			Integer numberOfElements, Boolean first, Boolean empty) {
+		this.content = content;
+		this.pageable = pageable;
+		this.totalElements = totalElements;
+		this.totalPages = totalPages;
+		this.last = last;
+		this.size = size;
+		this.number = number;
+		this.sort = sort;
+		this.numberOfElements = numberOfElements;
+		this.first = first;
+		this.empty = empty;
 	}
 
-	public String getBodega() {
-		return bodega;
+	public List<InventarioProductoBodega> getContent() {
+		return content;
 	}
 
-	public void setBodega(String bodega) {
-		this.bodega = bodega;
+	public PageableCommon getPageable() {
+		return pageable;
 	}
 
-	public String getProducto() {
-		return producto;
+	public Long getTotalElements() {
+		return totalElements;
 	}
 
-	public void setProducto(String producto) {
-		this.producto = producto;
+	public Integer getTotalPages() {
+		return totalPages;
 	}
 
-	public Integer getCantidad() {
-		return cantidad;
+	public Boolean getLast() {
+		return last;
 	}
 
-	public void setCantidad(Integer cantidad) {
-		this.cantidad = cantidad;
+	public Integer getSize() {
+		return size;
 	}
 
-	public LocalDateTime getFecha() {
-		return fecha;
+	public Integer getNumber() {
+		return number;
 	}
 
-	public void setFecha(LocalDateTime fecha) {
-		this.fecha = fecha;
+	public SortCommon getSort() {
+		return sort;
 	}
+
+	public Integer getNumberOfElements() {
+		return numberOfElements;
+	}
+
+	public Boolean getFirst() {
+		return first;
+	}
+
+	public Boolean getEmpty() {
+		return empty;
+	}
+
+	public void setContent(List<InventarioProductoBodega> content) {
+		this.content = content;
+	}
+
+	public void setPageable(PageableCommon pageable) {
+		this.pageable = pageable;
+	}
+
+	public void setTotalElements(Long totalElements) {
+		this.totalElements = totalElements;
+	}
+
+	public void setTotalPages(Integer totalPages) {
+		this.totalPages = totalPages;
+	}
+
+	public void setLast(Boolean last) {
+		this.last = last;
+	}
+
+	public void setSize(Integer size) {
+		this.size = size;
+	}
+
+	public void setNumber(Integer number) {
+		this.number = number;
+	}
+
+	public void setSort(SortCommon sort) {
+		this.sort = sort;
+	}
+
+	public void setNumberOfElements(Integer numberOfElements) {
+		this.numberOfElements = numberOfElements;
+	}
+
+	public void setFirst(Boolean first) {
+		this.first = first;
+	}
+
+	public void setEmpty(Boolean empty) {
+		this.empty = empty;
+	}
+	    
 }
