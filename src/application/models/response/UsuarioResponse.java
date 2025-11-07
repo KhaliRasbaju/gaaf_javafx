@@ -10,7 +10,7 @@ public class UsuarioResponse {
     
     private String nombre;
     
-    private String telfono;
+    private String telefono;
     
     private Boolean activo;
 
@@ -19,13 +19,13 @@ public class UsuarioResponse {
 	public UsuarioResponse() {
 	}
 
-	public UsuarioResponse(String id, String usuario, String correo, String nombre, String telfono, Boolean activo,
+	public UsuarioResponse(String id, String usuario, String correo, String nombre, String telefono, Boolean activo,
 			String rol) {
 		this.id = id;
 		this.usuario = usuario;
 		this.correo = correo;
 		this.nombre = nombre;
-		this.telfono = telfono;
+		this.telefono = telefono;
 		this.activo = activo;
 		this.rol = rol;
 	}
@@ -46,8 +46,8 @@ public class UsuarioResponse {
 		return nombre;
 	}
 
-	public String getTelfono() {
-		return telfono;
+	public String getTelefono() {
+		return telefono;
 	}
 
 	public Boolean getActivo() {
@@ -74,8 +74,8 @@ public class UsuarioResponse {
 		this.nombre = nombre;
 	}
 
-	public void setTelfono(String telfono) {
-		this.telfono = telfono;
+	public void setTelefono(String telfono) {
+		this.telefono = telfono;
 	}
 
 	public void setActivo(Boolean activo) {

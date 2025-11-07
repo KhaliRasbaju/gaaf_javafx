@@ -1,11 +1,13 @@
 package application.views;
 
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.effect.DropShadow;
@@ -25,13 +27,20 @@ public abstract class DashboardViewBase {
     protected HBox mainContainer;
     protected HBox headerBox;
     protected Button toggleMenu;
-    protected Button salir;
+    protected Button settingsButton;
     protected ImageView empresaLogo;
+
+    private VBox settingsMenu;
+    private boolean settingsOpen = false;
+
+    private Text userLabel; // ✅ Guardamos la referencia
 
     public DashboardViewBase() {
         vbox = new VBox(12);
         vbox.setPadding(new Insets(18));
-        vbox.setPrefWidth(200);
+        vbox.setMinWidth(140);
+        vbox.setMaxWidth(300);
+        vbox.setPrefWidth(300);
         vbox.getStyleClass().add("dashboard-sidebar");
 
         title = new Text(getTitleText());
@@ -39,7 +48,6 @@ public abstract class DashboardViewBase {
         vbox.getChildren().add(title);
 
         addMenuButtons();
-        // El pie se agrega en cada rol específico usando addSidebarFooter(roleName)
 
         content = new StackPane();
         content.getStyleClass().add("dashboard-content");
@@ -49,42 +57,18 @@ public abstract class DashboardViewBase {
 
         mainContainer = new HBox(vbox, content);
 
-        // Reemplazar el texto por el logo
         Image logoImg = new Image(getClass().getResource("/application/resources/logoGAAF.png").toExternalForm());
         empresaLogo = new ImageView(logoImg);
         empresaLogo.setFitHeight(38);
         empresaLogo.setPreserveRatio(true);
-        empresaLogo.setSmooth(true);
-        empresaLogo.setCache(true);
-        empresaLogo.getStyleClass().add("dashboard-header-logo");
 
         toggleMenu = new Button("☰");
         toggleMenu.getStyleClass().add("dashboard-toggle-button");
 
-        salir = new Button("Salir");
-        salir.getStyleClass().add("dashboard-salir-button");
-        DropShadow redGlow = new DropShadow(18, Color.web("#ff6b6b"));
-        redGlow.setSpread(0.5);
-        salir.setOnMouseEntered(ev -> salir.setEffect(redGlow));
-        salir.setOnMouseExited(ev -> salir.setEffect(null));
-        salir.setOnMousePressed(ev -> {
-            ScaleTransition st = new ScaleTransition(Duration.millis(140), salir);
-            st.setToX(0.92);
-            st.setToY(0.92);
-            st.play();
-        });
-        salir.setOnMouseReleased(ev -> {
-            ScaleTransition st = new ScaleTransition(Duration.millis(140), salir);
-            st.setToX(1);
-            st.setToY(1);
-            st.play();
-        });
-        salir.setOnAction(e -> onSalir());
-
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        headerBox = new HBox(16, toggleMenu, empresaLogo, spacer, salir);
+        headerBox = new HBox(16, toggleMenu, empresaLogo, spacer);
         headerBox.setAlignment(Pos.CENTER_LEFT);
         headerBox.setPadding(new Insets(12));
         headerBox.getStyleClass().add("dashboard-header");
@@ -98,21 +82,27 @@ public abstract class DashboardViewBase {
 
     protected Button createMenuButton(String icon, String text) {
         Text iconText = new Text(icon);
-        iconText.setStyle("-fx-font-family: 'Segoe UI Emoji'; -fx-font-size: 18px; -fx-font-weight: bold; -fx-fill: #E5E5E5;");
+        iconText.getStyleClass().add("dashboard-icon");
+
         Text labelText = new Text(text);
-        labelText.setStyle("-fx-font-family: 'Orbitron'; -fx-font-size: 14px; -fx-fill: #E5E5E5;");
+        labelText.getStyleClass().add("dashboard-header-title");
         labelText.managedProperty().bind(labelText.visibleProperty());
+
         HBox hbox = new HBox(10, iconText, labelText);
+        hbox.setMinHeight(40);
         hbox.setAlignment(Pos.CENTER_LEFT);
+
         Button btn = new Button();
         btn.setGraphic(hbox);
         btn.setMaxWidth(Double.MAX_VALUE);
         btn.getStyleClass().add("dashboard-menu-button");
+
         btn.getProperties().put("labelText", labelText);
-        btn.getProperties().put("iconText", iconText);
         btn.getProperties().put("hbox", hbox);
+
         DropShadow glow = new DropShadow(20, Color.web("#E5E5E5"));
         glow.setSpread(0.45);
+
         btn.setOnMouseEntered(e -> {
             btn.setEffect(glow);
             ScaleTransition st = new ScaleTransition(Duration.millis(180), iconText);
@@ -120,6 +110,7 @@ public abstract class DashboardViewBase {
             st.setToY(1.35);
             st.play();
         });
+
         btn.setOnMouseExited(e -> {
             btn.setEffect(null);
             ScaleTransition st = new ScaleTransition(Duration.millis(180), iconText);
@@ -127,41 +118,78 @@ public abstract class DashboardViewBase {
             st.setToY(1);
             st.play();
         });
-        Tooltip tip = new Tooltip(text);
-        Tooltip.install(btn, tip);
+
+        Tooltip.install(btn, new Tooltip(text));
         return btn;
     }
 
+    private void toggleSettingsMenu() {
+        settingsOpen = !settingsOpen;
+        settingsMenu.setVisible(settingsOpen);
+    }
+
     private void toggleMenu() {
-        double startWidth = vbox.getWidth();
-        double targetWidth = menuOpen ? 64 : 200;
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(vbox.prefWidthProperty(), startWidth)),
-                new KeyFrame(Duration.millis(280), new KeyValue(vbox.prefWidthProperty(), targetWidth))
+        double start = vbox.getWidth();
+        double target = menuOpen ? 140 : 300;
+
+        Timeline t = new Timeline(
+                new KeyFrame(Duration.ZERO,
+                        new KeyValue(vbox.minWidthProperty(), start),
+                        new KeyValue(vbox.maxWidthProperty(), start)
+                ),
+                new KeyFrame(Duration.millis(280),
+                        new KeyValue(vbox.minWidthProperty(), target, Interpolator.EASE_BOTH),
+                        new KeyValue(vbox.maxWidthProperty(), target, Interpolator.EASE_BOTH)
+                )
         );
-        timeline.play();
-        for (javafx.scene.Node node : vbox.getChildren()) {
+        t.play();
+
+        
+        for (Node node : vbox.getChildren()) {
+
             if (node instanceof Button btn) {
-                Object lblObj = btn.getProperties().get("labelText");
-                Object hboxObj = btn.getProperties().get("hbox");
-                if (lblObj instanceof Text labelText) {
-                    boolean willShow = !menuOpen;
-                    labelText.setVisible(willShow);
-                    if (hboxObj instanceof HBox hbox) {
-                        if (!willShow) {
-                            hbox.setAlignment(Pos.CENTER);
-                            btn.setAlignment(Pos.CENTER);
-                        } else {
-                            hbox.setAlignment(Pos.CENTER_LEFT);
-                            btn.setAlignment(Pos.CENTER_LEFT);
+                Text lbl = (Text) btn.getProperties().get("labelText");
+                HBox hb = (HBox) btn.getProperties().get("hbox");
+
+                if (lbl != null && hb != null) {
+                    boolean showText = !menuOpen;
+
+                    lbl.setVisible(showText);
+                    //hb.setAlignment(showText ? Pos.CENTER_LEFT : Pos.CENTER);
+                }
+            }
+
+            // ✅ Footer: usuario
+            if (node.getProperties().containsKey("labelTextFooter")) {
+                Text lblFooter = (Text) node.getProperties().get("labelTextFooter");
+                lblFooter.setVisible(!menuOpen);
+            }
+
+            // ✅ Settings menu completo
+            if (node instanceof VBox settingsContainer) {
+                if (settingsContainer == settingsMenu) {
+                    for (Node item : settingsContainer.getChildren()) {
+                        if (item instanceof Button btn) {
+                            Text lbl = (Text) btn.getProperties().get("labelText");
+                            HBox hb = (HBox) btn.getProperties().get("hbox");
+
+                            if (lbl != null && hb != null) {
+                                lbl.setVisible(!menuOpen);
+                                //hb.setAlignment(!menuOpen ? Pos.CENTER_LEFT : Pos.CENTER_LEFT);
+                            }
                         }
                     }
                 }
             }
         }
-        title.setText(menuOpen ? getTitleText().split(" ")[0] : getTitleText());
+
+
         menuOpen = !menuOpen;
+
+        // ✅ Si el sidebar se cierra, se oculta settings automáticamente
+        if (!menuOpen && settingsOpen) toggleSettingsMenu();
     }
+
 
     public Scene getScene() {
         BorderPane root = new BorderPane();
@@ -173,28 +201,90 @@ public abstract class DashboardViewBase {
     }
 
     protected void addSidebarFooter(String roleName) {
- 
-    	Region spacer = new Region();
-    	VBox.setVgrow(spacer, Priority.ALWAYS);
+        Region push = new Region();
+        VBox.setVgrow(push, Priority.ALWAYS);
+        vbox.getChildren().add(push);
 
-    	vbox.getChildren().addAll(spacer);
-        
-        HBox sidebarFooter = new HBox();
-    	sidebarFooter.setSpacing(12);
-    	sidebarFooter.setAlignment(Pos.CENTER_LEFT);
-    	sidebarFooter.getStyleClass().add("dashboard-sidebar-footer");
+        userLabel = new Text(roleName);
+        userLabel.getStyleClass().add("dashboard-user-label");
+        userLabel.setFill(Color.WHITE);
+        userLabel.managedProperty().bind(userLabel.visibleProperty());
+        vbox.getProperties().put("labelTextFooter", userLabel);
 
-    	Text userLabel = new Text(roleName);
-    	userLabel.getStyleClass().add("dashboard-user-label");
-    	userLabel.setFill(Color.WHITE);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-    	Button bellButton = new Button("🔔");
-    	bellButton.getStyleClass().add("dashboard-bell-button");
+        Text settingsIcon = new Text("⚙");
+        settingsIcon.getStyleClass().add("dashboard-icon");
 
-    	sidebarFooter.getChildren().addAll(userLabel, bellButton);
-    	sidebarFooter.setPadding(new Insets(10, 10, 10, 10));
+        settingsButton = new Button();
+        settingsButton.setGraphic(settingsIcon);
+        settingsButton.getStyleClass().add("dashboard-settings-button");
+        settingsButton.setTooltip(new Tooltip("Configuración"));
+        settingsButton.setOnAction(e -> toggleSettingsMenu());
 
-    	// Agregar al VBox al final
-    	vbox.getChildren().add(sidebarFooter);
+        HBox footer = new HBox(10, userLabel, spacer, settingsButton);
+        footer.setAlignment(Pos.CENTER_LEFT);
+        footer.setPadding(new Insets(10));
+        vbox.getChildren().add(footer);
+        footer.getProperties().put("labelTextFooter", userLabel);
+
+        settingsMenu = new VBox(6);
+        settingsMenu.setPadding(new Insets(8));
+        settingsMenu.setVisible(false);
+        settingsMenu.getStyleClass().add("dashboard-settings-menu");
+        settingsMenu.getChildren().add(createSettingsItem("🪪", "Información actual"));
+        settingsMenu.getChildren().add(createSettingsItem("🔑", "Cambiar contraseña"));
+        settingsMenu.setAlignment(Pos.CENTER_LEFT); 
+        Button logoutBtn = createSettingsItem("🚪", "Cerrar sesión");
+        logoutBtn.setOnAction(e -> onSalir());
+
+        settingsMenu.getChildren().add(logoutBtn);
+        vbox.getChildren().add(settingsMenu);
     }
+
+    private Button createSettingsItem(String icon, String text) {
+        Text iconText = new Text(icon);
+        iconText.getStyleClass().add("dashboard-icon");
+
+        Text labelText = new Text(text);
+        labelText.getStyleClass().add("dashboard-header-title");
+        labelText.managedProperty().bind(labelText.visibleProperty());
+
+        HBox hbox = new HBox(10, iconText, labelText);
+        hbox.setMinHeight(40);
+        hbox.setAlignment(Pos.CENTER_LEFT);
+
+        Button btn = new Button();
+        btn.setGraphic(hbox);
+        btn.setMaxWidth(Double.MAX_VALUE);
+        btn.getStyleClass().add("dashboard-settings-item");
+
+        btn.getProperties().put("labelText", labelText);
+        btn.getProperties().put("hbox", hbox);
+
+        // ✅ Animación hover igual que menú
+        DropShadow glow = new DropShadow(20, Color.web("#E5E5E5"));
+        glow.setSpread(0.45);
+
+        btn.setOnMouseEntered(e -> {
+            btn.setEffect(glow);
+            ScaleTransition st = new ScaleTransition(Duration.millis(180), iconText);
+            st.setToX(1.35);
+            st.setToY(1.35);
+            st.play();
+        });
+
+        btn.setOnMouseExited(e -> {
+            btn.setEffect(null);
+            ScaleTransition st = new ScaleTransition(Duration.millis(180), iconText);
+            st.setToX(1);
+            st.setToY(1);
+            st.play();
+        });
+
+        Tooltip.install(btn, new Tooltip(text));
+        return btn;
+    }
+
 }

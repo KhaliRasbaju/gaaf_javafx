@@ -115,7 +115,7 @@ public class UsuarioController {
 		colCorreo.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getCorreo()));
 
 		TableColumn<UsuarioResponse, String> colTelefono = new TableColumn<>("Teléfono");
-		colTelefono.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getTelfono()));
+		colTelefono.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getTelefono()));
 
 		TableColumn<UsuarioResponse, String> colRol = new TableColumn<>("Rol");
 		colRol.setCellValueFactory(c -> new javafx.beans.property.SimpleStringProperty(c.getValue().getRol()));

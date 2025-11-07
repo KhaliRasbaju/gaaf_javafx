@@ -75,25 +75,22 @@
     -fx-border-width: 0 0 2 0;
 }
 .dashboard-header-title {
-    -fx-font-family: 'Orbitron';
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
+    -fx-font-family: 'Orbitron'; 
+    -fx-font-size: 14px; 
     -fx-fill: #E5E5E5;
+}
+
+.dashboard-icon {
+	-fx-font-family: 'Segoe UI Emoji'; 
+	-fx-font-size: 18px; 
+	-fx-font-weight: bold; 
+	-fx-fill: #E5E5E5;
 }
 .dashboard-content {
     -fx-background-color: rgb(244, 255, 240);
     -fx-padding: 18;
 }
-.dashboard-salir-button {
-    -fx-background-color: #E62727;
-    -fx-text-fill: white;
-    -fx-padding: 8 14;
-    -fx-background-radius: 8;
-    -fx-cursor: hand;
-    -fx-font-family: 'Orbitron';
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
+
 .dashboard-toggle-button {
     -fx-background-color: transparent;
     -fx-text-fill: #E5E5E5; /* Cambiado a rgb(229,229,229) */
@@ -123,7 +120,56 @@
     -fx-font-size: 15px;
     -fx-font-weight: bold;
     -fx-text-fill: #FFFFFF;
+   
+    -fx-font-weight: bold;
+    -fx-label-padding: 0;
+    -fx-wrap-text: false;
 }
+
+/* Fondo del menú de configuración: verde traslúcido */
+.dashboard-settings-menu {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: rgba(255, 255, 255, 0.55);
+    -fx-border-width: 1.5;
+    -fx-padding: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0.3, 0, 3);
+    -fx-translate-y: -6; /* 🔹 eleva el menú un poco más arriba */
+}
+
+/* Texto de las opciones */
+.dashboard-settings-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-padding: 6 10;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+/* Hover verde claro */
+.dashboard-settings-item:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.20);
+    -fx-text-fill: #ffffff;
+}
+
+/* Botón configuraciones (engranaje) */
+.dashboard-settings-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-background-radius: 100%;
+    -fx-border-radius: 100%;
+    -fx-border-width: 1.5;
+    -fx-font-size: 18px;
+    -fx-cursor: hand;
+}
+
+.dashboard-settings-button:hover {
+    -fx-background-color: rgba(14,165,233,0.06);
+}
+
+
 
 /* Notification Toast */
 .notification-toast {

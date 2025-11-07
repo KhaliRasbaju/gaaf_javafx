@@ -120,7 +120,7 @@ public class RegistrarFormController {
 	        txtUsuario.setText(usuario.getUsuario());
 	        txtCorreo.setText(usuario.getCorreo());
 	        txtNombre.setText(usuario.getNombre());
-	        txtTelefono.setText(usuario.getTelfono());
+	        txtTelefono.setText(usuario.getTelefono());
 	        txtContraseña.setVisible(false);
 
 	        switch (usuario.getRol()) {
