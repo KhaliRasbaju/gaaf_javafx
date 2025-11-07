@@ -97,7 +97,7 @@ public class LoginView {
             	
             	AutentificacionService service = new AutentificacionService();
             	Sesion sesion = service.iniciarSesion(new SesionRequest(user, pass));
-            	SessionManager.getInstance().setSession(sesion.getToken(), sesion.getRol(), sesion.getUsuario());
+            	SessionManager.getInstance().setSession(sesion.getToken(), sesion.getRol(), sesion.getUsuario(), sesion.getId());
             	System.out.println(SessionManager.getInstance().getToken());
             	storage.saveSession(sesion.getToken(), sesion.getRol());
             	

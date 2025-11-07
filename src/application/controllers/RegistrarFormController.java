@@ -27,7 +27,7 @@ public class RegistrarFormController {
 	
 	
 	
-	 private static String toHex(Color color) {
+	private static String toHex(Color color) {
 	        return String.format("#%02X%02X%02X",
 	                (int) (color.getRed() * 255),
 	                (int) (color.getGreen() * 255),
@@ -112,8 +112,7 @@ public class RegistrarFormController {
 	    Button btnRegistrar = new Button(usuario == null ? "Registrar" : "Actualizar");
 	    btnRegistrar.getStyleClass().add("form-button");
 
-	    Label lblMensaje = new Label();
-	    lblMensaje.setTextFill(Color.RED);
+	    
 
 	    // --- CARGA DE DATOS SI EXISTE EL USUARIO ---
 	    if (usuario != null) {
@@ -173,8 +172,7 @@ public class RegistrarFormController {
 	                    cbRol.getValue() == null;
 
 	            if (camposIncompletos) {
-	                lblMensaje.setText("⚠️ Por favor, completa todos los campos.");
-	                lblMensaje.setTextFill(Color.RED);
+	               showNotification(btnRegistrar.getScene(),"⚠️ Por favor, completa todos los campos." , Color.RED);
 	                return;
 	            }
 
@@ -209,8 +207,7 @@ public class RegistrarFormController {
 	                showNotification(btnRegistrar.getScene(), "✅ Usuario creado correctamente", Color.GREEN);
 	            }
 
-	            lblMensaje.setTextFill(Color.GREEN);
-	            lblMensaje.setText("✅ Operación exitosa.");
+	          
 
 	            txtUsuario.clear();
 	            txtCorreo.clear();
@@ -226,7 +223,7 @@ public class RegistrarFormController {
 	    });
 
 	    // --- VBOX PRINCIPAL ---
-	    VBox root = new VBox(20, lblTitulo, grid, btnRegistrar, lblMensaje);
+	    VBox root = new VBox(20, lblTitulo, grid, btnRegistrar);
 	    root.setAlignment(Pos.CENTER);
 	    root.setPadding(new Insets(30));
 	    root.setStyle("-fx-background-color: #F8F9FA;");

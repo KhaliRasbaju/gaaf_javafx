@@ -1,5 +1,9 @@
 package application.views;
 
+import application.controllers.CredencialesFormController;
+import application.controllers.UsuarioEditarFormController;
+import application.services.UsuarioService;
+import application.session.SessionManager;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -20,6 +24,7 @@ import javafx.util.Duration;
 import javafx.scene.control.Tooltip;
 
 public abstract class DashboardViewBase {
+	
     protected boolean menuOpen = true;
     protected VBox vbox;
     protected StackPane content;
@@ -35,6 +40,7 @@ public abstract class DashboardViewBase {
 
     private Text userLabel; // ✅ Guardamos la referencia
 
+    
     public DashboardViewBase() {
         vbox = new VBox(12);
         vbox.setPadding(new Insets(18));
@@ -155,7 +161,7 @@ public abstract class DashboardViewBase {
                     boolean showText = !menuOpen;
 
                     lbl.setVisible(showText);
-                    //hb.setAlignment(showText ? Pos.CENTER_LEFT : Pos.CENTER);
+                   
                 }
             }
 
@@ -175,7 +181,7 @@ public abstract class DashboardViewBase {
 
                             if (lbl != null && hb != null) {
                                 lbl.setVisible(!menuOpen);
-                                //hb.setAlignment(!menuOpen ? Pos.CENTER_LEFT : Pos.CENTER_LEFT);
+                               
                             }
                         }
                     }
@@ -282,9 +288,60 @@ public abstract class DashboardViewBase {
             st.setToY(1);
             st.play();
         });
+        
+        btn.setOnAction((e) -> {
+        	switch (icon) {
+				case "🪪": {
+					
+					try {
+						onObtenerInformacion();
+						break;
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+				case "🔑": {
+					try {
+						onCredenciales();
+						break;
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+				
+				default:
+					throw new IllegalArgumentException("Unexpected value: " + icon);
+			}
+        });
 
         Tooltip.install(btn, new Tooltip(text));
         return btn;
     }
+    
+    private static String getId() {
+	    return SessionManager.getInstance().getId();
+	}
+    
+    private void onObtenerInformacion() throws Exception {
+    	try {
+    		String id = getId();
+			UsuarioService service = new UsuarioService();
+			var usuario = service.obtenerUsuario(id);
+			content.getChildren().add(UsuarioEditarFormController.getScene("Información del", usuario));
+		} catch (Exception ex) {
+			throw new Exception("Error tipo: "+ ex );
+		}
+    }
+    
+    private void onCredenciales() throws Exception{
+    	try {    		
+    		String id = getId();
+			content.getChildren().add(CredencialesFormController.getScene("Cambiar contraseña del ", id));
+		} catch (Exception ex) {
+			throw new Exception("Error tipo: "+ ex );
+		}
+    }
+    
+    
 
 }

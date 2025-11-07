@@ -5,6 +5,7 @@ public class SessionManager {
 	private String username;
  	private String jwtToken;
  	private String userRole;
+ 	private String id;
 
     private SessionManager() {}
 
@@ -13,10 +14,11 @@ public class SessionManager {
         return instance;
     }
 
-    public void setSession(String token, String role, String username) {
+    public void setSession(String token, String role, String username, String id) {
         this.jwtToken = token;
         this.userRole = role;
         this.username = username;
+        this.id = id;
     }  
     
     public String getUsername() {
@@ -30,8 +32,12 @@ public class SessionManager {
     public String getRole() {
         return userRole;
     }
+    
+    public String getId() {
+		return id;
+	}
 
-    public void clearSession() {
+	public void clearSession() {
         jwtToken = null;
         userRole = null;
     }
