@@ -5,12 +5,11 @@ import java.util.List;
 import application.models.response.Bodega;
 import application.models.response.ResponseCommon;
 import application.services.BodegaService;
-import javafx.animation.FadeTransition;
+import application.utils.NotificationManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -21,12 +20,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Popup;
-import javafx.util.Duration;
+
 
 public class BodegaController {
 
     private final StackPane content;
+
 
     
     // ✅ Constructor recibe el contenedor principal (StackPane)
@@ -35,36 +34,6 @@ public class BodegaController {
     }
     
     
-    private static String toHex(Color color) {
-        return String.format("#%02X%02X%02X",
-                (int) (color.getRed() * 255),
-                (int) (color.getGreen() * 255),
-                (int) (color.getBlue() * 255));
-    }
-
-    /** 🔹 Muestra un pequeño mensaje tipo Toast */
-    private static void showNotification(Scene scene, String text, Color color) {
-        Label notification = new Label(text);
-        notification.getStyleClass().add("notification-toast");
-        notification.setStyle("-fx-background-color: " + toHex(color) + ";"
-                + "-fx-text-fill: white; -fx-padding: 10px; -fx-background-radius: 8px;");
-
-        Popup popup = new Popup();
-        popup.getContent().add(notification);
-        popup.setAutoFix(true);
-
-        // Posición en parte inferior central
-        double x = scene.getWindow().getX() + scene.getWidth() / 2 - 100;
-        double y = scene.getWindow().getY() + scene.getHeight() - 100;
-        popup.show(scene.getWindow(), x, y);
-
-        // 🔹 Animación FadeOut
-        FadeTransition fade = new FadeTransition(Duration.seconds(2.5), notification);
-        fade.setFromValue(1.0);
-        fade.setToValue(0.0);
-        fade.setOnFinished(ev -> popup.hide());
-        fade.play();
-    }
 
 
     // ✅ Método de acción no estático
@@ -143,10 +112,10 @@ public class BodegaController {
                     try {
                         var respuesta = onActionEliminar(bodega.getId(), btnEliminar);
                         if (respuesta.getStatus() != 200) {
-                            showNotification(btnEliminar.getScene(),
-                                    String.format("❎ %s", respuesta.getMessage()), Color.RED);
+                            NotificationManager.showNotification(btnEliminar.getScene(),
+                            		String.format("❎ %s", respuesta.getMessage()), Color.RED);
                         } else {
-                            showNotification(btnEliminar.getScene(),
+                            NotificationManager.showNotification(btnEliminar.getScene(),
                                     String.format("✅ %s", respuesta.getMessage()), Color.GREEN);
                             getTableView().getItems().remove(bodega);
                         }

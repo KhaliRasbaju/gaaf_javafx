@@ -3,10 +3,9 @@ package application.controllers;
 import application.models.request.BodegaRequest;
 import application.models.response.Bodega;
 import application.services.BodegaService;
-import javafx.animation.FadeTransition;
+import application.utils.NotificationManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -15,44 +14,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Popup;
-import javafx.util.Duration;
 
 public class BodegaFormController {
 	
 	
 
-	 /** 🔹 Convierte Color a formato HEX para aplicar en CSS dinámico */
-    private static String toHex(Color color) {
-        return String.format("#%02X%02X%02X",
-                (int) (color.getRed() * 255),
-                (int) (color.getGreen() * 255),
-                (int) (color.getBlue() * 255));
-    }
-
-    /** 🔹 Muestra un pequeño mensaje tipo Toast */
-    private static void showNotification(Scene scene, String text, Color color) {
-        Label notification = new Label(text);
-        notification.getStyleClass().add("notification-toast");
-        notification.setStyle("-fx-background-color: " + toHex(color) + ";"
-                + "-fx-text-fill: white; -fx-padding: 10px; -fx-background-radius: 8px;");
-
-        Popup popup = new Popup();
-        popup.getContent().add(notification);
-        popup.setAutoFix(true);
-
-        // Posición en parte inferior central
-        double x = scene.getWindow().getX() + scene.getWidth() / 2 - 100;
-        double y = scene.getWindow().getY() + scene.getHeight() - 100;
-        popup.show(scene.getWindow(), x, y);
-
-        // 🔹 Animación FadeOut
-        FadeTransition fade = new FadeTransition(Duration.seconds(2.5), notification);
-        fade.setFromValue(1.0);
-        fade.setToValue(0.0);
-        fade.setOnFinished(ev -> popup.hide());
-        fade.play();
-    }
 
     /** 🔹 Lógica de acción para registrar una bodega */
     private static void onActionRegistrar(BodegaRequest request) {
@@ -143,19 +109,19 @@ public class BodegaFormController {
             try {
                 if (bodega == null) {
                     onActionRegistrar(request);
-                    showNotification(btnAccion.getScene(), "✅ Bodega registrada correctamente", Color.GREEN);
+                    NotificationManager.showNotification(btnAccion.getScene(), "✅ Bodega registrada correctamente", Color.GREEN);
                     lblMensaje.setText("✅ Bodega registrada correctamente.");
                     lblMensaje.setTextFill(Color.GREEN);
                     txtNombre.clear();
                     txtUbicacion.clear();
                 } else {
                     onActionActualizar(bodega.getId(), request);
-                    showNotification(btnAccion.getScene(), "✏️ Bodega actualizada correctamente", Color.BLUE);
+                    NotificationManager.showNotification(btnAccion.getScene(), "✏️ Bodega actualizada correctamente", Color.BLUE);
                     lblMensaje.setText("✏️ Bodega actualizada correctamente.");
                     lblMensaje.setTextFill(Color.BLUE);
                 }
             } catch (Exception ex) {
-                showNotification(btnAccion.getScene(), "❎ Error al guardar la bodega", Color.RED);
+            	NotificationManager.showNotification(btnAccion.getScene(), "❎ Error al guardar la bodega", Color.RED);
                 lblMensaje.setText("❎ Error al guardar la bodega");
                 lblMensaje.setTextFill(Color.RED);
                 System.out.println("Error tipo: " + ex);

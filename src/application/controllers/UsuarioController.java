@@ -5,12 +5,11 @@ import java.util.List;
 import application.models.response.ResponseCommon;
 import application.models.response.UsuarioResponse;
 import application.services.UsuarioService;
-import javafx.animation.FadeTransition;
+import application.utils.NotificationManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -20,8 +19,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Popup;
-import javafx.util.Duration;
 
 public class UsuarioController {
 
@@ -31,31 +28,7 @@ public class UsuarioController {
 		this.content = content;
 	}
 
-	// ------------------- Notificación tipo Toast -------------------
-	private static String toHex(Color color) {
-		return String.format("#%02X%02X%02X", (int) (color.getRed() * 255), (int) (color.getGreen() * 255),
-				(int) (color.getBlue() * 255));
-	}
-
-	private static void showNotification(Scene scene, String text, Color color) {
-		Label notification = new Label(text);
-		notification.setStyle("-fx-background-color: " + toHex(color) + ";"
-				+ "-fx-text-fill: white; -fx-padding: 10px; -fx-background-radius: 8px;");
-
-		Popup popup = new Popup();
-		popup.getContent().add(notification);
-		popup.setAutoFix(true);
-
-		double x = scene.getWindow().getX() + scene.getWidth() / 2 - 100;
-		double y = scene.getWindow().getY() + scene.getHeight() - 100;
-		popup.show(scene.getWindow(), x, y);
-
-		FadeTransition fade = new FadeTransition(Duration.seconds(2.5), notification);
-		fade.setFromValue(1.0);
-		fade.setToValue(0.0);
-		fade.setOnFinished(ev -> popup.hide());
-		fade.play();
-	}
+	
 
 	private void onActionCrear() {
 		try {
@@ -160,9 +133,9 @@ public class UsuarioController {
 						UsuarioResponse u = getTableView().getItems().get(getIndex());
 						var response  = onActionEliminar(u.getId());
 						getTableView().getItems().remove(u);
-						showNotification(btnEliminar.getScene(), response.getMessage(), Color.GREEN);
+						NotificationManager.showNotification(btnEliminar.getScene(), response.getMessage(), Color.GREEN);
 					} catch (Exception ex) {
-						showNotification(btnEliminar.getScene(), "Error al eliminar el usuario", Color.RED);
+						NotificationManager.showNotification(btnEliminar.getScene(), "Error al eliminar el usuario", Color.RED);
 					}
 				});
 			}

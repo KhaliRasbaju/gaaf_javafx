@@ -169,7 +169,7 @@ public class ReporteCompraController {
 		filtrosPane.getStyleClass().add("filtros-container");
 		filtrosPane.setHgap(10);
 		filtrosPane.setVgap(25);
-		filtrosPane.setPrefWrapLength(900); // Permite que los elementos se acomoden si el ancho es pequeño
+		filtrosPane.setPrefWrapLength(1250); 
 
 		// Añadimos todos los filtros en orden horizontal
 		filtrosPane.getChildren().addAll(
