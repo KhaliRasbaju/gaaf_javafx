@@ -14,6 +14,7 @@ import application.models.response.Producto;
 import application.services.PedidoService;
 import application.services.ProveedorService;
 import application.utils.NotificationManager;
+import application.utils.PrecioFormatter;
 import application.services.ProductoService;
 import application.services.MetodoPagoService;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -96,6 +97,7 @@ public class PedidoFormController {
     public  ScrollPane getScene(String title, Pedido pedido) throws Exception {
     	
     	
+    	
 
         Text titulo = new Text(String.format("📦 %s Pedido", title));
 
@@ -110,6 +112,14 @@ public class PedidoFormController {
         // Campos básicos
         TextField txtValor = new TextField();
         txtValor.setPromptText("Valor total del pedido");
+        txtValor.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
+        
+        PrecioFormatter.aplicarFormato(txtValor);
 
         DatePicker dpFechaPedido = new DatePicker(LocalDate.now());
         dpFechaPedido.setPromptText("Fecha del pedido");
@@ -124,6 +134,8 @@ public class PedidoFormController {
 
         TextField txtReferencia = new TextField();
         txtReferencia.setPromptText("Referencia del pago");
+        
+        txtReferencia.setVisible(false);
         
         if(pedido != null) {
         	txtReferencia.setVisible(false);
@@ -158,6 +170,13 @@ public class PedidoFormController {
 
         TextField txtFermentacion = new TextField();
         txtFermentacion.setPromptText("Fermentación");
+        
+        txtFermentacion.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
 
 		Label lblFermentacion = new Label("Fermentación");
 		lblFermentacion.getStyleClass().add("form-label");
@@ -167,6 +186,12 @@ public class PedidoFormController {
 
         TextField txtPeso = new TextField();
         txtPeso.setPromptText("Peso");
+        txtPeso.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
 
         Label lblPeso = new Label("Peso");
         lblPeso.getStyleClass().add("form-label");
@@ -177,6 +202,13 @@ public class PedidoFormController {
         TextField txtCantidad = new TextField();
         txtCantidad.setPromptText("Cantidad");
         
+        txtCantidad.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
+        
         Label lblCantidad = new Label("Cantidad");
         lblCantidad.getStyleClass().add("form-label");
         formDetalle.add(lblCantidad, 1, 2);
@@ -185,6 +217,14 @@ public class PedidoFormController {
 
         TextField txtHumedad = new TextField();
         txtHumedad.setPromptText("Humedad");
+        
+        txtHumedad.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
+        
         Label lblHumedad = new Label("Humedad");
         lblHumedad.getStyleClass().add("form-label");
         formDetalle.add(lblHumedad, 0, 4);
@@ -193,6 +233,13 @@ public class PedidoFormController {
 
         TextField txtEstadoCacao = new TextField();
         txtEstadoCacao.setPromptText("Estado cacao");
+        txtEstadoCacao.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+                return change;
+            }
+            return null;
+        }));
+        
         Label lblEstado = new Label("Estado del cacao");
         lblEstado.getStyleClass().add("form-label");
         formDetalle.add(lblEstado, 1, 4);
@@ -420,10 +467,11 @@ public class PedidoFormController {
                         .orElse(null);
 
                 MedioPagoRequest medioPago = new MedioPagoRequest(txtReferencia.getText(), idMetodoPago);
-
+                String valorTexto = txtValor.getText().replace(".", "").replace("$", "").trim();
+                Double valor = Double.parseDouble(valorTexto);
                 PedidoRequest request = new PedidoRequest(
                         nitProveedor,
-                        Double.parseDouble(txtValor.getText()),
+                        valor,
                         dpFechaPedido.getValue().atStartOfDay(),
                         medioPago,
                         new ArrayList<>(listaDetalles)
@@ -496,12 +544,12 @@ public class PedidoFormController {
         
         cbMetodoPago.setOnAction(e -> {
         	System.out.println(cbMetodoPago.getValue());
-        	if(cbMetodoPago.getValue().equals("Transferencia Bancaria")) {
-        		txtReferencia.setVisible(true);
-        		lblReferencia.setVisible(true);
-        	}else {
+        	if(cbMetodoPago.getValue().equals("Efectivo")) {
         		txtReferencia.setVisible(false);
         		lblReferencia.setVisible(false);
+        	}else {
+        		txtReferencia.setVisible(true);
+        		lblReferencia.setVisible(true);
         	}
         });
         

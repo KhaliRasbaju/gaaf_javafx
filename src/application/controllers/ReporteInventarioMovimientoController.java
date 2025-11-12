@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -95,6 +96,12 @@ public class ReporteInventarioMovimientoController {
 		TextField txtCantidad = new TextField();
 	    txtCantidad.setPromptText("Cantidad");
 	    txtCantidad.getStyleClass().add("filtros-textfield");
+	    txtCantidad.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
 	    
 	    Label lblProducto = new Label("Producto:");
 		lblProducto.getStyleClass().add("filtros-label");

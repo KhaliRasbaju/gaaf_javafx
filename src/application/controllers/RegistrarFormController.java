@@ -15,7 +15,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -53,22 +55,121 @@ public class RegistrarFormController {
 	    TextField txtUsuario = new TextField();
 	    txtUsuario.setPromptText("Usuario");
 	    txtUsuario.getStyleClass().add("form-field");
+	    txtUsuario.setTextFormatter(new TextFormatter<>(change -> {
+	        String newText = change.getControlNewText();
 
+	        // Solo letras y números
+	        if (!newText.matches("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]*")) {
+	            return null; // Bloquear carácter
+	        }
+
+	        return change;
+	    }));
 	    TextField txtCorreo = new TextField();
 	    txtCorreo.setPromptText("Correo electrónico");
 	    txtCorreo.getStyleClass().add("form-field");
+	    
+	    txtCorreo.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+
+            // Solo letras, números, @, ., _, -
+            if (newText.matches("[a-zA-Z0-9@._-]*")) {
+                return change;
+            }
+            return null;
+        }));
 
 	    TextField txtNombre = new TextField();
 	    txtNombre.setPromptText("Nombre completo");
 	    txtNombre.getStyleClass().add("form-field");
+	    
+
+        txtNombre.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+
+            // Solo letras (incluye tildes y ñ) y espacios
+            if (!newText.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) {
+                return null; // bloquea caracteres inválidos
+            }
+
+            // Evitar dos espacios seguidos
+            if (newText.contains("  ")) {
+                return null;
+            }
+
+            // Evitar espacio al inicio
+            if (newText.startsWith(" ")) {
+                return null;
+            }
+
+            return change;
+        }));
 
 	    TextField txtTelefono = new TextField();
 	    txtTelefono.setPromptText("Teléfono");
 	    txtTelefono.getStyleClass().add("form-field");
+	    txtTelefono.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
+        
 
-	    PasswordField txtContraseña = new PasswordField();
+	 // Campo de contraseña real
+	    PasswordField passwordField = new PasswordField();
+	    passwordField.setPromptText("Contraseña");
+	    passwordField.getStyleClass().add("form-field");
+
+	    // Campo visible (texto normal)
+	    TextField txtContraseña = new TextField();
 	    txtContraseña.setPromptText("Contraseña");
 	    txtContraseña.getStyleClass().add("form-field");
+	    txtContraseña.setVisible(false);
+	    txtContraseña.setManaged(false);
+
+	    // Botón con icono de ojo
+	    Button toggleEye = new Button("👁");
+	    toggleEye.getStyleClass().add("login-eye-button");
+	    toggleEye.setFocusTraversable(false); // No robar foco
+
+	    toggleEye.setOnAction(e -> {
+	        boolean showing = txtContraseña.isVisible();
+
+	        if (showing) {
+	            // Volver a ocultar contraseña
+	            passwordField.setText(txtContraseña.getText());
+	            txtContraseña.setVisible(false);
+	            txtContraseña.setManaged(false);
+	            passwordField.setVisible(true);
+	            passwordField.setManaged(true);
+	            toggleEye.setText("👁");
+	        } else {
+	            // Mostrar contraseña
+	            txtContraseña.setText(passwordField.getText());
+	            txtContraseña.setVisible(true);
+	            txtContraseña.setManaged(true);
+	            passwordField.setVisible(false);
+	            passwordField.setManaged(false);
+
+	            toggleEye.setText("🙈"); 
+	        }
+	    });
+
+
+	    // Mantener valores sincronizados mientras se escribe
+	    passwordField.textProperty().addListener((obs, oldV, newV) -> {
+	        if (!txtContraseña.isVisible()) txtContraseña.setText(newV);
+	    });
+	    txtContraseña.textProperty().addListener((obs, oldV, newV) -> {
+	        if (txtContraseña.isVisible()) passwordField.setText(newV);
+	    });
+
+	    // Contenedor con icono a la derecha
+	    StackPane passwordPane = new StackPane();
+	    passwordPane.setAlignment(Pos.CENTER_RIGHT);
+	    passwordPane.getChildren().addAll(passwordField, txtContraseña, toggleEye);
+	    StackPane.setMargin(toggleEye, new Insets(0, 10, 0, 0));
 
 	    ComboBox<String> cbRol = new ComboBox<>();
 	    cbRol.getItems().addAll("Administrador", "Coordinador de Compras", "Gerente", "Jefe de Bodega");
@@ -117,10 +218,12 @@ public class RegistrarFormController {
 	    grid.add(new Label("Teléfono:"), 0, row);
 	    grid.add(txtTelefono, 1, row++);
 
-	    if (usuario == null) { // Solo si es registro
+	    if (usuario == null) { 
 	        grid.add(new Label("Contraseña:"), 0, row);
-	        grid.add(txtContraseña, 1, row++);
+	        grid.add(passwordPane, 1, row++); //
 	    }
+
+
 
 	    grid.add(new Label("Rol:"), 0, row);
 	    grid.add(cbRol, 1, row++);

@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -78,6 +79,27 @@ public class EntidadBancariaFormController {
 	    TextField txtNombre = new TextField();
 	    txtNombre.setPromptText("Nombre de la entidad");
 	    txtNombre.getStyleClass().add("form-field");
+	    txtNombre.setTextFormatter(new TextFormatter<>(change -> {
+	        String newText = change.getControlNewText();
+
+	        // Solo letras (incluye tildes y ñ) y espacios
+	        if (!newText.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) {
+	            return null; // bloquea caracteres inválidos
+	        }
+
+	        // Evitar dos espacios seguidos
+	        if (newText.contains("  ")) {
+	            return null;
+	        }
+
+	        // Evitar espacio al inicio
+	        if (newText.startsWith(" ")) {
+	            return null;
+	        }
+
+	        return change;
+	    }));
+
 	    if (entidad != null && entidad.getNombre() != null)
 	        txtNombre.setText(entidad.getNombre());
 	    grid.add(txtNombre, 0, 1, 2, 1); // ocupa dos columnas

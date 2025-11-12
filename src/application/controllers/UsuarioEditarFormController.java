@@ -9,113 +9,152 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class UsuarioEditarFormController {
 
-	
-	private static void onActualizar(String id, UsuarioRequest request) throws Exception {
-		try {
-			
-			UsuarioService service = new UsuarioService();
-			service.editarUsuario(id, request);
-			
-			
-		} catch (Exception ex) {
-			throw new Exception("Error tipo" + ex);
-		}
-	}
-	
-	
-	public static VBox getScene(String title, UsuarioResponse usuario) {
-		Label lblTitulo = new Label(String.format("📝 %s de Usuario", title));
-	    lblTitulo.getStyleClass().add("form-title");
-	    
-	    
-	    
-	    Label lblUsuario = new Label("Usuario:");
-	    lblUsuario.getStyleClass().add("form-label");
-	    TextField txtUsuario = new TextField();
-	    txtUsuario.setPromptText("Usuario");
-	    txtUsuario.getStyleClass().add("form-field");
+    private boolean disable = true;
 
-	    Label lblCorreo = new Label("Correo:");
-	    lblCorreo.getStyleClass().add("form-label");	  
-	    TextField txtCorreo = new TextField();
-	    txtCorreo.setPromptText("Correo electrónico");
-	    txtCorreo.getStyleClass().add("form-field");
+    private void aplicarDisable(TextField txtUsuario, TextField txtCorreo,
+                                TextField txtNombre, TextField txtTelefono,
+                                Button btnActualizar) {
+        txtUsuario.setDisable(disable);
+        txtCorreo.setDisable(disable);
+        txtNombre.setDisable(disable);
+        txtTelefono.setDisable(disable);
+        btnActualizar.setDisable(disable);
+    }
 
-	    Label lblNombre = new Label("Nombre:");
-	    lblNombre.getStyleClass().add("form-label");
-	    TextField txtNombre = new TextField();
-	    txtNombre.setPromptText("Nombre completo");
-	    txtNombre.getStyleClass().add("form-field");
+    private void onActualizar(String id, UsuarioRequest request) throws Exception {
+        UsuarioService service = new UsuarioService();
+        service.editarUsuario(id, request);
+    }
 
-	    Label lblTelefono = new Label("Teléfono:");
-	    lblTelefono.getStyleClass().add("form-label");
-	    TextField txtTelefono = new TextField();
-	    txtTelefono.setPromptText("Teléfono");
-	    txtTelefono.getStyleClass().add("form-field");
+    public VBox getScene(String title, UsuarioResponse usuario) {
 
-	    Label lblRol = new Label("Rol:");
-	    lblRol.getStyleClass().add("form-label");
-	    Label lblRolUsuario = new Label();
-	    lblRolUsuario.getStyleClass().add("form-label");
-	    
-	    Button btnActualizar = new Button("Actualizar");
-	    btnActualizar.getStyleClass().add("form-button");
-	    
-	    if(usuario != null) {
-	    	txtUsuario.setText(usuario.getUsuario());
-	    	txtCorreo.setText(usuario.getCorreo());
-	    	txtNombre.setText(usuario.getNombre());
-	    	txtTelefono.setText(usuario.getTelefono());
-	    	lblRolUsuario.setText(usuario.getRol());
-	    }
-	    
-	    GridPane grid = new GridPane();
-	    grid.getStyleClass().add("form-container");
-	    grid.setHgap(20);
-	    grid.setVgap(15);
-	    grid.setAlignment(Pos.CENTER);
+        Label lblTitulo = new Label(String.format("📝 %s de Usuario", title));
+        lblTitulo.getStyleClass().add("form-title");
 
-	    int row = 0;
-	    grid.add(lblUsuario, 0, row);
-	    grid.add(txtUsuario, 1, row++);
+        Button toggleActive = new Button("Editar");
+        toggleActive.getStyleClass().add("btn-active");
 
-	    grid.add(lblCorreo, 0, row);
-	    grid.add(txtCorreo, 1, row++);
+        Label lblUsuario = new Label("Usuario:");
+        lblUsuario.getStyleClass().add("form-label");
+        TextField txtUsuario = new TextField();
+        txtUsuario.setPromptText("Usuario");
+        txtUsuario.getStyleClass().add("form-field");
 
-	    grid.add(lblNombre, 0, row);
-	    grid.add(txtNombre, 1, row++);
+        txtUsuario.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            return newText.matches("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]*") ? change : null;
+        }));
 
-	    grid.add(lblTelefono, 0, row);
-	    grid.add(txtTelefono, 1, row++);
-	    grid.add(lblRol, 0, row);
-	    grid.add(lblRolUsuario, 1, row++);
-	    
-	    
-	    btnActualizar.setOnAction((e) -> {
-	    	
-	    	
-	    	
-	    	try {	  
-	    		UsuarioRequest request = new UsuarioRequest(txtNombre.getText(), txtUsuario.getText(), txtCorreo.getText(), txtTelefono.getText(), lblRolUsuario.getText());
-	    		onActualizar(usuario.getId(), request);
-	    		NotificationManager.showNotification(btnActualizar.getScene(), "✅ Información de usuario actualizada correctamente", Color.GREEN);
-			} catch (Exception ex) {
-				NotificationManager.showNotification(btnActualizar.getScene(), "❎ Error al actulizar la información del usuario", Color.RED);
-				System.out.println("Error tipo:" + ex);
-			}
-	    });
-	    
-	    VBox root = new VBox(20, lblTitulo, grid, btnActualizar);
-	    root.setAlignment(Pos.CENTER);
-	    root.setPadding(new Insets(30));
-	    root.setStyle("-fx-background-color: #F8F9FA;");
-	    return root;
+        Label lblCorreo = new Label("Correo:");
+        lblCorreo.getStyleClass().add("form-label");
+        TextField txtCorreo = new TextField();
+        txtCorreo.setPromptText("Correo electrónico");
+        txtCorreo.getStyleClass().add("form-field");
 
-	}
+        txtCorreo.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            return newText.matches("[a-zA-Z0-9@._-]*") ? change : null;
+        }));
+
+        Label lblNombre = new Label("Nombre:");
+        lblNombre.getStyleClass().add("form-label");
+        TextField txtNombre = new TextField();
+        txtNombre.setPromptText("Nombre completo");
+        txtNombre.getStyleClass().add("form-field");
+
+        txtNombre.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (!newText.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) return null;
+            if (newText.contains("  ")) return null;
+            if (newText.startsWith(" ")) return null;
+            return change;
+        }));
+
+        Label lblTelefono = new Label("Teléfono:");
+        lblTelefono.getStyleClass().add("form-label");
+        TextField txtTelefono = new TextField();
+        txtTelefono.setPromptText("Teléfono");
+        txtTelefono.getStyleClass().add("form-field");
+
+        txtTelefono.setTextFormatter(new TextFormatter<>(change ->
+                change.getControlNewText().matches("\\d*") ? change : null
+        ));
+
+        Label lblRol = new Label("Rol:");
+        lblRol.getStyleClass().add("form-label");
+        Label lblRolUsuario = new Label();
+        lblRolUsuario.getStyleClass().add("form-label");
+
+        Button btnActualizar = new Button("Actualizar");
+        btnActualizar.getStyleClass().add("form-button");
+
+        // Asignar valores si vienen del backend
+        if (usuario != null) {
+            txtUsuario.setText(usuario.getUsuario());
+            txtCorreo.setText(usuario.getCorreo());
+            txtNombre.setText(usuario.getNombre());
+            txtTelefono.setText(usuario.getTelefono());
+            lblRolUsuario.setText(usuario.getRol());
+        }
+
+        aplicarDisable(txtUsuario, txtCorreo, txtNombre, txtTelefono, btnActualizar);
+
+        GridPane grid = new GridPane();
+        grid.getStyleClass().add("form-container");
+        grid.setHgap(20);
+        grid.setVgap(15);
+        grid.setAlignment(Pos.CENTER);
+
+        int row = 0;
+        grid.add(lblUsuario, 0, row);
+        grid.add(txtUsuario, 1, row++);
+        grid.add(lblCorreo, 0, row);
+        grid.add(txtCorreo, 1, row++);
+        grid.add(lblNombre, 0, row);
+        grid.add(txtNombre, 1, row++);
+        grid.add(lblTelefono, 0, row);
+        grid.add(txtTelefono, 1, row++);
+        grid.add(lblRol, 0, row);
+        grid.add(lblRolUsuario, 1, row++);
+
+        btnActualizar.setOnAction(e -> {
+            try {
+                UsuarioRequest request = new UsuarioRequest(
+                        txtNombre.getText(),
+                        txtUsuario.getText(),
+                        txtCorreo.getText(),
+                        txtTelefono.getText(),
+                        lblRolUsuario.getText()
+                );
+                onActualizar(usuario.getId(), request);
+                NotificationManager.showNotification(btnActualizar.getScene(),
+                        "✅ Información de usuario actualizada correctamente",
+                        Color.GREEN);
+            } catch (Exception ex) {
+                NotificationManager.showNotification(btnActualizar.getScene(),
+                        "❎ Error al actualizar la información del usuario",
+                        Color.RED);
+                ex.printStackTrace();
+            }
+        });
+
+        toggleActive.setOnAction(e -> {
+            disable = !disable; // alterna entre true/false
+            aplicarDisable(txtUsuario, txtCorreo, txtNombre, txtTelefono, btnActualizar);
+        });
+
+        VBox root = new VBox(20, lblTitulo, toggleActive, grid, btnActualizar);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(30));
+        root.setStyle("-fx-background-color: #F8F9FA;");
+
+        return root;
+    }
 }

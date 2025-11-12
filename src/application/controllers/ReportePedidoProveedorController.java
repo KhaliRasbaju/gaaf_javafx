@@ -148,27 +148,18 @@ public class ReportePedidoProveedorController {
 	    Label lblValorPedido = new Label("Valor del pedido:");
 	    lblValorPedido.getStyleClass().add("filtros-label");
 		
-		ComboBox<String> cbValorPedido = new ComboBox<>();
-		cbValorPedido.getItems().addAll("$ 500.000 (COP)","$ 1'500.000 (COP)", "$ 2'200.000 (COP)", "MAX");
-		cbValorPedido.setPromptText("Seleccione el rango del precio");
-		cbValorPedido.getStyleClass().add("filtros-combo");
-		
-		
-		cbValorPedido.setButtonCell(new ListCell<>() {
-		    @Override
-		    protected void updateItem(String item, boolean empty) {
-		        super.updateItem(item, empty);
-		        setText(empty || item == null ? "Seleccione el rango del precio" : item);
-		    }
-		});
-	
+	    TextField txtValor = new TextField();
+        txtValor.setPromptText("Valor total del pedido");
+        txtValor.getStyleClass().add("filtros-textfield");
+        
+        PrecioFormatter.aplicarFormato(txtValor);
 		
 
 		
 		
 		FlowPane filtrosPane = new FlowPane();
 		filtrosPane.getStyleClass().add("filtros-container");
-		filtrosPane.setHgap(25);
+		filtrosPane.setHgap(20);
 		filtrosPane.setVgap(10);
 		filtrosPane.setPrefWrapLength(900); // Permite que los elementos se acomoden si el ancho es pequeño
 
@@ -179,7 +170,7 @@ public class ReportePedidoProveedorController {
 		    lblFechaPedido, dpFechaPedido,
 		    lblFechaEntrega, dpFechaEntrega,
 		
-		    lblValorPedido, cbValorPedido
+		    lblValorPedido, txtValor
 		);
         
         
@@ -284,23 +275,23 @@ public class ReportePedidoProveedorController {
         
        
         
-        cbValorPedido.valueProperty().addListener((obs, oldVal, newVal) -> {
-		    switch (newVal) {
-		        case "$ 1'500.000 (COP)":     
-		        	valor[0] = 1500000.0; 
-		        	break;
-		        case "$ 2'200.000 (COP)":     
-		        	valor[0] = 1500000.0;  
-		        	break;
-		        case "$ 500.000 (COP)":
-		        	valor[0] = 500000.0; 
-		        	break;
-		        case "MAX":
-		            valor[0] = null; 
-		            break;
-		    }
-		    actualizar.run();
-		});
+        txtValor.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+               valor[0] = null;
+            } else {
+                try {
+                	String valorTexto = txtValor.getText().replace(".", "").replace("$", "").trim();
+                    Double valorInfo = Double.parseDouble(valorTexto);
+                    valor[0] = valorInfo;
+                    System.out.println(valorTexto);
+                    System.out.println(valorInfo);
+                } catch (Exception ex) {
+                    System.out.println("Error tipo: "+ ex);
+                }
+            }
+            actualizar.run();
+        });
+        
         
         btnRestablecer.setOnAction((e) -> {
             // Estado
@@ -326,15 +317,8 @@ public class ReportePedidoProveedorController {
             });
 
             // Valor
-            cbValorPedido.getSelectionModel().clearSelection();
-            cbValorPedido.setValue(null);
-            cbValorPedido.setButtonCell(new ListCell<>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty || item == null ? "Seleccione el rango del precio" : item);
-                }
-            });
+            txtValor.clear();
+            txtValor.setPromptText("Valor total del pedido");
 
            
             // Fechas

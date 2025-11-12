@@ -327,7 +327,8 @@ public abstract class DashboardViewBase {
     		String id = getId();
 			UsuarioService service = new UsuarioService();
 			var usuario = service.obtenerUsuario(id);
-			content.getChildren().add(UsuarioEditarFormController.getScene("Información del", usuario));
+			UsuarioEditarFormController controller = new UsuarioEditarFormController();
+			content.getChildren().add(controller.getScene("Información del", usuario));
 		} catch (Exception ex) {
 			throw new Exception("Error tipo: "+ ex );
 		}

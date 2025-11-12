@@ -102,6 +102,43 @@ public class TransaccionFormController {
         txtCantidad.getStyleClass().add("form-field");
         txtObservacion.getStyleClass().add("form-textarea");
 
+        // Restrincciones
+        txtCantidad.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
+        
+        txtIdPedido.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
+        
+        txtObservacion.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+
+            // Permitir letras, números, espacios y saltos de línea
+            if (!newText.matches("[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ \\n]*")) {
+                return null;             }
+
+            // Evitar dos espacios seguidos
+            if (newText.contains("  ")) {
+                return null;
+            }
+
+            // Evitar espacio al inicio
+            if (newText.startsWith(" ")) {
+                return null;
+            }
+
+            return change;
+        }));
+
+        
+        
         List<Producto> productos = productos();
         List<Bodega> bodegas = bodegas();
 

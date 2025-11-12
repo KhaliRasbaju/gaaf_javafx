@@ -127,6 +127,13 @@ public class ProveedorFormController {
         TextField txtNit = new TextField();
         txtNit.setPromptText("NIT");
         txtNit.getStyleClass().add("form-field");
+        txtNit.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
+        
         Label lblNit = new Label("NIT");
         lblNit.getStyleClass().add("form-label");
         gridInfo.add(lblNit, 0, 0);
@@ -136,6 +143,28 @@ public class ProveedorFormController {
         TextField txtNombre = new TextField();
         txtNombre.setPromptText("Nombre");
         txtNombre.getStyleClass().add("form-field");
+        
+        txtNombre.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+
+            // Solo letras (incluye tildes y ñ) y espacios
+            if (!newText.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) {
+                return null; // bloquea caracteres inválidos
+            }
+
+            // Evitar dos espacios seguidos
+            if (newText.contains("  ")) {
+                return null;
+            }
+
+            // Evitar espacio al inicio
+            if (newText.startsWith(" ")) {
+                return null;
+            }
+
+            return change;
+        }));
+
         Label lblNombre = new Label("Nombre");
         lblNombre.getStyleClass().add("form-label");
         gridInfo.add(lblNombre, 1, 0);
@@ -144,6 +173,17 @@ public class ProveedorFormController {
         TextField txtCorreo = new TextField();
         txtCorreo.setPromptText("Correo");
         txtCorreo.getStyleClass().add("form-field");
+        
+        txtCorreo.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+
+            // Solo letras, números, @, ., _, -
+            if (newText.matches("[a-zA-Z0-9@._-]*")) {
+                return change;
+            }
+            return null;
+        }));
+
         Label lblCorreo = new Label("Correo");
         lblCorreo.getStyleClass().add("form-label");
         gridInfo.add(lblCorreo, 0, 2);
@@ -152,6 +192,14 @@ public class ProveedorFormController {
         TextField txtTelefono = new TextField();
         txtTelefono.setPromptText("Teléfono");
         txtTelefono.getStyleClass().add("form-field");
+        
+        txtTelefono.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
+        
         Label lblTelefono = new Label("Teléfono");
         lblTelefono.getStyleClass().add("form-label");
         gridInfo.add(lblTelefono, 1, 2);
@@ -175,6 +223,12 @@ public class ProveedorFormController {
         TextField txtNumeroCuenta = new TextField();
         txtNumeroCuenta.setPromptText("Número de cuenta");
         txtNumeroCuenta.getStyleClass().add("form-field");
+        txtNumeroCuenta.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
         Label lblNumeroCuenta = new Label("Número de cuenta");
         lblNumeroCuenta.getStyleClass().add("form-label");
         gridCuenta.add(lblNumeroCuenta, 1, 0);
@@ -224,8 +278,8 @@ public class ProveedorFormController {
         cbDepartamento.getStyleClass().add("form-field");
         Label lblDepartamento = new Label("Departamento");
         lblDepartamento.getStyleClass().add("form-label");
-        gridUbicacion.add(lblDepartamento, 1, 0);
-        gridUbicacion.add(cbDepartamento, 1, 1);
+        gridUbicacion.add(lblDepartamento, 0, 0);
+        gridUbicacion.add(cbDepartamento, 0, 1);
 
         ComboBox<String> cbMunicipio = new ComboBox<>();
         cbMunicipio.setPromptText("Municipio");
@@ -233,8 +287,13 @@ public class ProveedorFormController {
         cbMunicipio.getStyleClass().add("form-field");
         Label lblMunicipio = new Label("Ciudad");
         lblMunicipio.getStyleClass().add("form-label");
-        gridUbicacion.add(lblMunicipio, 0, 0);
-        gridUbicacion.add(cbMunicipio, 0, 1);
+        lblMunicipio.setVisible(false);
+        
+        if(cbDepartamento.getValue() != null) {
+        	lblMunicipio.setVisible(true);
+        }
+        gridUbicacion.add(lblMunicipio, 1, 0);
+        gridUbicacion.add(cbMunicipio, 1, 1);
 
 
 
@@ -268,6 +327,7 @@ public class ProveedorFormController {
                 for (Municipio m : listaMunicipios) {
                     cbMunicipio.getItems().add(m.getNombre());
                 }
+                lblMunicipio.setVisible(true);
                 cbMunicipio.setVisible(true);
                 cbMunicipio.managedProperty().bind(cbMunicipio.visibleProperty());
                 cbMunicipio.getParent().requestLayout();

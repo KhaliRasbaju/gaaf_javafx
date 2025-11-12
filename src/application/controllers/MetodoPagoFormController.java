@@ -77,6 +77,27 @@ public class MetodoPagoFormController {
 	    TextField txtNombre = new TextField();
 	    txtNombre.setPromptText("Nombre del método de pago");
 	    txtNombre.getStyleClass().add("form-field");
+	    txtNombre.setTextFormatter(new TextFormatter<>(change -> {
+	        String newText = change.getControlNewText();
+
+	        // Solo letras (incluye tildes y ñ) y espacios
+	        if (!newText.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) {
+	            return null; // bloquea caracteres inválidos
+	        }
+
+	        // Evitar dos espacios seguidos
+	        if (newText.contains("  ")) {
+	            return null;
+	        }
+
+	        // Evitar espacio al inicio
+	        if (newText.startsWith(" ")) {
+	            return null;
+	        }
+
+	        return change;
+	    }));
+
 	    if (metodoPago != null && metodoPago.getNombre() != null)
 	        txtNombre.setText(metodoPago.getNombre());
 	    grid.add(txtNombre, 0, 1, 2, 1); // ocupa 2 columnas para centrar

@@ -16,6 +16,7 @@ module GAAF_V1 {
     opens application.models.response to javafx.base;
     opens application.controllers to javafx.fxml;
     
+    exports application;
     exports application.models.request;
     exports application.models.response;
     exports application.controllers;

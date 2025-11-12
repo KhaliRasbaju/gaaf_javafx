@@ -68,12 +68,15 @@ public class LoginView {
                 visiblePassword.setManaged(false);
                 passwordField.setVisible(true);
                 passwordField.setManaged(true);
+                toggleEye.setText("👁");
             } else {
                 visiblePassword.setText(passwordField.getText());
                 visiblePassword.setVisible(true);
                 visiblePassword.setManaged(true);
                 passwordField.setVisible(false);
                 passwordField.setManaged(false);
+
+	            toggleEye.setText("🙈"); 
             }
         });
 

@@ -199,8 +199,7 @@ public class PedidoController {
                     Pedido pedido = getTableView().getItems().get(getIndex());
                     if (pedido.getRecibido()) { 
                         Label lblSinAccion = new Label("Sin acciones");
-                        lblSinAccion.setTextFill(Color.GRAY);
-                        lblSinAccion.setStyle("-fx-font-style: italic;");
+                        lblSinAccion.getStyleClass().add("label-sin-acciones");
                         setGraphic(lblSinAccion);
                         setAlignment(Pos.CENTER);
                     } else {

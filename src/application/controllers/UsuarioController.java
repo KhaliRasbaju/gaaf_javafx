@@ -5,6 +5,7 @@ import java.util.List;
 import application.models.response.ResponseCommon;
 import application.models.response.UsuarioResponse;
 import application.services.UsuarioService;
+import application.session.SessionManager;
 import application.utils.NotificationManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -64,6 +65,9 @@ public class UsuarioController {
 		}
 	}
 	
+	private static String getUserId() {
+		return SessionManager.getInstance().getId();
+	}
 	
 	// ------------------- Tabla de Usuarios -------------------
 	public VBox getScene(List<UsuarioResponse> usuarios) {
@@ -114,37 +118,63 @@ public class UsuarioController {
 
 		TableColumn<UsuarioResponse, Void> colAcciones = new TableColumn<>("Acciones");
 		colAcciones.setCellFactory(col -> new TableCell<UsuarioResponse, Void>() {
-			private final Button btnEditar = new Button("\u270E");  
-        	private final Button btnEliminar = new Button("\u2716");
-			private final HBox box = new HBox(5, btnEditar, btnEliminar);
+		    private final Button btnEditar = new Button("\u270E"); 
+		    private final Button btnEliminar = new Button("\u2716"); 
+		    private final HBox box = new HBox(5, btnEditar, btnEliminar);
+		    private final Label lblSinAcciones = new Label("Sin acciones");
 
-			{
-				btnEditar.getStyleClass().add("btn-editar");
-				btnEliminar.getStyleClass().add("btn-eliminar");
-				box.setAlignment(Pos.CENTER);
+		    {
+		        btnEditar.getStyleClass().add("btn-editar");
+		        btnEliminar.getStyleClass().add("btn-eliminar");
+		        box.setAlignment(Pos.CENTER);
+		        lblSinAcciones.getStyleClass().add("label-sin-acciones");
 
-				btnEditar.setOnAction(e -> {
-					UsuarioResponse u = getTableView().getItems().get(getIndex());
-					onActionEditar(u.getId());
-				});
+		        btnEditar.setOnAction(e -> {
+		            UsuarioResponse u = getTableView().getItems().get(getIndex());
+		            onActionEditar(u.getId());
+		        });
 
-				btnEliminar.setOnAction(e -> {
-					try {
-						UsuarioResponse u = getTableView().getItems().get(getIndex());
-						var response  = onActionEliminar(u.getId());
-						getTableView().getItems().remove(u);
-						NotificationManager.showNotification(btnEliminar.getScene(), response.getMessage(), Color.GREEN);
-					} catch (Exception ex) {
-						NotificationManager.showNotification(btnEliminar.getScene(), "Error al eliminar el usuario", Color.RED);
-					}
-				});
-			}
+		        btnEliminar.setOnAction(e -> {
+		            try {
+		                UsuarioResponse u = getTableView().getItems().get(getIndex());
+		                var response = onActionEliminar(u.getId());
+		                getTableView().getItems().remove(u);
+		                NotificationManager.showNotification(btnEliminar.getScene(), response.getMessage(), Color.GREEN);
+		            } catch (Exception ex) {
+		                NotificationManager.showNotification(btnEliminar.getScene(), "Error al eliminar el usuario", Color.RED);
+		            }
+		        });
+		    }
 
-			@Override
-			protected void updateItem(Void item, boolean empty) {
-				super.updateItem(item, empty);
-				setGraphic(empty ? null : box);
-			}
+		    
+		    
+		    @Override
+		    protected void updateItem(Void item, boolean empty) {
+		        super.updateItem(item, empty);
+
+		        if (empty) {
+		            setGraphic(null);
+		            return;
+		        }
+
+		        UsuarioResponse usuario = getTableView().getItems().get(getIndex());
+
+		           String userIdFila = usuario.getId();
+		        if (userIdFila == null) {
+		            System.out.println("⚠️ Usuario con ID null: " + usuario.getNombre());
+		        }
+
+		        String userIdSesion = getUserId();
+		        System.out.println(getUserId());
+
+		        if (userIdFila != null && userIdSesion != null && userIdFila.equals(userIdSesion)) {
+		            setGraphic(lblSinAcciones);
+		            setAlignment(Pos.CENTER);
+		        } else {
+		            setGraphic(box);
+		        }
+
+		    }
 		});
 
 		table.getColumns().addAll(colUsuario, colNombre, colCorreo, colTelefono, colRol, colActivo, colAcciones);

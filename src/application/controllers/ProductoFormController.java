@@ -11,6 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -53,6 +54,26 @@ public class ProductoFormController {
         TextField txtNombre = new TextField();
         txtNombre.setPromptText("Nombre del producto");
         txtNombre.getStyleClass().add("form-field");
+        txtNombre.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+
+            // Solo letras (incluye tildes y ñ) y espacios
+            if (!newText.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) {
+                return null; // bloquea caracteres inválidos
+            }
+
+            // Evitar dos espacios seguidos
+            if (newText.contains("  ")) {
+                return null;
+            }
+
+            // Evitar espacio al inicio
+            if (newText.startsWith(" ")) {
+                return null;
+            }
+
+            return change;
+        }));
 
         ComboBox<String> cbTipo = new ComboBox<>();
         cbTipo.getItems().addAll("CACAO", "INGREDIENTES_COMPLEMENTARIOS");

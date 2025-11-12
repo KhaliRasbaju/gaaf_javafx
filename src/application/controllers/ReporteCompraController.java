@@ -21,6 +21,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -140,26 +141,25 @@ public class ReporteCompraController {
 		Label lblCantidad = new Label("Cantidad:");
 		lblCantidad.getStyleClass().add("filtros-label");
 		
+		
 		TextField txtCantidad = new TextField();
 	    txtCantidad.setPromptText("Cantidad");
 	    txtCantidad.getStyleClass().add("filtros-textfield");
+	    txtCantidad.setTextFormatter(new TextFormatter<>(change -> {
+        	if (change.getControlNewText().matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
 	    
 	    Label lblValorPedido = new Label("Valor del pedido:");
 	    lblValorPedido.getStyleClass().add("filtros-label");
 		
-		ComboBox<String> cbValorPedido = new ComboBox<>();
-		cbValorPedido.getItems().addAll("$ 500.000 (COP)","$ 1'500.000 (COP)", "$ 2'200.000 (COP)", "MAX");
-		cbValorPedido.setPromptText("Seleccione el rango del precio");
-		cbValorPedido.getStyleClass().add("filtros-combo");
-		
-		
-		cbValorPedido.setButtonCell(new ListCell<>() {
-		    @Override
-		    protected void updateItem(String item, boolean empty) {
-		        super.updateItem(item, empty);
-		        setText(empty || item == null ? "Seleccione el rango del precio" : item);
-		    }
-		});
+	    TextField txtValor = new TextField();
+        txtValor.setPromptText("Valor total del pedido");
+        txtValor.getStyleClass().add("filtros-textfield");
+        
+        PrecioFormatter.aplicarFormato(txtValor);
 	
 		
 
@@ -178,7 +178,7 @@ public class ReporteCompraController {
 		    lblFechaPedido, dpFechaPedido,
 		    lblFechaEntrega, dpFechaEntrega,
 		    lblCantidad, txtCantidad,
-		    lblValorPedido, cbValorPedido
+		    lblValorPedido, txtValor
 		);
         
         
@@ -298,23 +298,25 @@ public class ReporteCompraController {
         });
 
         
-        cbValorPedido.valueProperty().addListener((obs, oldVal, newVal) -> {
-		    switch (newVal) {
-		        case "$ 1'500.000 (COP)":     
-		        	valor[0] = 1500000.0; 
-		        	break;
-		        case "$ 2'200.000 (COP)":     
-		        	valor[0] = 1500000.0;  
-		        	break;
-		        case "$ 500.000 (COP)":
-		        	valor[0] = 500000.0; 
-		        	break;
-		        case "MAX":
-		            valor[0] = null; 
-		            break;
-		    }
-		    actualizar.run();
-		});
+        txtValor.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) {
+               valor[0] = null;
+            } else {
+                try {
+                	String valorTexto = txtValor.getText().replace(".", "").replace("$", "").trim();
+                    Double valorInfo = Double.parseDouble(valorTexto);
+                    valor[0] = valorInfo;
+                    System.out.println(valorTexto);
+                    System.out.println(valorInfo);
+                } catch (Exception ex) {
+                    System.out.println("Error tipo: "+ ex);
+                }
+            }
+            actualizar.run();
+        });
+        
+        
+
         
         btnRestablecer.setOnAction((e) -> {
             // Estado
@@ -340,15 +342,9 @@ public class ReporteCompraController {
             });
 
             // Valor
-            cbValorPedido.getSelectionModel().clearSelection();
-            cbValorPedido.setValue(null);
-            cbValorPedido.setButtonCell(new javafx.scene.control.ListCell<>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty || item == null ? "Seleccione el rango del precio" : item);
-                }
-            });
+            txtValor.clear();
+            txtValor.setPromptText("Valor total del pedido");
+       
 
             // Cantidad
             txtCantidad.clear();
