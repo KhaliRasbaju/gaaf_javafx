@@ -4,6 +4,7 @@ package application.controllers;
 
 import application.models.request.RegistrarRequest;
 import application.models.request.UsuarioRequest;
+import application.models.response.ResponseCommon;
 import application.models.response.UsuarioResponse;
 import application.services.AutentificacionService;
 import application.services.UsuarioService;
@@ -23,7 +24,11 @@ import javafx.scene.paint.Color;
 
 public class RegistrarFormController {
 	
-	
+	private final StackPane content;
+
+	public RegistrarFormController(StackPane content) {
+		this.content = content;
+	}
 	
 	private static void onActionRegistrar(RegistrarRequest request) {
 		try {
@@ -35,10 +40,10 @@ public class RegistrarFormController {
 		}
 	}
 	
-	private static void onActionEditar( String id, UsuarioRequest request) {
+	private static ResponseCommon onActionEditar( String id, UsuarioRequest request) {
 		try {
 			UsuarioService service = new UsuarioService();
-			service.editarUsuario(id, request);
+			return service.editarUsuario(id, request);
 		} catch (Exception ex) {
 			System.out.println("Error tipo: " + ex);
 			throw new RuntimeException("Error tipo "+ ex);
@@ -46,7 +51,7 @@ public class RegistrarFormController {
 	}
 	
 	
-	public static VBox getScene(String title, UsuarioResponse usuario) {
+	public VBox getScene(String title, UsuarioResponse usuario) {
 	    // --- TÍTULO ---
 	    Label lblTitulo = new Label(String.format("📝 %s de Usuario", title));
 	    lblTitulo.getStyleClass().add("form-title");
@@ -109,11 +114,16 @@ public class RegistrarFormController {
 	    txtTelefono.setPromptText("Teléfono");
 	    txtTelefono.getStyleClass().add("form-field");
 	    txtTelefono.setTextFormatter(new TextFormatter<>(change -> {
-        	if (change.getControlNewText().matches("\\d*")) {
-                return change;
-            }
-            return null;
-        }));
+	        String nuevo = change.getControlNewText();
+	        if (!nuevo.matches("\\d*")) {
+	            return null;
+	        }	  
+	        
+	        if (nuevo.length() > 9) {
+	            return null;
+	        }
+	        return change;
+	    }));
         
 
 	 // Campo de contraseña real
@@ -236,12 +246,13 @@ public class RegistrarFormController {
 	                    txtUsuario.getText().isEmpty() ||
 	                    txtCorreo.getText().isEmpty() ||
 	                    txtNombre.getText().isEmpty() ||
+	                    !txtCorreo.getText().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$") ||
 	                    txtTelefono.getText().isEmpty() ||
 	                    (usuario == null && txtContraseña.getText().isEmpty()) ||
 	                    cbRol.getValue() == null;
 
 	            if (camposIncompletos) {
-	            	NotificationManager.showNotification(btnRegistrar.getScene(),"⚠️ Por favor, completa todos los campos." , Color.RED);
+	            	NotificationManager.showNotification(btnRegistrar.getScene(),"⚠ Por favor, completa todos los campos. El correo debe ser tener formato como gaaf@gaaf.co" , Color.ORANGE);
 	                return;
 	            }
 
@@ -261,8 +272,15 @@ public class RegistrarFormController {
 	                        txtTelefono.getText(),
 	                        rol
 	                );
-	                onActionEditar(usuario.getId(), request);
-	                NotificationManager.showNotification(btnRegistrar.getScene(), "✅ Usuario actualizado correctamente", Color.GREEN);
+	                var response = onActionEditar(usuario.getId(), request);
+	                
+	                if(response.getStatus() != 200) {
+                    	NotificationManager.showNotification(btnRegistrar.getScene(), String.format("❌ %s", response.getMessage()), Color.YELLOWGREEN);
+                    } else {
+                    	NotificationManager.showNotification(btnRegistrar.getScene(), String.format("✔ %s", response.getMessage()), Color.GREEN);
+                    }
+	                
+	                
 	            } else {
 	                RegistrarRequest request = new RegistrarRequest(
 	                        txtUsuario.getText(),
@@ -273,7 +291,7 @@ public class RegistrarFormController {
 	                        rol
 	                );
 	                onActionRegistrar(request);
-	                NotificationManager.showNotification(btnRegistrar.getScene(), "✅ Usuario creado correctamente", Color.GREEN);
+	                NotificationManager.showNotification(btnRegistrar.getScene(), "✔ Usuario creado correctamente", Color.GREEN);
 	            }
 
 	          
@@ -289,6 +307,16 @@ public class RegistrarFormController {
 	            System.out.println("Error tipo: " + ex);
 	            NotificationManager.showNotification(btnRegistrar.getScene(), "❌ Error al registrar/actualizar usuario", Color.RED);
 	        }
+	        
+	        try {
+	        	UsuarioService service = new UsuarioService();
+	        	var usuarios = service.obtenerUsuarios();
+				UsuarioController controller = new UsuarioController(content);
+				content.getChildren().setAll(controller.getScene(usuarios));
+				
+			} catch (Exception ex) {
+				throw new RuntimeException("Error tipo: "+ ex);
+			}
 	    });
 
 	    // --- VBOX PRINCIPAL ---

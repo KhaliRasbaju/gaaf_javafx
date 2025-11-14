@@ -2,151 +2,198 @@ package application.controllers;
 
 import application.models.response.Common;
 import application.models.response.ResponseCommon;
-import application.models.request.CommonRequest; 
+import application.models.request.CommonRequest;
 import application.services.MetodoPagoService;
 import application.utils.NotificationManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 
 public class MetodoPagoFormController {
 
-	
-	
-	private final StackPane content;
-	
-	
-	
-	
+    private final StackPane content;
 
-	 public MetodoPagoFormController(StackPane content) {
-		this.content = content;
-	}
+    public MetodoPagoFormController(StackPane content) {
+        this.content = content;
+    }
 
-	
-	
-	private static void onActionCrear(CommonRequest request) throws Exception {
-		try {
-			MetodoPagoService service = new MetodoPagoService();
-			service.crearMetodo(request);
-		} catch (Exception ex) {
-			System.out.println("Error tipo: " + ex);
-		}
-	}
-	
-	private static ResponseCommon onActionEditar( Long id,CommonRequest request) throws Exception {
-		try {
-			MetodoPagoService service = new MetodoPagoService();
-			return service.editarMetodo(id,request);
-		} catch (Exception ex) {
-			System.out.println("Error tipo: " + ex);
-			throw new Exception("Error tipo: "+ ex);
-		}
-	}
-	
-	
-	public static VBox getScene(String accion, Common metodoPago) {
-	    Label lblTitulo = new Label(accion + " Método de Pago");
-	    lblTitulo.getStyleClass().add("form-title");
+    // =============================
+    //     LÓGICA DE SERVICIO
+    // =============================
+    private static ResponseCommon onActionCrear(CommonRequest request) {
+        try {
+            MetodoPagoService service = new MetodoPagoService();
+            return service.crearMetodo(request);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error tipo: " + ex);
+        }
+    }
 
-	    // --- GRID FORMULARIO ---
-	    GridPane grid = new GridPane();
-	    grid.getStyleClass().add("form-container");
-	    grid.setHgap(25);
-	    grid.setVgap(15);
-	    grid.setPadding(new Insets(25));
-	    grid.setAlignment(Pos.CENTER);
+    private static ResponseCommon onActionEditar(Long id, CommonRequest request) {
+        try {
+            MetodoPagoService service = new MetodoPagoService();
+            return service.editarMetodo(id, request);
+        } catch (Exception ex) {
+            System.out.println("Error tipo: " + ex);
+            throw new RuntimeException("Error tipo: " + ex);
+        }
+    }
 
-	    ColumnConstraints col1 = new ColumnConstraints();
-	    col1.setPercentWidth(50);
-	    ColumnConstraints col2 = new ColumnConstraints();
-	    col2.setPercentWidth(50);
-	    grid.getColumnConstraints().addAll(col1, col2);
+    // =============================
+    //   ESCENA DEL FORMULARIO
+    // =============================
+    public VBox getScene(String accion, Common metodoPago) {
 
-	    // --- Campos ---
-	    Label lblNombre = new Label("Nombre del método de pago");
-	    lblNombre.getStyleClass().add("form-label");
-	    grid.add(lblNombre, 0, 0);
+        Label lblTitulo = new Label(accion + " Método de Pago");
+        lblTitulo.getStyleClass().add("form-title");
 
-	    TextField txtNombre = new TextField();
-	    txtNombre.setPromptText("Nombre del método de pago");
-	    txtNombre.getStyleClass().add("form-field");
-	    txtNombre.setTextFormatter(new TextFormatter<>(change -> {
-	        String newText = change.getControlNewText();
+        // --- CONTENEDOR GRID ---
+        GridPane grid = new GridPane();
+        grid.getStyleClass().add("form-container");
+        grid.setHgap(25);
+        grid.setVgap(15);
+        grid.setPadding(new Insets(25));
+        grid.setAlignment(Pos.CENTER);
 
-	        // Solo letras (incluye tildes y ñ) y espacios
-	        if (!newText.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) {
-	            return null; // bloquea caracteres inválidos
-	        }
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(50);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(50);
+        grid.getColumnConstraints().addAll(col1, col2);
 
-	        // Evitar dos espacios seguidos
-	        if (newText.contains("  ")) {
-	            return null;
-	        }
+        // =============================
+        //          CAMPO NOMBRE
+        // =============================
+        Label lblNombre = new Label("Nombre del método de pago");
+        lblNombre.getStyleClass().add("form-label");
 
-	        // Evitar espacio al inicio
-	        if (newText.startsWith(" ")) {
-	            return null;
-	        }
+        grid.add(lblNombre, 0, 0);
 
-	        return change;
-	    }));
+        TextField txtNombre = new TextField();
+        txtNombre.getStyleClass().add("form-field");
+        txtNombre.setPromptText("Nombre del método de pago");
 
-	    if (metodoPago != null && metodoPago.getNombre() != null)
-	        txtNombre.setText(metodoPago.getNombre());
-	    grid.add(txtNombre, 0, 1, 2, 1); // ocupa 2 columnas para centrar
+        txtNombre.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
 
-	    // --- Botón ---
-	    Button btnAccion = new Button(accion);
-	    btnAccion.getStyleClass().add("form-button");
-	    btnAccion.setPrefWidth(200);
+            if (!newText.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*"))
+                return null;
+            if (newText.contains("  "))
+                return null;
+            if (newText.startsWith(" "))
+                return null;
 
-	    HBox contBoton = new HBox(btnAccion);
-	    contBoton.setAlignment(Pos.CENTER);
-	    contBoton.setPadding(new Insets(10, 0, 0, 0));
+            return change;
+        }));
 
-	    Label lblMensaje = new Label();
-	    lblMensaje.setTextFill(Color.RED);
+        if (metodoPago != null)
+            txtNombre.setText(metodoPago.getNombre());
 
-	    // --- Acción del botón ---
-	    btnAccion.setOnAction(e -> {
-	        if (txtNombre.getText().isEmpty()) {
-	            lblMensaje.setText("⚠️ El nombre es obligatorio.");
-	            lblMensaje.setTextFill(Color.RED);
-	            return;
-	        }
+        grid.add(txtNombre, 0, 1, 2, 1);
 
-	        try {
-	            CommonRequest request = new CommonRequest(txtNombre.getText());
+        // =============================
+        //         BOTÓN ACCIÓN
+        // =============================
+        Button btnAccion = new Button(accion);
+        btnAccion.getStyleClass().add("form-button");
+        btnAccion.setPrefWidth(200);
 
-	            if (metodoPago == null) {
-	                onActionCrear(request);
-	                NotificationManager.showNotification(btnAccion.getScene(), "✅ Método de pago creado correctamente", Color.GREEN);
-	                txtNombre.clear();
-	            } else {
-	                var response = onActionEditar(metodoPago.getId(), request);
-	                NotificationManager.showNotification(btnAccion.getScene(), response.getMessage(), Color.GREEN);
-	                txtNombre.clear();
-	            }
-	        } catch (Exception ex) {
-	        	NotificationManager.showNotification(btnAccion.getScene(), "❎ Error al guardar el método de pago", Color.RED);
-	            System.out.println("Error: " + ex);
-	        }
-	    });
+        HBox contBoton = new HBox(btnAccion);
+        contBoton.setAlignment(Pos.CENTER);
+        contBoton.setPadding(new Insets(10, 0, 0, 0));
 
-	    // --- Layout principal ---
-	    VBox root = new VBox(20, lblTitulo, grid, contBoton, lblMensaje);
-	    root.setAlignment(Pos.TOP_CENTER);
-	    root.setPadding(new Insets(35));
-	    root.setStyle("-fx-background-color: #F8F9FA;");
+        // =============================
+        //     ACCIÓN DEL BOTÓN
+        // =============================
+        btnAccion.setOnAction(e -> {
 
-	    return root;
-	}
+            // --- Validación ---
+            if (txtNombre.getText().isEmpty()) {
+                NotificationManager.showNotification(
+                        btnAccion.getScene(),
+                        "⚠ El nombre es obligatorio.",
+                        Color.ORANGE
+                );
+                return;
+            }
 
+            try {
+                CommonRequest request = new CommonRequest(txtNombre.getText());
+
+                ResponseCommon response = (metodoPago == null)
+                        ? onActionCrear(request)
+                        : onActionEditar(metodoPago.getId(), request);
+
+                txtNombre.clear();
+
+                // -------------------------
+                // NOTIFICACIONES
+                // -------------------------
+                if (metodoPago == null) { // Crear
+                    if (response.getStatus() != 201) {
+                        NotificationManager.showNotification(
+                                btnAccion.getScene(),
+                                "❌ " + response.getMessage(),
+                                Color.YELLOWGREEN
+                        );
+                    } else {
+                        NotificationManager.showNotification(
+                                btnAccion.getScene(),
+                                "✔ " + response.getMessage(),
+                                Color.GREEN
+                        );
+                    }
+                } else { // Editar
+                    if (response.getStatus() != 200) {
+                        NotificationManager.showNotification(
+                                btnAccion.getScene(),
+                                "❌ " + response.getMessage(),
+                                Color.YELLOWGREEN
+                        );
+                    } else {
+                        NotificationManager.showNotification(
+                                btnAccion.getScene(),
+                                "✏ " + response.getMessage(),
+                                Color.GREEN
+                        );
+                    }
+                }
+
+            } catch (Exception ex) {
+                NotificationManager.showNotification(
+                        btnAccion.getScene(),
+                        "❌ Error al guardar el método de pago",
+                        Color.RED
+                );
+                System.out.println("Error: " + ex);
+            }
+
+            // -------------------------
+            // RECARGAR TABLA
+            // -------------------------
+            try {
+                MetodoPagoService service = new MetodoPagoService();
+                var metodos = service.obtenerMetodos();
+
+                MetodoPagoController controller = new MetodoPagoController(content);
+                content.getChildren().setAll(controller.getScene(metodos));
+
+            } catch (Exception ex) {
+                throw new RuntimeException("Error tipo: " + ex);
+            }
+
+        });
+
+        // =============================
+        //     LAYOUT FINAL
+        // =============================
+        VBox root = new VBox(20, lblTitulo, grid, contBoton);
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setPadding(new Insets(35));
+        root.setStyle("-fx-background-color: #F8F9FA;");
+
+        return root;
+    }
 }

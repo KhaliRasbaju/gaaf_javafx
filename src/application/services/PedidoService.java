@@ -29,10 +29,10 @@ public class PedidoService {
         return mapper.readValue(response, new TypeReference<List<Pedido>>() {});
     }
 
-    public Pedido crearPedido(PedidoRequest pedido) throws Exception {
+    public ResponseCommon crearPedido(PedidoRequest pedido) throws Exception {
         String jsonBody = mapper.writeValueAsString(pedido);
         String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/pedido/crear", jsonBody, false);
-        return mapper.readValue(response, Pedido.class);
+        return mapper.readValue(response, ResponseCommon.class);
     }
 
     public ResponseCommon recibirPedido(Long id) throws Exception {
@@ -50,10 +50,10 @@ public class PedidoService {
         return mapper.readValue(response, ResponseCommon.class);
     }
     
-    public Pedido editarPedido(Long id, PedidoRequest pedido) throws Exception {
+    public ResponseCommon editarPedido(Long id, PedidoRequest pedido) throws Exception {
         String jsonBody = mapper.writeValueAsString(pedido);
         String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/pedido/editar/" + id, jsonBody);
-        return mapper.readValue(response, Pedido.class);
+        return mapper.readValue(response, ResponseCommon.class);
     }
 
 }

@@ -11,11 +11,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 public class UsuarioEditarFormController {
 
+	private final StackPane content;
+
+	public UsuarioEditarFormController(StackPane content) {
+		this.content = content;
+	}
+	
     private boolean disable = true;
 
     private void aplicarDisable(TextField txtUsuario, TextField txtCorreo,
@@ -35,7 +42,7 @@ public class UsuarioEditarFormController {
 
     public VBox getScene(String title, UsuarioResponse usuario) {
 
-        Label lblTitulo = new Label(String.format("📝 %s de Usuario", title));
+        Label lblTitulo = new Label(String.format("📝 %s Usuario", title));
         lblTitulo.getStyleClass().add("form-title");
 
         Button toggleActive = new Button("Editar");
@@ -125,6 +132,17 @@ public class UsuarioEditarFormController {
         grid.add(lblRolUsuario, 1, row++);
 
         btnActualizar.setOnAction(e -> {
+        	
+        	if(txtNombre.getText().isEmpty() 
+        			|| txtUsuario.getText().isEmpty() 
+        			|| txtCorreo.getText().isEmpty() 
+        			|| txtTelefono.getText().isEmpty() 
+        			||lblRolUsuario.getText().isEmpty()
+        			|| !txtCorreo.getText().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+        			) {
+        		NotificationManager.showNotification(btnActualizar.getScene(), "⚠ Completa todos los campos. El correo debe ser tener formato como gaaf@gaaf.co", Color.ORANGE);
+        	}
+        	
             try {
                 UsuarioRequest request = new UsuarioRequest(
                         txtNombre.getText(),
@@ -135,14 +153,25 @@ public class UsuarioEditarFormController {
                 );
                 onActualizar(usuario.getId(), request);
                 NotificationManager.showNotification(btnActualizar.getScene(),
-                        "✅ Información de usuario actualizada correctamente",
+                        "✔ Información de usuario actualizada correctamente",
                         Color.GREEN);
             } catch (Exception ex) {
                 NotificationManager.showNotification(btnActualizar.getScene(),
-                        "❎ Error al actualizar la información del usuario",
+                        "❌ Error al actualizar la información del usuario",
                         Color.RED);
                 ex.printStackTrace();
             }
+            
+            try {
+				UsuarioService service = new UsuarioService();
+				var user = service.obtenerUsuario(usuario.getId());
+            	UsuarioEditarFormController controller = new UsuarioEditarFormController(content);
+            	content.getChildren().setAll(controller.getScene("Información del ", user));
+            	
+            	
+			} catch (Exception ex) {
+				throw new RuntimeException("Error tipo: " + ex);
+			}
         });
 
         toggleActive.setOnAction(e -> {

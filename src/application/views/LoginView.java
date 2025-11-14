@@ -135,9 +135,22 @@ public class LoginView {
 
            
         });
+        
+        VBox hbox = new VBox(15);
+        hbox.setAlignment(Pos.CENTER);
+        // Evitar que el HBox se expanda horizontalmente
+        VBox.setVgrow(hbox, Priority.NEVER);
 
+        // Evitar expansión de los campos
+        usernameField.setPrefWidth(350);
+        passwordPane.setPrefWidth(350);
+
+        // Opcional: limitar ancho total del HBox
+        hbox.setMaxWidth(400);
+
+        hbox.getChildren().addAll(usernameField, passwordPane);
         // 🔹 Layout principal (logo reemplaza el título)
-        VBox vbox = new VBox(15, logoView, lockIcon, usernameField, passwordPane, loginButton);
+        VBox vbox = new VBox(15, logoView, lockIcon, hbox, loginButton);
         vbox.setAlignment(Pos.CENTER);
         vbox.setPadding(new Insets(40));
         vbox.getStyleClass().add("login-root");

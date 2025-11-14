@@ -212,12 +212,7 @@ public class ReportePedidoProveedorController {
 
         // Columna Referencia de Pago
         TableColumn<PedidoProveedor, String> colReferencia = new TableColumn<>("Referencia Pago");
-        colReferencia.setCellValueFactory(cellData -> {
-            String referencia = cellData.getValue().getReferenciaPago();
-            return new SimpleStringProperty(
-                referencia != null ? referencia : "Sin referencia"
-            );
-        });
+        colReferencia.setCellValueFactory(new PropertyValueFactory<>("referenciaPago"));
 
         
         // Columna Método de Pago

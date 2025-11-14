@@ -17,16 +17,18 @@ public class ProductoService {
 	
 
 	
-	public Producto crearProducto(ProductoRequest productoRequest) throws Exception {
+	public ResponseCommon crearProducto(ProductoRequest productoRequest) throws Exception {
 		String json = mapper.writeValueAsString(productoRequest);
 		String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/producto/crear", json, false);
-		return mapper.readValue(response, Producto.class);	
+		System.out.println(response);
+		return mapper.readValue(response, ResponseCommon.class);	
 	}
 	
-	public Producto editarProducto(ProductoRequest productoRequest, Long id) throws Exception {
+	public ResponseCommon editarProducto(ProductoRequest productoRequest, Long id) throws Exception {
 		String json = mapper.writeValueAsString(productoRequest);
 		String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/producto/editar/"+id, json);
-		return mapper.readValue(response, Producto.class);	
+		System.out.println(response);
+		return mapper.readValue(response, ResponseCommon.class);	
 	}
 
 	public Producto obtenerProducto(Long id) throws Exception{

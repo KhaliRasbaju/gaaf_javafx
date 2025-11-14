@@ -22,9 +22,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.ScrollPane;
 
 public abstract class DashboardViewBase {
-	
+
     protected boolean menuOpen = true;
     protected VBox vbox;
     protected StackPane content;
@@ -34,13 +35,13 @@ public abstract class DashboardViewBase {
     protected Button toggleMenu;
     protected Button settingsButton;
     protected ImageView empresaLogo;
+    private ScrollPane sidebarScroll;
 
     private VBox settingsMenu;
     private boolean settingsOpen = false;
 
-    private Text userLabel; // ✅ Guardamos la referencia
+    private Text userLabel;
 
-    
     public DashboardViewBase() {
         vbox = new VBox(12);
         vbox.setPadding(new Insets(18));
@@ -59,9 +60,26 @@ public abstract class DashboardViewBase {
         content.getStyleClass().add("dashboard-content");
         Text placeholder = new Text("Selecciona una opción del menú");
         content.getChildren().add(placeholder);
-        HBox.setHgrow(content, Priority.ALWAYS);
 
-        mainContainer = new HBox(vbox, content);
+        // SCROLLPANE DEL SIDEBAR (★ NUEVO ★)
+        sidebarScroll = new ScrollPane(vbox);
+        sidebarScroll.setFitToWidth(true);
+        sidebarScroll.setFitToHeight(true);
+        sidebarScroll.setMinHeight(0); 
+        sidebarScroll.setPrefHeight(Double.MAX_VALUE);
+        HBox.setHgrow(sidebarScroll, Priority.NEVER);
+        VBox.setVgrow(vbox, Priority.ALWAYS);
+
+
+        // Hacerlo totalmente transparente
+        sidebarScroll.setStyle("-fx-background-color: transparent;");
+        sidebarScroll.setBackground(Background.EMPTY);
+        sidebarScroll.setBorder(Border.EMPTY);
+
+        sidebarScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        sidebarScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        
+        mainContainer = new HBox(sidebarScroll, content);
 
         Image logoImg = new Image(getClass().getResource("/application/resources/logoGAAF.png").toExternalForm());
         empresaLogo = new ImageView(logoImg);
@@ -135,72 +153,67 @@ public abstract class DashboardViewBase {
     }
 
     private void toggleMenu() {
-        double start = vbox.getWidth();
+
+        double start = sidebarScroll.getPrefWidth();
         double target = menuOpen ? 140 : 300;
 
         Timeline t = new Timeline(
                 new KeyFrame(Duration.ZERO,
-                        new KeyValue(vbox.minWidthProperty(), start),
-                        new KeyValue(vbox.maxWidthProperty(), start)
+                        new KeyValue(sidebarScroll.prefWidthProperty(), start),
+                        new KeyValue(sidebarScroll.minWidthProperty(), start),
+                        new KeyValue(sidebarScroll.maxWidthProperty(), start)
                 ),
                 new KeyFrame(Duration.millis(280),
-                        new KeyValue(vbox.minWidthProperty(), target, Interpolator.EASE_BOTH),
-                        new KeyValue(vbox.maxWidthProperty(), target, Interpolator.EASE_BOTH)
+                        new KeyValue(sidebarScroll.prefWidthProperty(), target, Interpolator.EASE_BOTH),
+                        new KeyValue(sidebarScroll.minWidthProperty(), target, Interpolator.EASE_BOTH),
+                        new KeyValue(sidebarScroll.maxWidthProperty(), target, Interpolator.EASE_BOTH)
                 )
         );
+
         t.play();
 
-        
+
+        // 🔥 Ocultar todos los textos: botones, footer, y settings
         for (Node node : vbox.getChildren()) {
 
+            // Menú principal
             if (node instanceof Button btn) {
                 Text lbl = (Text) btn.getProperties().get("labelText");
-                HBox hb = (HBox) btn.getProperties().get("hbox");
-
-                if (lbl != null && hb != null) {
-                    boolean showText = !menuOpen;
-
-                    lbl.setVisible(showText);
-                   
-                }
+                if (lbl != null) lbl.setVisible(!menuOpen);
             }
 
-            // ✅ Footer: usuario
+            // Footer (usuario + engranaje)
             if (node.getProperties().containsKey("labelTextFooter")) {
                 Text lblFooter = (Text) node.getProperties().get("labelTextFooter");
-                lblFooter.setVisible(!menuOpen);
+                if (lblFooter != null) lblFooter.setVisible(!menuOpen);
             }
 
-            // ✅ Settings menu completo
-            if (node instanceof VBox settingsContainer) {
-                if (settingsContainer == settingsMenu) {
-                    for (Node item : settingsContainer.getChildren()) {
-                        if (item instanceof Button btn) {
-                            Text lbl = (Text) btn.getProperties().get("labelText");
-                            HBox hb = (HBox) btn.getProperties().get("hbox");
-
-                            if (lbl != null && hb != null) {
-                                lbl.setVisible(!menuOpen);
-                               
-                            }
-                        }
+            // ⚙ Textos del menú de configuración
+            if (node instanceof VBox settingsBox) {
+                for (Node n : settingsBox.getChildren()) {
+                    if (n instanceof Button btnSettings) {
+                        Text lblSettings = (Text) btnSettings.getProperties().get("labelText");
+                        if (lblSettings != null) lblSettings.setVisible(!menuOpen);
                     }
                 }
             }
         }
 
-
         menuOpen = !menuOpen;
 
-        // ✅ Si el sidebar se cierra, se oculta settings automáticamente
         if (!menuOpen && settingsOpen) toggleSettingsMenu();
     }
 
+
+    
 
     public Scene getScene() {
         BorderPane root = new BorderPane();
         root.setTop(headerBox);
         root.setCenter(mainContainer);
+        root.setCenter(mainContainer);
+        VBox.setVgrow(mainContainer, Priority.ALWAYS);
+        HBox.setHgrow(content, Priority.ALWAYS);
         Scene scene = new Scene(root, 1000, 650);
         scene.getStylesheets().add(getClass().getResource("/application/resources/application.css").toExternalForm());
         return scene;
@@ -241,11 +254,11 @@ public abstract class DashboardViewBase {
         settingsMenu.getStyleClass().add("dashboard-settings-menu");
         settingsMenu.getChildren().add(createSettingsItem("🪪", "Información actual"));
         settingsMenu.getChildren().add(createSettingsItem("🔑", "Cambiar contraseña"));
-        settingsMenu.setAlignment(Pos.CENTER_LEFT); 
+
         Button logoutBtn = createSettingsItem("🚪", "Cerrar sesión");
         logoutBtn.setOnAction(e -> onSalir());
-
         settingsMenu.getChildren().add(logoutBtn);
+
         vbox.getChildren().add(settingsMenu);
     }
 
@@ -267,9 +280,7 @@ public abstract class DashboardViewBase {
         btn.getStyleClass().add("dashboard-settings-item");
 
         btn.getProperties().put("labelText", labelText);
-        btn.getProperties().put("hbox", hbox);
 
-        // ✅ Animación hover igual que menú
         DropShadow glow = new DropShadow(20, Color.web("#E5E5E5"));
         glow.setSpread(0.45);
 
@@ -288,61 +299,44 @@ public abstract class DashboardViewBase {
             st.setToY(1);
             st.play();
         });
-        
+
         btn.setOnAction((e) -> {
-        	switch (icon) {
-				case "🪪": {
-					
-					try {
-						onObtenerInformacion();
-						break;
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-				case "🔑": {
-					try {
-						onCredenciales();
-						break;
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-				
-				default:
-					throw new IllegalArgumentException("Unexpected value: " + icon);
-			}
+            try {
+                switch (icon) {
+                    case "🪪": onObtenerInformacion(); break;
+                    case "🔑": onCredenciales(); break;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         Tooltip.install(btn, new Tooltip(text));
         return btn;
     }
-    
-    private static String getId() {
-	    return SessionManager.getInstance().getId();
-	}
-    
-    private void onObtenerInformacion() throws Exception {
-    	try {
-    		String id = getId();
-			UsuarioService service = new UsuarioService();
-			var usuario = service.obtenerUsuario(id);
-			UsuarioEditarFormController controller = new UsuarioEditarFormController();
-			content.getChildren().add(controller.getScene("Información del", usuario));
-		} catch (Exception ex) {
-			throw new Exception("Error tipo: "+ ex );
-		}
-    }
-    
-    private void onCredenciales() throws Exception{
-    	try {    		
-    		String id = getId();
-			content.getChildren().add(CredencialesFormController.getScene("Cambiar contraseña del ", id));
-		} catch (Exception ex) {
-			throw new Exception("Error tipo: "+ ex );
-		}
-    }
-    
-    
 
+    private static String getId() {
+        return SessionManager.getInstance().getId();
+    }
+
+    private void onObtenerInformacion() throws Exception {
+        try {
+            String id = getId();
+            UsuarioService service = new UsuarioService();
+            var usuario = service.obtenerUsuario(id);
+            UsuarioEditarFormController controller = new UsuarioEditarFormController(content);
+            content.getChildren().add(controller.getScene("Información del", usuario));
+        } catch (Exception ex) {
+            throw new Exception("Error tipo: " + ex);
+        }
+    }
+
+    private void onCredenciales() throws Exception {
+        try {
+            String id = getId();
+            content.getChildren().add(CredencialesFormController.getScene("Cambiar contraseña del ", id));
+        } catch (Exception ex) {
+            throw new Exception("Error tipo: " + ex);
+        }
+    }
 }

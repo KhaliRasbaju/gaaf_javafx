@@ -8,6 +8,7 @@ import application.models.request.UbicacionRequest;
 import application.models.response.Common;
 import application.models.response.Municipio;
 import application.models.response.Proveedor;
+import application.models.response.ResponseCommon;
 import application.services.DepartamentoService;
 import application.services.EntidadService;
 import application.services.MunicipioService;
@@ -19,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -28,24 +30,28 @@ public class ProveedorFormController {
 	private static Long idEntidad;
 	private static Long idDepartamento;
 	private static Long idMunicipio;
-	
+	private final StackPane content;
+
+    public ProveedorFormController(StackPane content) {
+        this.content = content;
+    }
 	
 
-    private static void onActionRegistrar(ProveedorRequest request) {
+    private static ResponseCommon onActionRegistrar(ProveedorRequest request) {
         try {
             ProveedorService service = new ProveedorService();
-            System.out.println(service.crearProveedor(request));
+            return service.crearProveedor(request);
         } catch (Exception ex) {
-            System.out.println("Error tipo: " + ex);
+            throw new RuntimeException("Error tipo: " + ex);
         }
     }
 
-    private static void onActionActualizar(Long nit, ProveedorRequest request) {
+    private static ResponseCommon onActionActualizar(Long nit, ProveedorRequest request) {
         try {
             ProveedorService service = new ProveedorService();
-            service.editarProveedor(nit, request);
+            return service.editarProveedor(nit, request);
         } catch (Exception ex) {
-            System.out.println("Error tipo: " + ex);
+            throw new RuntimeException("Error tipo: " + ex);
         }
     }
     
@@ -88,7 +94,7 @@ public class ProveedorFormController {
         }
     }
     
-    private static Municipio  municipio(Long id) throws Exception {
+    private static Municipio municipio(Long id) throws Exception {
         try {
             MunicipioService service = new MunicipioService();
             System.out.println(service.obtenerMunicipio(id));
@@ -102,7 +108,7 @@ public class ProveedorFormController {
     }
 
 
-    public static ScrollPane getScene(String title, Proveedor proveedor) throws Exception {
+    public  ScrollPane getScene(String title, Proveedor proveedor) throws Exception {
     	
     	 // --- TÍTULO ---
         Label titulo = new Label(String.format("🏢 %s Proveedor", title));
@@ -194,11 +200,16 @@ public class ProveedorFormController {
         txtTelefono.getStyleClass().add("form-field");
         
         txtTelefono.setTextFormatter(new TextFormatter<>(change -> {
-        	if (change.getControlNewText().matches("\\d*")) {
-                return change;
-            }
-            return null;
-        }));
+	        String nuevo = change.getControlNewText();
+	        if (!nuevo.matches("\\d*")) {
+	            return null;
+	        }	  
+	        
+	        if (nuevo.length() > 10) {
+	            return null;
+	        }
+	        return change;
+	    }));
         
         Label lblTelefono = new Label("Teléfono");
         lblTelefono.getStyleClass().add("form-label");
@@ -376,6 +387,10 @@ public class ProveedorFormController {
                     }
                 } catch (Exception ignored) {}
             });
+            
+            txtNumeroCuenta.setDisable(true);
+            cbTipo.setDisable(true);
+            cbEntidad.setDisable(true);
         }
 
         // --- BOTÓN ---
@@ -385,15 +400,16 @@ public class ProveedorFormController {
         contBoton.setAlignment(Pos.CENTER);
         contBoton.setPadding(new Insets(10, 0, 20, 0));
 
-        Label lblMensaje = new Label();
-        lblMensaje.setTextFill(Color.RED);
 
         // --- EVENTO BOTÓN ---
         btnAccion.setOnAction(e -> {
-            if (txtNit.getText().isEmpty() || txtNombre.getText().isEmpty()
-                    || txtCorreo.getText().isEmpty() || txtTelefono.getText().isEmpty()) {
-                lblMensaje.setText("⚠️ Completa todos los campos.");
-                lblMensaje.setTextFill(Color.RED);
+            if (txtNit.getText().isEmpty() 
+            		|| txtNombre.getText().isEmpty()
+                    || txtCorreo.getText().isEmpty() 
+                    || txtTelefono.getText().isEmpty() 
+                    || !txtCorreo.getText().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+                    ) {
+            	NotificationManager.showNotification(btnAccion.getScene(), "⚠ Completa todos los campos. El correo debe ser tener formato como gaaf@gaaf.co ", Color.ORANGE);              
                 return;
             }
 
@@ -426,11 +442,19 @@ public class ProveedorFormController {
                 );
 
                 if (proveedor == null) {
-                    onActionRegistrar(request);
-                    NotificationManager.showNotification(btnAccion.getScene(), "✅ Proveedor registrado correctamente", Color.GREEN);
+                    var response = onActionRegistrar(request);
+                    if(response.getStatus() != 201) {
+                    	NotificationManager.showNotification(btnAccion.getScene(), String.format("❌ %s", response.getMessage()), Color.YELLOWGREEN);
+                    } else {
+                    	NotificationManager.showNotification(btnAccion.getScene(), String.format("✔ %s", response.getMessage()), Color.GREEN);
+                    }
                 } else {
-                    onActionActualizar(proveedor.getNit(), request);
-                    NotificationManager.showNotification(btnAccion.getScene(), "✏️ Proveedor actualizado correctamente", Color.GREEN);
+                    var response = onActionActualizar(proveedor.getNit(), request);
+                    if(response.getStatus() != 200) {
+                    	NotificationManager.showNotification(btnAccion.getScene(), String.format("❌ %s", response.getMessage()), Color.YELLOWGREEN);
+                    } else {
+                    	NotificationManager.showNotification(btnAccion.getScene(), String.format("✏ %s", response.getMessage()), Color.GREEN);
+                    }
                 }
 
                 txtNit.clear();
@@ -442,12 +466,21 @@ public class ProveedorFormController {
             } catch (Exception ex2) {
             	NotificationManager.showNotification(btnAccion.getScene(), "❎ Error en el registro del proveedor", Color.RED);
             }
+            
+            try {
+            	ProveedorService service = new ProveedorService();
+            	var proveedores = service.obtenerProveedores();
+				ProveedorController controller = new ProveedorController(content);
+				content.getChildren().setAll(controller.getScene(proveedores));
+			} catch (Exception ex) {
+				throw new RuntimeException("Error tipo: "+ ex);
+			}
         });
 
        
 
         // --- ENVOLTORIO PRINCIPAL ---
-        VBox root = new VBox(20, titulo, gridInfo, gridUbicacion, gridCuenta, contBoton, lblMensaje);
+        VBox root = new VBox(20, titulo, gridInfo, gridUbicacion, gridCuenta, contBoton);
         root.setAlignment(Pos.TOP_CENTER);
         root.setPadding(new Insets(30));
         root.setStyle("-fx-background-color: #F8F9FA;");
@@ -456,7 +489,7 @@ public class ProveedorFormController {
         scroll.setFitToWidth(true);
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scroll.setStyle("-fx-background-color: transparent;");
+        scroll.getStyleClass().add("custom-scroll");
 
         return scroll;
     }

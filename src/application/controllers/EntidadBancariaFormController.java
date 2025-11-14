@@ -2,6 +2,7 @@ package application.controllers;
 
 import application.models.request.CommonRequest;
 import application.models.response.Common;
+import application.models.response.ResponseCommon;
 import application.services.EntidadService;
 import application.utils.NotificationManager;
 import javafx.geometry.Insets;
@@ -10,144 +11,191 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.layout.StackPane;
 
 public class EntidadBancariaFormController {
 
-	private final StackPane content;
-	
-	
-	
-	 public EntidadBancariaFormController(StackPane content) {
-		this.content = content;
-	}
+    private final StackPane content;
 
-	
+    public EntidadBancariaFormController(StackPane content) {
+        this.content = content;
+    }
 
-	
-	
-	private static void onActionCrear(CommonRequest request) {
-		try {
-			 EntidadService service = new EntidadService();
-			 service.crearEntidad(request);
-		} catch (Exception ex) {
-			System.out.println("Error tipo: " + ex);
-		}
-	}
-	
-	
-	private static void onActionEditar(Long id,CommonRequest request) {
-		try {
-			EntidadService service = new EntidadService();
-			service.editarEntidad(id, request);
-		} catch (Exception ex) {
-			System.out.println("Error tipo: " + ex);
-		}
-	}
-	
-	
-	
-	
-	public static VBox getScene(String modo, Common entidad) {
-	    Label lblTitulo = new Label(modo + " Entidad Bancaria");
-	    lblTitulo.getStyleClass().add("form-title");
+    // ===========================
+    //   LÓGICA DE SERVICIO
+    // ===========================
 
-	    // --- GRID FORMULARIO ---
-	    GridPane grid = new GridPane();
-	    grid.getStyleClass().add("form-container");
-	    grid.setHgap(25);
-	    grid.setVgap(15);
-	    grid.setPadding(new Insets(25));
-	    grid.setAlignment(Pos.CENTER);
+    private static ResponseCommon crearEntidad(CommonRequest request) {
+        try {
+            return new EntidadService().crearEntidad(request);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error tipo: " + ex);
+        }
+    }
 
-	    ColumnConstraints col1 = new ColumnConstraints();
-	    col1.setPercentWidth(50);
-	    ColumnConstraints col2 = new ColumnConstraints();
-	    col2.setPercentWidth(50);
-	    grid.getColumnConstraints().addAll(col1, col2);
+    private static ResponseCommon editarEntidad(Long id, CommonRequest request) {
+        try {
+            return new EntidadService().editarEntidad(id, request);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error tipo: " + ex);
+        }
+    }
 
-	    // --- Campo Nombre ---
-	    Label lblNombre = new Label("Nombre de la entidad");
-	    lblNombre.getStyleClass().add("form-label");
-	    grid.add(lblNombre, 0, 0);
+    // ===========================
+    //  ESCENA DEL FORMULARIO
+    // ===========================
 
-	    TextField txtNombre = new TextField();
-	    txtNombre.setPromptText("Nombre de la entidad");
-	    txtNombre.getStyleClass().add("form-field");
-	    txtNombre.setTextFormatter(new TextFormatter<>(change -> {
-	        String newText = change.getControlNewText();
+    public VBox getScene(String modo, Common entidad) {
 
-	        // Solo letras (incluye tildes y ñ) y espacios
-	        if (!newText.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) {
-	            return null; // bloquea caracteres inválidos
-	        }
+        Label lblTitulo = new Label(modo + " Entidad Bancaria");
+        lblTitulo.getStyleClass().add("form-title");
 
-	        // Evitar dos espacios seguidos
-	        if (newText.contains("  ")) {
-	            return null;
-	        }
+        GridPane grid = new GridPane();
+        grid.getStyleClass().add("form-container");
+        grid.setHgap(25);
+        grid.setVgap(15);
+        grid.setPadding(new Insets(25));
+        grid.setAlignment(Pos.CENTER);
 
-	        // Evitar espacio al inicio
-	        if (newText.startsWith(" ")) {
-	            return null;
-	        }
+        // Columnas
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(50);
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(50);
+        grid.getColumnConstraints().addAll(col1, col2);
 
-	        return change;
-	    }));
+        // -----------------------------------------
+        // CAMPO NOMBRE
+        // -----------------------------------------
+        Label lblNombre = new Label("Nombre de la entidad");
+        lblNombre.getStyleClass().add("form-label");
+        grid.add(lblNombre, 0, 0);
 
-	    if (entidad != null && entidad.getNombre() != null)
-	        txtNombre.setText(entidad.getNombre());
-	    grid.add(txtNombre, 0, 1, 2, 1); // ocupa dos columnas
+        TextField txtNombre = new TextField();
+        txtNombre.setPromptText("Nombre de la entidad");
+        txtNombre.getStyleClass().add("form-field");
 
-	    // --- Botón ---
-	    Button btnGuardar = new Button(entidad == null ? "Crear" : "Actualizar");
-	    btnGuardar.getStyleClass().add("form-button");
-	    btnGuardar.setPrefWidth(200);
+        txtNombre.setTextFormatter(new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
 
-	    HBox contBoton = new HBox(btnGuardar);
-	    contBoton.setAlignment(Pos.CENTER);
-	    contBoton.setPadding(new Insets(10, 0, 0, 0));
+            if (!newText.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*"))
+                return null;
+            if (newText.contains("  "))
+                return null;
+            if (newText.startsWith(" "))
+                return null;
 
-	    Label lblMensaje = new Label();
-	    lblMensaje.setTextFill(Color.RED);
+            return change;
+        }));
 
-	    // --- Acción del botón ---
-	    btnGuardar.setOnAction(e -> {
-	        if (txtNombre.getText().isEmpty()) {
-	            lblMensaje.setText("⚠️ El nombre es obligatorio.");
-	            lblMensaje.setTextFill(Color.RED);
-	            return;
-	        }
+        if (entidad != null)
+            txtNombre.setText(entidad.getNombre());
 
-	        try {
-	            CommonRequest request = new CommonRequest(txtNombre.getText());
-	            if (entidad == null) {
-	                onActionCrear(request);
-	                NotificationManager.showNotification(btnGuardar.getScene(), "✅ Entidad bancaria creada correctamente", Color.GREEN);
-	                txtNombre.clear();
-	            } else {
-	                onActionEditar(entidad.getId(), request);
-	                NotificationManager.showNotification(btnGuardar.getScene(), "✅ Entidad bancaria actualizada correctamente", Color.GREEN);
-	                txtNombre.clear();
-	            }
-	        } catch (Exception ex) {
-	        	NotificationManager.showNotification(btnGuardar.getScene(), "❎ Error al guardar la entidad bancaria", Color.RED);
-	            System.out.println("Error tipo: " + ex);
-	        }
-	    });
+        grid.add(txtNombre, 0, 1, 2, 1);
 
-	    // --- Layout principal ---
-	    VBox root = new VBox(20, lblTitulo, grid, contBoton, lblMensaje);
-	    root.setAlignment(Pos.TOP_CENTER);
-	    root.setPadding(new Insets(30));
-	    root.setStyle("-fx-background-color: #F8F9FA;");
+        // -----------------------------------------
+        // BOTÓN GUARDAR
+        // -----------------------------------------
+        Button btnGuardar = new Button(entidad == null ? "Crear" : "Actualizar");
+        btnGuardar.getStyleClass().add("form-button");
+        btnGuardar.setPrefWidth(200);
 
-	    return root;
-	}
+        HBox contBoton = new HBox(btnGuardar);
+        contBoton.setAlignment(Pos.CENTER);
+        contBoton.setPadding(new Insets(10, 0, 0, 0));
 
+        // -----------------------------------------
+        // ACCIÓN DEL BOTÓN
+        // -----------------------------------------
+
+        btnGuardar.setOnAction(e -> {
+
+            // Validación
+            if (txtNombre.getText().isEmpty()) {
+                NotificationManager.showNotification(
+                        btnGuardar.getScene(),
+                        "⚠ El nombre es obligatorio.",
+                        Color.ORANGE
+                );
+                return;
+            }
+
+            try {
+                CommonRequest request = new CommonRequest(txtNombre.getText());
+                ResponseCommon response;
+
+                // CREATE / UPDATE
+                if (entidad == null)
+                    response = crearEntidad(request);
+                else
+                    response = editarEntidad(entidad.getId(), request);
+
+                // Limpia campo luego de guardar
+                txtNombre.clear();
+
+                // Notificaciones según estado
+                if (entidad == null) { // Creación
+                    if (response.getStatus() != 201) {
+                        NotificationManager.showNotification(
+                                btnGuardar.getScene(),
+                                "❌ " + response.getMessage(),
+                                Color.YELLOWGREEN
+                        );
+                    } else {
+                        NotificationManager.showNotification(
+                                btnGuardar.getScene(),
+                                "✔ " + response.getMessage(),
+                                Color.GREEN
+                        );
+                    }
+
+                } else { // Edición
+                    if (response.getStatus() != 200) {
+                        NotificationManager.showNotification(
+                                btnGuardar.getScene(),
+                                "❌ " + response.getMessage(),
+                                Color.YELLOWGREEN
+                        );
+                    } else {
+                        NotificationManager.showNotification(
+                                btnGuardar.getScene(),
+                                "✏ " + response.getMessage(),
+                                Color.GREEN
+                        );
+                    }
+                }
+
+            } catch (Exception ex) {
+                NotificationManager.showNotification(
+                        btnGuardar.getScene(),
+                        "❌ Error al guardar la entidad bancaria",
+                        Color.RED
+                );
+                System.out.println("Error tipo: " + ex);
+            }
+
+            // -----------------------------------------
+            // RECARGA DE TABLA DESPUÉS DE GUARDAR
+            // -----------------------------------------
+            try {
+                EntidadService service = new EntidadService();
+                var entidades = service.obtenerEntidades();
+
+                EntidadBancariaController controller = new EntidadBancariaController(content);
+                content.getChildren().setAll(controller.getScene(entidades));
+
+            } catch (Exception ex) {
+                throw new RuntimeException("Error tipo: " + ex);
+            }
+
+        });
+
+        VBox root = new VBox(20, lblTitulo, grid, contBoton);
+        root.setAlignment(Pos.TOP_CENTER);
+        root.setPadding(new Insets(30));
+        root.setStyle("-fx-background-color: #F8F9FA;");
+
+        return root;
+    }
 }

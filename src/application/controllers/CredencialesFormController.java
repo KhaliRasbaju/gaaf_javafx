@@ -1,6 +1,7 @@
 package application.controllers;
 
 import application.models.request.CredencialesRequest;
+import application.models.response.ResponseCommon;
 import application.services.UsuarioService;
 import application.utils.NotificationManager;
 import javafx.beans.value.ChangeListener;
@@ -14,20 +15,36 @@ public class CredencialesFormController {
 
     private static final String PASSWORD_REGEX = "^[A-Za-z0-9]{8,}$";
 
-    private static void onCambiarCredenciales(String id, CredencialesRequest request) throws Exception {
+    // 🔹 Campos como atributos para usar fuera de getScene()
+    private static PasswordField contrasena;
+    private static PasswordField contrasenaConfirma;
+    private static Button btnActualizar;
+
+    private static String userId;
+
+    /** ============================================================
+     *  🔹 Acción real: llamar al servicio
+     *  ============================================================ */
+    private static ResponseCommon onCambiarCredenciales(String id, CredencialesRequest request) throws Exception {
         UsuarioService service = new UsuarioService();
-        service.editarCredenciales(id, request);
+        return service.editarCredenciales(id, request);
     }
 
+    /** ============================================================
+     *  🔹 Método principal: Construir vista
+     *  ============================================================ */
     public static VBox getScene(String title, String id) {
+
+        userId = id;
 
         Label lblTitulo = new Label(String.format("📝 %s de Usuario", title));
         lblTitulo.getStyleClass().add("form-title");
 
         //====== CAMPO PASSWORD ======//
         Label lblContrasena = new Label("Contraseña:");
-        PasswordField contrasena = new PasswordField();
+        contrasena = new PasswordField();
         contrasena.setPromptText("Nueva contraseña");
+
         TextField contrasenaVisible = new TextField();
         contrasenaVisible.setVisible(false);
         contrasenaVisible.setManaged(false);
@@ -39,8 +56,9 @@ public class CredencialesFormController {
 
         //====== CAMPO CONFIRM PASSWORD ======//
         Label lblContrasenaConfirmar = new Label("Confirmar contraseña:");
-        PasswordField contrasenaConfirma = new PasswordField();
+        contrasenaConfirma = new PasswordField();
         contrasenaConfirma.setPromptText("Repetir contraseña");
+
         TextField contrasenaConfirmaVisible = new TextField();
         contrasenaConfirmaVisible.setVisible(false);
         contrasenaConfirmaVisible.setManaged(false);
@@ -54,13 +72,13 @@ public class CredencialesFormController {
         Label lblInfo = new Label("📌 Mín 8 caracteres, solo letras y números. Ambas deben coincidir.");
         lblInfo.setStyle("-fx-font-size: 12px; -fx-text-fill: #707070;");
 
-        Button btnActualizar = new Button("Actualizar");
+        btnActualizar = new Button("Actualizar");
         btnActualizar.getStyleClass().add("form-button");
         btnActualizar.setDisable(true);
 
         agregarValidacionPassword(contrasena, contrasenaConfirma, btnActualizar);
 
-        //====== GRID LAYOUT ======//
+        //====== GRID ======//
         GridPane grid = new GridPane();
         grid.getStyleClass().add("form-container");
         grid.setHgap(20);
@@ -74,25 +92,9 @@ public class CredencialesFormController {
         grid.add(panePassword2, 1, row++);
 
         //====== ACCIÓN BOTÓN ======//
-        btnActualizar.setOnAction(e -> {
-            if (!contrasena.getText().equals(contrasenaConfirma.getText())) {
-                NotificationManager.showNotification(btnActualizar.getScene(),
-                        "❌ Las contraseñas no coinciden", Color.RED);
-                return;
-            }
+        btnActualizar.setOnAction(e -> cambiarCredenciales());
 
-            try {
-                CredencialesRequest request = new CredencialesRequest(contrasena.getText());
-                onCambiarCredenciales(id, request);
-                NotificationManager.showNotification(btnActualizar.getScene(),
-                        "✅ Contraseña cambiada exitosamente", Color.GREEN);
-            } catch (Exception ex) {
-                NotificationManager.showNotification(btnActualizar.getScene(),
-                        "❎ Error al cambiar la contraseña", Color.RED);
-                System.out.println("Error tipo: " + ex);
-            }
-        });
-
+        //====== ROOT ======//
         VBox root = new VBox(20, lblTitulo, lblInfo, grid, btnActualizar);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(30));
@@ -101,7 +103,76 @@ public class CredencialesFormController {
         return root;
     }
 
-    // ✅ Controle mostrarse/ocultarse con ojito
+
+    /** ============================================================
+     *  🔹 MÉTODO PRINCIPAL: cambiarCredenciales()
+     *  ============================================================ */
+    private static void cambiarCredenciales() {
+
+        if (!validarCampos()) {
+            return;
+        }
+
+        try {
+            CredencialesRequest request = new CredencialesRequest(contrasena.getText());
+            var response  = onCambiarCredenciales(userId, request);
+            
+            if(response.getStatus() != 200) {            	
+            	manejarRespuesta(true, String.format("❌ ", response.getMessage()));
+            } else {
+            	manejarRespuesta(true, String.format("✔ ", response.getMessage()));
+            }       
+        } catch (Exception ex) {
+            manejarRespuesta(false, "❌ Error al cambiar la contraseña");
+            System.out.println("Error tipo: " + ex);
+        } finally {        	
+        	contrasena.setText(null);
+        	contrasena.setPromptText("Nueva contraseña");
+        	contrasenaConfirma.setText(null);
+        	contrasenaConfirma.setPromptText("Repetir contraseña");
+        }
+    }
+
+
+    /** ============================================================
+     *  🔹 Validaciones
+     *  ============================================================ */
+    private static boolean validarCampos() {
+
+        String pass = contrasena.getText();
+        String conf = contrasenaConfirma.getText();
+
+        if (!pass.matches(PASSWORD_REGEX)) {
+            manejarRespuesta(false, "❌ La contraseña debe tener mínimo 8 caracteres y ser alfanumérica");
+            return false;
+        }
+
+        if (!pass.equals(conf)) {
+            manejarRespuesta(false, "❌ Las contraseñas no coinciden");
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /** ============================================================
+     *  🔹 Manejo de respuesta
+     *  ============================================================ */
+    private static void manejarRespuesta(boolean exito, String mensaje) {
+        Color color = exito ? Color.GREEN : Color.RED;
+
+        NotificationManager.showNotification(
+                btnActualizar.getScene(),
+                mensaje,
+                color
+        );
+    }
+
+
+    /** ============================================================
+     *  🔹 Mostrar/ocultar contraseña
+     *  ============================================================ */
     private static StackPane crearPasswordPane(PasswordField passField, TextField passVisible, Button toggleBtn) {
 
         passVisible.managedProperty().bind(passVisible.visibleProperty());
@@ -110,15 +181,10 @@ public class CredencialesFormController {
         passVisible.textProperty().bindBidirectional(passField.textProperty());
 
         toggleBtn.setOnAction(e -> {
-            if (passVisible.isVisible()) {
-                passVisible.setVisible(false);
-                passField.setVisible(true);
-                toggleBtn.setText("👁");
-            } else {
-                passVisible.setVisible(true);
-                passField.setVisible(false);
-                toggleBtn.setText("🙈");
-            }
+            boolean visible = passVisible.isVisible();
+            passVisible.setVisible(!visible);
+            passField.setVisible(visible);
+            toggleBtn.setText(visible ? "👁" : "🙈");
         });
 
         StackPane pane = new StackPane(passField, passVisible, toggleBtn);
@@ -128,9 +194,13 @@ public class CredencialesFormController {
         return pane;
     }
 
-    // ✅ Validación en tiempo real
+    /** ============================================================
+     *  🔹 Validación dinámica en tiempo real
+     *  ============================================================ */
     private static void agregarValidacionPassword(PasswordField campo, PasswordField confirmar, Button btn) {
+
         ChangeListener<String> validar = (obs, ov, nv) -> {
+
             String pass = campo.getText();
             String conf = confirmar.getText();
 
@@ -138,12 +208,14 @@ public class CredencialesFormController {
             boolean coincide = pass.equals(conf);
 
             btn.setDisable(!(valido && coincide));
+
             campo.getStyleClass().removeAll("validar-contrasena-coincide", "validar-contrasena-no-coincide");
             confirmar.getStyleClass().removeAll("validar-contrasena-coincide", "validar-contrasena-no-coincide");
 
             campo.getStyleClass().add(valido ?
                     "validar-contrasena-coincide" :
                     "validar-contrasena-no-coincide");
+
             confirmar.getStyleClass().add(coincide ?
                     "validar-contrasena-coincide" :
                     "validar-contrasena-no-coincide");

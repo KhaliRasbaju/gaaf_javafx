@@ -33,7 +33,8 @@ public class EntidadBancariaController {
     // 🔹 Acción para abrir formulario de nueva entidad bancaria
     private void onActionEntidadBancaria() {
         try {
-            content.getChildren().setAll(EntidadBancariaFormController.getScene("Registrar", null));
+        	EntidadBancariaFormController controller = new EntidadBancariaFormController(content);
+            content.getChildren().setAll(controller.getScene("Registrar", null));
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
         }
@@ -124,10 +125,10 @@ public class EntidadBancariaController {
                         var respuesta = onActionEliminar(entidad.getId(), btnEliminar);
                         if (respuesta.getStatus() != 200) {
                         	NotificationManager.showNotification(btnEliminar.getScene(),
-                                    String.format("❎ %s", respuesta.getMessage()), Color.RED);
+                                    String.format("❌ %s", respuesta.getMessage()), Color.RED);
                         } else {
                         	NotificationManager.showNotification(btnEliminar.getScene(),
-                                    String.format("✅ %s", respuesta.getMessage()), Color.GREEN);
+                                    String.format("✔ %s", respuesta.getMessage()), Color.GREEN);
                             getTableView().getItems().remove(entidad);
                         }
                     } catch (Exception ex) {

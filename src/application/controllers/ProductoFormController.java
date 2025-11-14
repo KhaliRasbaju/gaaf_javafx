@@ -2,6 +2,7 @@ package application.controllers;
 
 import application.models.request.ProductoRequest;
 import application.models.response.Producto;
+import application.models.response.ResponseCommon;
 import application.services.ProductoService;
 import application.utils.NotificationManager;
 import javafx.geometry.Insets;
@@ -16,18 +17,24 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class ProductoFormController {
 
+	private final StackPane content;
+
+    public ProductoFormController(StackPane content) {
+        this.content = content;
+    }
 
     /** 🔹 Acción para registrar un producto */
-    private static void onActionRegistrar(ProductoRequest request) {
+    private static ResponseCommon onActionRegistrar(ProductoRequest request) {
         try {
             ProductoService service = new ProductoService();
-            service.crearProducto(request);
+            return service.crearProducto(request);
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
             throw new RuntimeException("Error tipo " + ex);
@@ -35,17 +42,17 @@ public class ProductoFormController {
     }
 
     /** 🔹 Acción para actualizar un producto existente */
-    private static void onActionActualizar(ProductoRequest request, Long id ) {
+    private static ResponseCommon onActionActualizar(ProductoRequest request, Long id ) {
         try {
             ProductoService service = new ProductoService();
-            service.editarProducto(request, id);
+            return service.editarProducto(request, id);
         } catch (Exception ex) {
-            System.out.println("Error tipo: " + ex);
+            throw new RuntimeException("Error tipo: " + ex);
         }
     }
 
     /** 🔹 Construye y retorna la escena del formulario */
-    public static VBox getScene(String title, Producto producto) {
+    public VBox getScene(String title, Producto producto) {
         // 🔹 Título principal
         Text titulo = new Text(String.format("📦 %s Producto", title));
         titulo.getStyleClass().add("form-title");
@@ -89,6 +96,7 @@ public class ProductoFormController {
             if (producto.getNombre() != null) txtNombre.setText(producto.getNombre());
             if (producto.getTipo() != null) cbTipo.setValue(producto.getTipo());
             if (producto.getDescripcion() != null) txtDescripcion.setText(producto.getDescripcion());
+            cbTipo.setDisable(true);
         }
 
         // 🔹 Botón (Registrar / Actualizar)
@@ -96,37 +104,90 @@ public class ProductoFormController {
         btnAccion.getStyleClass().add("form-button");
         btnAccion.setPrefWidth(200);
 
-        Label lblMensaje = new Label();
-        lblMensaje.setTextFill(Color.RED);
+       
 
         btnAccion.setOnAction(e -> {
-            if (txtNombre.getText().isEmpty() || cbTipo.getValue() == null || txtDescripcion.getText().isEmpty()) {
-                lblMensaje.setText("⚠️ Por favor, completa todos los campos.");
-                lblMensaje.setTextFill(Color.RED);
-                return;
-            }
 
-            ProductoRequest request = new ProductoRequest(
-                    txtNombre.getText(),
-                    cbTipo.getValue(),
-                    txtDescripcion.getText()
-            );
+            try {
+                // -----------------------------
+                //   Validación
+                // -----------------------------
+                if (txtNombre.getText().isEmpty() ||
+                    cbTipo.getValue() == null ||
+                    txtDescripcion.getText().isEmpty()) {
+                	NotificationManager.showNotification(btnAccion.getScene(), "⚠ Por favor, completa todos los campos.", Color.ORANGE);
+                  
+                    return;
+                }
 
-            if (producto == null) {
-                onActionRegistrar(request);
-                NotificationManager.showNotification(btnAccion.getScene(), "✅ Producto registrado correctamente", Color.GREEN);
-                lblMensaje.setTextFill(Color.GREEN);
-                lblMensaje.setText("✅ Producto registrado correctamente.");
+                // -----------------------------
+                //   Construcción del request
+                // -----------------------------
+                ProductoRequest request = new ProductoRequest(
+                        txtNombre.getText(),
+                        cbTipo.getValue(),
+                        txtDescripcion.getText()
+                );
+
+                // -----------------------------
+                //   Registrar o Editar
+                // -----------------------------
+                var esNuevo = (producto == null);
+                var response = esNuevo
+                        ? onActionRegistrar(request)
+                        : onActionActualizar(request, producto.getId());
+
+                // -----------------------------
+                //   Notificación
+                // -----------------------------
+                int successCode = esNuevo ? 201 : 200;
+                String icon = esNuevo ? "✔" : "✏";
+
+                if (response.getStatus() != successCode) {
+                    NotificationManager.showNotification(
+                            btnAccion.getScene(),
+                            String.format("❌ %s", response.getMessage()),
+                            Color.YELLOWGREEN
+                    );
+                } else {
+                    NotificationManager.showNotification(
+                            btnAccion.getScene(),
+                            String.format("%s %s", icon, response.getMessage()),
+                            Color.GREEN
+                    );
+                }
+
+                // -----------------------------
+                //   Limpiar campos
+                // -----------------------------
                 txtNombre.clear();
                 cbTipo.setValue(null);
                 txtDescripcion.clear();
-            } else {
-                onActionActualizar(request, producto.getId());
-                NotificationManager.showNotification(btnAccion.getScene(), "✏️ Producto actualizado correctamente", Color.DODGERBLUE);
-                lblMensaje.setTextFill(Color.DODGERBLUE);
-                lblMensaje.setText("✏️ Producto actualizado correctamente.");
+
+            } catch (Exception ex) {
+                NotificationManager.showNotification(
+                        btnAccion.getScene(),
+                        "❎ Error al guardar el producto",
+                        Color.RED
+                );
+                System.out.println("Error tipo: " + ex);
             }
+
+            // -----------------------------
+            //   Recargar listado
+            // -----------------------------
+            try {
+                ProductoService service = new ProductoService();
+                var productos = service.obtenerProductos();
+                ProductoController controller = new ProductoController(content);
+                content.getChildren().setAll(controller.getScene(productos));
+
+            } catch (Exception ex) {
+                throw new RuntimeException("Error tipo: " + ex);
+            }
+
         });
+
 
         // ======= Sección 1: Información del producto =======
         GridPane gridInfo = new GridPane();
@@ -181,7 +242,7 @@ public class ProductoFormController {
         contBoton.setPadding(new Insets(10, 0, 0, 0));
 
         // 🔹 Layout principal
-        VBox root = new VBox(20, titulo, gridInfo, gridDescripcion, contBoton, lblMensaje);
+        VBox root = new VBox(20, titulo, gridInfo, gridDescripcion, contBoton);
         root.setAlignment(Pos.TOP_CENTER);
         root.setPadding(new Insets(30));
         root.setStyle("-fx-background-color: #F8F9FA;");

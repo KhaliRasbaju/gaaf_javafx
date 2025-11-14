@@ -33,7 +33,8 @@ public class ProveedorController {
 
     private void onActionProveedor() {
         try {
-            content.getChildren().setAll(ProveedorFormController.getScene("Registrar", null));
+        	ProveedorFormController controller = new ProveedorFormController(content);
+            content.getChildren().setAll(controller.getScene("Registrar", null));
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
         }
@@ -43,7 +44,8 @@ public class ProveedorController {
         try {
             ProveedorService service = new ProveedorService();
             Proveedor proveedor = service.obtenerProveedor(nit);
-            content.getChildren().setAll(ProveedorFormController.getScene("Editar", proveedor));
+            ProveedorFormController controller = new ProveedorFormController(content);
+            content.getChildren().setAll(controller.getScene("Editar", proveedor));
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
         }
@@ -104,10 +106,10 @@ public class ProveedorController {
                         var respuesta = onActionEliminar(proveedor.getNit(), btnEliminar);
                         if (respuesta.getStatus() != 200) {
                         	NotificationManager.showNotification(btnEliminar.getScene(),
-                                    String.format("❎ %s", respuesta.getMessage()), Color.RED);
+                                    String.format("❌ %s", respuesta.getMessage()), Color.RED);
                         } else {
                         	NotificationManager.showNotification(btnEliminar.getScene(),
-                                    String.format("✅ %s", respuesta.getMessage()), Color.GREEN);
+                                    String.format("✔ %s", respuesta.getMessage()), Color.GREEN);
                             getTableView().getItems().remove(proveedor);
                         }
                     } catch (Exception ex) {

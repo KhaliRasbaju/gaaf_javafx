@@ -24,10 +24,10 @@ public class UsuarioService {
 	        return mapper.readValue(response, new TypeReference<List<UsuarioResponse>>() {});
 	    }
 	  
-	    public UsuarioResponse editarUsuario(String id, UsuarioRequest request) throws Exception {
+	    public ResponseCommon editarUsuario(String id, UsuarioRequest request) throws Exception {
 	        String jsonBody = mapper.writeValueAsString(request);
 	        String response = HttpClientUtil.put(ApiConfig.BASE_AUTH_URL + "/usuario/editar/" + id, jsonBody);
-	        return mapper.readValue(response, UsuarioResponse.class);
+	        return mapper.readValue(response, ResponseCommon.class);
 	    }
 	    
 	    public ResponseCommon editarCredenciales(String id, CredencialesRequest request) throws Exception {

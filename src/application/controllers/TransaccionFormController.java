@@ -223,7 +223,7 @@ public class TransaccionFormController {
                 String tipo = cmbTipo.getValue();
 
                 if (idBodega == null || tipo == null || txtCantidad.getText().isEmpty()) {
-                    lblMensaje.setText("⚠️ Todos los campos obligatorios deben completarse.");
+                    lblMensaje.setText("⚠ Todos los campos obligatorios deben completarse.");
                     lblMensaje.setTextFill(Color.RED);
                     return;
                 }
@@ -243,9 +243,9 @@ public class TransaccionFormController {
                 var response = onActionCrear(request);
               
                 if(response.getStatus() != 200) {
-                	NotificationManager.showNotification(btnRegistrar.getScene(), response.getMessage(), Color.RED);
+                	NotificationManager.showNotification(btnRegistrar.getScene(), String.format("❌ %s", response.getMessage()), Color.RED);
                 } else {
-                	NotificationManager.showNotification(btnRegistrar.getScene(), response.getMessage(), Color.GREEN);
+                	NotificationManager.showNotification(btnRegistrar.getScene(), String.format("✔ %s", response.getMessage()), Color.GREEN);
                 }
                 
                 cmbProducto.setValue(null);
@@ -259,6 +259,13 @@ public class TransaccionFormController {
                 System.out.println("Error tipo: " + ex);
                 NotificationManager.showNotification(btnRegistrar.getScene(), "❌ Error al registrar la transacción", Color.RED);
             }
+            
+            try {
+            	ReporteInventarioMovimientoController controller = new ReporteInventarioMovimientoController();
+            	content.getChildren().add(controller.getScene(null, productos));				
+			} catch (Exception ex) {
+				throw new RuntimeException("Error tipo: "+ ex);
+			}
         });
 
         

@@ -21,17 +21,17 @@ public class EntidadService {
     }
 
     // 🔹 CREAR ENTIDAD (POST)
-    public Common crearEntidad(CommonRequest entidad) throws Exception {
+    public ResponseCommon crearEntidad(CommonRequest entidad) throws Exception {
         String jsonBody = mapper.writeValueAsString(entidad);
         String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/entidad-bancaria/crear", jsonBody, false);
-        return mapper.readValue(response, Common.class);
+        return mapper.readValue(response, ResponseCommon.class);
     }
 
     // 🔹 EDITAR ENTIDAD (PUT)
-    public Common editarEntidad(Long id, CommonRequest entidad) throws Exception {
+    public ResponseCommon editarEntidad(Long id, CommonRequest entidad) throws Exception {
         String jsonBody = mapper.writeValueAsString(entidad);
         String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/entidad-bancaria/editar/" + id, jsonBody);
-        return mapper.readValue(response, Common.class);
+        return mapper.readValue(response, ResponseCommon.class);
     }
     
     public Common obtenerEntidad(Long id) throws Exception {

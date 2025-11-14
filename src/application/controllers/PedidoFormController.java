@@ -1,5 +1,6 @@
 package application.controllers;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import application.models.request.PedidoRequest;
 import application.models.response.Common;
 import application.models.response.Pedido;
 import application.models.response.Proveedor;
+import application.models.response.ResponseCommon;
 import application.models.response.Producto;
 import application.services.PedidoService;
 import application.services.ProveedorService;
@@ -32,28 +34,34 @@ public class PedidoFormController {
     private static Long idMetodoPago;
     private static Long nitProveedor;
     private static Long idProductoSeleccionado;
+    
+    private final StackPane content;
+
+    public PedidoFormController(StackPane content) {
+        this.content = content;
+    }
 
     // Lista para los detalles del pedido
     private final ObservableList<DetallePedidoRequest> listaDetalles = FXCollections.observableArrayList();
 
    
 
-    private static void onActionRegistrar(PedidoRequest request) {
+    private static ResponseCommon onActionRegistrar(PedidoRequest request) {
         try {
             PedidoService service = new PedidoService();
-            service.crearPedido(request);
+            return service.crearPedido(request);
         } catch (Exception ex) {
-            System.out.println("Error tipo: " + ex);
+            throw new RuntimeException("Error tipo: " + ex);
         }
     }
     
     
-    private static void onActionEditar(Long idPedido, PedidoRequest request) {
+    private static ResponseCommon onActionEditar(Long idPedido, PedidoRequest request) {
 		try {
 			PedidoService service = new PedidoService();
-			service.editarPedido(idPedido, request);
+			return service.editarPedido(idPedido, request);
 		} catch (Exception ex) {
-			System.out.println("Error tipo: " + ex);
+			throw new RuntimeException("Error tipo: " + ex);
 		}
 	}
 
@@ -94,12 +102,14 @@ public class PedidoFormController {
         }
     }
 
-    public  ScrollPane getScene(String title, Pedido pedido) throws Exception {
+    public ScrollPane getScene(String title, Pedido pedido) throws Exception {
     	
     	
     	
 
         Text titulo = new Text(String.format("📦 %s Pedido", title));
+        
+        
 
         // Combobox proveedor
         ComboBox<String> cbProveedor = new ComboBox<>();
@@ -141,7 +151,47 @@ public class PedidoFormController {
         	txtReferencia.setVisible(false);
         }
         
+     // --- CAMPOS PRINCIPALES ---
+        GridPane formGrid = new GridPane();
+        formGrid.getStyleClass().add("form-container");
+        formGrid.setHgap(25);
+        formGrid.setVgap(12);
+        formGrid.setPadding(new Insets(25));
+        formGrid.setAlignment(Pos.TOP_CENTER);
 
+        // === FILA 1 ===
+        Label lblProveedor = new Label("Proveedor");
+        lblProveedor.getStyleClass().add("form-label");
+        formGrid.add(lblProveedor, 0, 0);
+        cbProveedor.getStyleClass().add("form-field");
+        formGrid.add(cbProveedor, 0, 1);
+
+        Label lblValor = new Label("Valor total");
+        lblValor.getStyleClass().add("form-label");
+        formGrid.add(lblValor, 1, 0);
+        txtValor.getStyleClass().add("form-field");
+        formGrid.add(txtValor, 1, 1);
+
+        // === FILA 2 ===
+        Label lblFecha = new Label("Fecha del pedido");
+        lblFecha.getStyleClass().add("form-label");
+        formGrid.add(lblFecha, 0, 2);
+        dpFechaPedido.getStyleClass().add("form-field");
+        formGrid.add(dpFechaPedido, 0, 3);
+
+        Label lblMetodoPago = new Label("Método de pago");
+        lblMetodoPago.getStyleClass().add("form-label");
+        formGrid.add(lblMetodoPago, 1, 2);
+        cbMetodoPago.getStyleClass().add("form-field");
+        formGrid.add(cbMetodoPago, 1, 3);
+
+        // === FILA 3 ===
+        Label lblReferencia = new Label("Referencia de pago");
+        lblReferencia.getStyleClass().add("form-label");
+        formGrid.add(lblReferencia, 0, 4);
+        txtReferencia.getStyleClass().add("form-field");
+        formGrid.add(txtReferencia, 0, 5);
+        lblReferencia.setVisible(false);
       
 
 
@@ -313,6 +363,8 @@ public class PedidoFormController {
         tablaDetalles.getColumns().addAll(
             colFermentacion, colPeso, colCantidad, colHumedad, colEstadoCacao, colProducto, colEliminar
         );
+        
+        
        
         btnAgregarDetalle.setOnAction(e -> {
             try {
@@ -342,7 +394,7 @@ public class PedidoFormController {
                     existente.setEstadoCacao(Float.parseFloat(txtEstadoCacao.getText()));
 
                     tablaDetalles.refresh(); // refresca la tabla visualmente
-                    NotificationManager.showNotification(cbProducto.getScene(), "✏️ Detalle actualizado", Color.DODGERBLUE);
+                    NotificationManager.showNotification(cbProducto.getScene(), "✏ Detalle actualizado", Color.DODGERBLUE);
                 } else {
                     // ➕ Agrega un nuevo detalle
                     DetallePedidoRequest nuevo = new DetallePedidoRequest(
@@ -355,7 +407,7 @@ public class PedidoFormController {
                     );
                     listaDetalles.add(nuevo);
                     tablaDetalles.refresh();
-                    NotificationManager.showNotification(cbProducto.getScene(), "✅ Detalle agregado", Color.GREEN);
+                    NotificationManager.showNotification(cbProducto.getScene(), "✔ Detalle agregado", Color.GREEN);
                 }
                 tablaDetalles.refresh();
 
@@ -400,11 +452,21 @@ public class PedidoFormController {
                     .map(p -> p.getNombre() + " (" + p.getNit() + ")")
                     .orElse(null));
 
-            txtValor.setText(String.valueOf(pedido.getValor()));
+            txtValor.setTextFormatter(null);
+            String valorPlano = new BigDecimal(String.valueOf(pedido.getValor())).toPlainString();
+            txtValor.setText(PrecioFormatter.formatearPrecio(Double.valueOf(valorPlano))); // formatea antes de mostrar
+            PrecioFormatter.aplicarFormato(txtValor); 
+            
             dpFechaPedido.setValue(pedido.getFechaPedido().toLocalDate());
 
             cbMetodoPago.setValue(pedido.getMedioPago().getMetodoPago());
-            txtReferencia.setText(pedido.getMedioPago().getReferencia());
+            
+            if(!pedido.getMedioPago().getReferencia().equals("null")) {
+            	txtReferencia.setText(pedido.getMedioPago().getReferencia());
+            	lblReferencia.setVisible(true);
+            	txtReferencia.setVisible(true);
+            }
+            
 
          // Limpia la lista antes de rellenarla
             listaDetalles.clear();
@@ -444,31 +506,45 @@ public class PedidoFormController {
         lblMensaje.setTextFill(Color.RED);
 
         btnAccion.setOnAction(e -> {
-        	
-        	
-        	
             try {
-            	
-            	if(listaDetalles.isEmpty()) {
-            		NotificationManager.showNotification(btnAccion.getScene(), "Debe haber detalle del pedido", Color.ORANGE);
-            		return;
-            	}
-            	
+
+                // -----------------------------
+                //   Obtener NIT del proveedor
+                // -----------------------------
                 nitProveedor = listaProveedores.stream()
                         .filter(p -> cbProveedor.getValue().contains(String.valueOf(p.getNit())))
                         .findFirst()
                         .map(Proveedor::getNit)
                         .orElse(null);
 
+                // -----------------------------
+                //   Obtener ID del método pago
+                // -----------------------------
                 idMetodoPago = listaMetodos.stream()
                         .filter(m -> m.getNombre().equals(cbMetodoPago.getValue()))
                         .findFirst()
                         .map(Common::getId)
                         .orElse(null);
 
-                MedioPagoRequest medioPago = new MedioPagoRequest(txtReferencia.getText(), idMetodoPago);
-                String valorTexto = txtValor.getText().replace(".", "").replace("$", "").trim();
-                Double valor = Double.parseDouble(valorTexto);
+                // -----------------------------
+                //   Asignar referencia null si es Efectivo
+                // -----------------------------
+                if ("Efectivo".equals(cbMetodoPago.getValue())) {
+                    txtReferencia.setText("null");
+                }
+
+                // -----------------------------
+                //   Construcción de objetos
+                // -----------------------------
+                MedioPagoRequest medioPago = new MedioPagoRequest(
+                        txtReferencia.getText(),
+                        idMetodoPago
+                );
+
+                Double valor = Double.parseDouble(
+                        txtValor.getText().replace(".", "").replace("$", "").trim()
+                );
+
                 PedidoRequest request = new PedidoRequest(
                         nitProveedor,
                         valor,
@@ -476,16 +552,38 @@ public class PedidoFormController {
                         medioPago,
                         new ArrayList<>(listaDetalles)
                 );
-             
 
-                if (pedido == null) {
-                    onActionRegistrar(request);
-                    NotificationManager.showNotification(btnAccion.getScene(), "✅ Pedido registrado correctamente", Color.GREEN);
+                // -----------------------------
+                //   Crear o Editar
+                // -----------------------------
+                var response = (pedido == null)
+                        ? onActionRegistrar(request)
+                        : onActionEditar(pedido.getId(), request);
+
+                // -----------------------------
+                //   Notificaciones
+                // -----------------------------
+                boolean esNuevo = pedido == null;
+                int successCode = esNuevo ? 201 : 200;
+
+                if (response.getStatus() != successCode) {
+                    NotificationManager.showNotification(
+                            btnAccion.getScene(),
+                            String.format("❌ %s", response.getMessage()),
+                            Color.YELLOWGREEN
+                    );
                 } else {
-                	onActionEditar(pedido.getId(),request);
-                	NotificationManager.showNotification(btnAccion.getScene(), "✏️ Pedido actualizado correctamente", Color.GREEN);
+                    String icon = esNuevo ? "✔" : "✏";
+                    NotificationManager.showNotification(
+                            btnAccion.getScene(),
+                            String.format("%s %s", icon, response.getMessage()),
+                            Color.GREEN
+                    );
                 }
 
+                // -----------------------------
+                //   Limpiar campos
+                // -----------------------------
                 cbProveedor.getSelectionModel().clearSelection();
                 txtValor.clear();
                 txtReferencia.clear();
@@ -493,54 +591,34 @@ public class PedidoFormController {
 
             } catch (Exception ex) {
                 System.out.println("Error tipo: " + ex);
-                NotificationManager.showNotification(btnAccion.getScene(), "❎ Error en el registro del pedido", Color.RED);
+                NotificationManager.showNotification(
+                        btnAccion.getScene(),
+                        "❌ Error en el registro del pedido",
+                        Color.RED
+                );
             }
+
+            // -----------------------------
+            //   Recargar listado
+            // -----------------------------
+            try {
+                PedidoService service = new PedidoService();
+                var pedidos = service.obtenerPedidos();
+
+                PedidoController controller = new PedidoController(content);
+                content.getChildren().setAll(controller.getScene(pedidos));
+
+            } catch (Exception ex) {
+                throw new RuntimeException("Error tipo: " + ex);
+            }
+
         });
-        
+
       
         titulo.getStyleClass().add("form-title");
 
-        // --- CAMPOS PRINCIPALES ---
-        GridPane formGrid = new GridPane();
-        formGrid.getStyleClass().add("form-container");
-        formGrid.setHgap(25);
-        formGrid.setVgap(12);
-        formGrid.setPadding(new Insets(25));
-        formGrid.setAlignment(Pos.TOP_CENTER);
-
-        // === FILA 1 ===
-        Label lblProveedor = new Label("Proveedor");
-        lblProveedor.getStyleClass().add("form-label");
-        formGrid.add(lblProveedor, 0, 0);
-        cbProveedor.getStyleClass().add("form-field");
-        formGrid.add(cbProveedor, 0, 1);
-
-        Label lblValor = new Label("Valor total");
-        lblValor.getStyleClass().add("form-label");
-        formGrid.add(lblValor, 1, 0);
-        txtValor.getStyleClass().add("form-field");
-        formGrid.add(txtValor, 1, 1);
-
-        // === FILA 2 ===
-        Label lblFecha = new Label("Fecha del pedido");
-        lblFecha.getStyleClass().add("form-label");
-        formGrid.add(lblFecha, 0, 2);
-        dpFechaPedido.getStyleClass().add("form-field");
-        formGrid.add(dpFechaPedido, 0, 3);
-
-        Label lblMetodoPago = new Label("Método de pago");
-        lblMetodoPago.getStyleClass().add("form-label");
-        formGrid.add(lblMetodoPago, 1, 2);
-        cbMetodoPago.getStyleClass().add("form-field");
-        formGrid.add(cbMetodoPago, 1, 3);
-
-        // === FILA 3 ===
-        Label lblReferencia = new Label("Referencia de pago");
-        lblReferencia.getStyleClass().add("form-label");
-        formGrid.add(lblReferencia, 0, 4);
-        txtReferencia.getStyleClass().add("form-field");
-        formGrid.add(txtReferencia, 0, 5);
-        lblReferencia.setVisible(false);
+        
+        
         
         cbMetodoPago.setOnAction(e -> {
         	System.out.println(cbMetodoPago.getValue());
@@ -587,8 +665,7 @@ public class PedidoFormController {
         // --- OPCIONAL: Scroll general (para pantallas pequeñas) ---
         ScrollPane scrollRoot = new ScrollPane(root);
         scrollRoot.setFitToWidth(true);
-        scrollRoot.setStyle("-fx-background-color: transparent;");
-
+        scrollRoot.getStyleClass().add("custom-scroll");
         return scrollRoot;
     
     }

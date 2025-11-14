@@ -32,7 +32,9 @@ public class ProductoController {
     // 🔹 Acción para abrir formulario de nuevo producto
     private void onActionProducto() {
         try {
-            content.getChildren().setAll(ProductoFormController.getScene("Registrar", null));
+        	ProductoFormController controller = new ProductoFormController(content);
+        	
+            content.getChildren().setAll(controller.getScene("Registrar", null));
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
         }
@@ -44,7 +46,8 @@ public class ProductoController {
         try {
             ProductoService service = new ProductoService();
             Producto producto = service.obtenerProducto(id);
-            content.getChildren().setAll(ProductoFormController.getScene("Editar", producto));
+            ProductoFormController controller = new ProductoFormController(content);     
+            content.getChildren().setAll(controller.getScene("Editar", producto));
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
         }
@@ -109,10 +112,10 @@ public class ProductoController {
                         var respuesta = onActionEliminar(producto.getId(), btnEliminar);
                         if (respuesta.getStatus() != 200) {
                         	NotificationManager.showNotification(btnEliminar.getScene(),
-                                    String.format("❎ %s", respuesta.getMessage()), Color.RED);
+                                    String.format("❌ %s", respuesta.getMessage()), Color.RED);
                         } else {
                         	NotificationManager.showNotification(btnEliminar.getScene(),
-                                    String.format("✅ %s", respuesta.getMessage()), Color.GREEN);
+                                    String.format("✔ %s", respuesta.getMessage()), Color.GREEN);
                             getTableView().getItems().remove(producto);
                         }
                     } catch (Exception ex) {

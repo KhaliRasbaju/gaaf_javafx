@@ -95,11 +95,17 @@ public class ReporteInventarioController {
 	    txtCantidad.setPromptText("Cantidad");
 	    txtCantidad.getStyleClass().add("filtros-textfield");
 	    txtCantidad.setTextFormatter(new TextFormatter<>(change -> {
-        	if (change.getControlNewText().matches("\\d*")) {
-                return change;
-            }
-            return null;
-        }));
+	        String nuevo = change.getControlNewText();
+	        if (!nuevo.matches("\\d*")) {
+	            return null;
+	        }	  
+	        
+	        if (nuevo.length() > 9) {
+	            return null;
+	        }
+	        return change;
+	    }));
+	    
 	    
 	    Label lblProducto = new Label("Producto:");
 		lblProducto.getStyleClass().add("filtros-label");

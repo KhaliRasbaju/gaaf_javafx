@@ -20,11 +20,11 @@ public class ProveedorService {
 		return mapper.readValue(response, new TypeReference<List<Proveedor>>() {});
 	}
 	
-	public Proveedor crearProveedor(ProveedorRequest proveedor) throws Exception {
+	public ResponseCommon crearProveedor(ProveedorRequest proveedor) throws Exception {
 		String jsonBody = mapper.writeValueAsString(proveedor);
 	    String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/proveedor/crear", jsonBody, false);
 	    System.out.println(response);
-	    return mapper.readValue(response, Proveedor.class);
+	    return mapper.readValue(response, ResponseCommon.class);
 	}
 	
 	public ResponseCommon editarProveedor(Long nit, ProveedorRequest proveedor) throws Exception {

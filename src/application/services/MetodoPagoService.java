@@ -22,10 +22,10 @@ public class MetodoPagoService {
 	        return mapper.readValue(response, new TypeReference<List<Common>>() {});
 	    }
 
-	    public Common crearMetodo(CommonRequest entidad) throws Exception {
+	    public ResponseCommon crearMetodo(CommonRequest entidad) throws Exception {
 	        String jsonBody = mapper.writeValueAsString(entidad);
 	        String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/metodo-pago/crear", jsonBody, false);
-	        return mapper.readValue(response, Common.class);
+	        return mapper.readValue(response, ResponseCommon.class);
 	    }
 
 	    public ResponseCommon editarMetodo(Long id, CommonRequest entidad) throws Exception {

@@ -34,7 +34,7 @@ public class UsuarioController {
 	private void onActionCrear() {
 		try {
 			
-			RegistrarFormController controller  = new RegistrarFormController();
+			RegistrarFormController controller  = new RegistrarFormController(content);
 			content.getChildren().addAll(controller.getScene("Registrar", null));
 		} catch (Exception ex) {
 			System.out.println("Error tipo: " + ex);
@@ -47,7 +47,7 @@ public class UsuarioController {
 			UsuarioService service = new UsuarioService();
 			var usuario = service.obtenerUsuario(id);
 			
-			RegistrarFormController controller  = new RegistrarFormController();
+			RegistrarFormController controller  = new RegistrarFormController(content);
 			content.getChildren().addAll(controller.getScene("Editar", usuario));
 		} catch (Exception ex) {
 			System.out.println("Error tipo: " + ex);
@@ -139,9 +139,16 @@ public class UsuarioController {
 		                UsuarioResponse u = getTableView().getItems().get(getIndex());
 		                var response = onActionEliminar(u.getId());
 		                getTableView().getItems().remove(u);
-		                NotificationManager.showNotification(btnEliminar.getScene(), response.getMessage(), Color.GREEN);
+		                
+		                if (response.getStatus() != 200) {
+		                	
+		                	NotificationManager.showNotification(btnEliminar.getScene(), String.format("❌ %s", response.getMessage()), Color.RED);
+		                } else {		                	
+		                	NotificationManager.showNotification(btnEliminar.getScene(), String.format("✔️ %s", response.getMessage()), Color.GREEN);
+		                }
+		                
 		            } catch (Exception ex) {
-		                NotificationManager.showNotification(btnEliminar.getScene(), "Error al eliminar el usuario", Color.RED);
+		            	NotificationManager.showNotification(btnEliminar.getScene(), "❌ Error al eliminar el usuario", Color.RED);	                
 		            }
 		        });
 		    }

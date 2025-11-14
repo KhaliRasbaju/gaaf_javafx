@@ -1,10 +1,13 @@
 package application.controllers;
 
 import java.util.List;
+
+import application.models.response.Compra;
 import application.models.response.Pedido;
 import application.models.response.ResponseCommon;
 import application.services.PedidoService;
 import application.utils.NotificationManager;
+import application.utils.PrecioFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -30,7 +33,7 @@ public class PedidoController {
     
     private void onActionAgregar() {
         try {
-        	PedidoFormController controller = new PedidoFormController();
+        	PedidoFormController controller = new PedidoFormController(content);
             content.getChildren().setAll(controller.getScene("Registrar", null));
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
@@ -41,7 +44,7 @@ public class PedidoController {
         try {
             PedidoService service = new PedidoService();
             Pedido pedido = service.obtenerPedido(id);
-            PedidoFormController controller = new PedidoFormController();
+            PedidoFormController controller = new PedidoFormController(content);
             content.getChildren().setAll(controller.getScene("Editar", pedido));
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
@@ -86,6 +89,17 @@ public class PedidoController {
 
         TableColumn<Pedido, Double> colValor = new TableColumn<>("Valor Total");
         colValor.setCellValueFactory(new PropertyValueFactory<>("valor"));
+        colValor.setCellFactory(column -> new TableCell<Pedido, Double>() {
+            @Override
+            protected void updateItem(Double valor, boolean empty) {
+                super.updateItem(valor, empty);
+                if (empty || valor == null) {
+                    setText(null);
+                } else {
+                    setText(PrecioFormatter.formatearPrecio(valor));
+                }
+            }
+        });
 
         TableColumn<Pedido, String> colFechaPedido = new TableColumn<>("Fecha Pedido");
         colFechaPedido.setCellValueFactory(new PropertyValueFactory<>("fechaPedido"));
@@ -179,10 +193,11 @@ public class PedidoController {
                     try {
                         var resp = onActionEliminar(pedido.getId());
                         if (resp.getStatus() == 200) {
-                        	NotificationManager.showNotification(btnEliminar.getScene(), "✅ Pedido eliminado", Color.GREEN);
+                        	NotificationManager.showNotification(btnEliminar.getScene(), String.format("✔ %s", resp.getMessage()), Color.GREEN);
                             getTableView().getItems().remove(pedido);
                         } else {
-                        	NotificationManager.showNotification(btnEliminar.getScene(), "❌ " + resp.getMessage(), Color.RED);
+                        	System.out.println("Paso aqui");
+                        	NotificationManager.showNotification(btnEliminar.getScene(), "❌ %s" + resp.getMessage(), Color.RED);
                         }
                     } catch (Exception ex) {
                         System.out.println("Error tipo: " + ex);
@@ -209,6 +224,8 @@ public class PedidoController {
                 }
             }
         });
+        
+        
 
 
         table.getColumns().addAll(colId, colNitProveedor, colValor, colFechaPedido, colFechaEntrega, colRecibido, colAcciones);

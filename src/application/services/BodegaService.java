@@ -22,16 +22,16 @@ public class BodegaService {
     }
 
    
-    public Bodega crearBodega(BodegaRequest bodega) throws Exception {
+    public ResponseCommon crearBodega(BodegaRequest bodega) throws Exception {
         String jsonBody = mapper.writeValueAsString(bodega);
         String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/bodega/crear", jsonBody, false);
-        return mapper.readValue(response, Bodega.class);
+        return mapper.readValue(response, ResponseCommon.class);
     }
   
-    public Bodega editarBodega(Long id, BodegaRequest bodega) throws Exception {
+    public ResponseCommon editarBodega(Long id, BodegaRequest bodega) throws Exception {
         String jsonBody = mapper.writeValueAsString(bodega);
         String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/bodega/" + id, jsonBody);
-        return mapper.readValue(response, Bodega.class);
+        return mapper.readValue(response, ResponseCommon.class);
     }
     
     public Bodega obtenerBodega(Long id) throws Exception {

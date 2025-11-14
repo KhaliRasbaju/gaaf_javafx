@@ -39,7 +39,8 @@ public class BodegaController {
     // ✅ Método de acción no estático
     private void onActionBodega() {
         try {
-            content.getChildren().setAll(BodegaFormController.getScene("Registrar", null));
+        	BodegaFormController controller = new BodegaFormController(content);
+            content.getChildren().setAll(controller.getScene("Registrar", null));
         } catch (Exception ex) {
             System.out.println("Error tipo: " + ex);
         }
@@ -49,7 +50,8 @@ public class BodegaController {
 		try {
 			BodegaService service = new BodegaService();
 			Bodega bodega = service.obtenerBodega(id);
-			content.getChildren().setAll(BodegaFormController.getScene("Editar", bodega));
+			BodegaFormController controller = new BodegaFormController(content);
+			content.getChildren().setAll(controller.getScene("Editar", bodega));
 		} catch (Exception ex) {
 			System.out.println("Error tipo: " + ex);
 		}
@@ -113,10 +115,10 @@ public class BodegaController {
                         var respuesta = onActionEliminar(bodega.getId(), btnEliminar);
                         if (respuesta.getStatus() != 200) {
                             NotificationManager.showNotification(btnEliminar.getScene(),
-                            		String.format("❎ %s", respuesta.getMessage()), Color.RED);
+                            		String.format("❌ %s", respuesta.getMessage()), Color.RED);
                         } else {
                             NotificationManager.showNotification(btnEliminar.getScene(),
-                                    String.format("✅ %s", respuesta.getMessage()), Color.GREEN);
+                                    String.format("✔ %s", respuesta.getMessage()), Color.GREEN);
                             getTableView().getItems().remove(bodega);
                         }
                     } catch (Exception ex) {

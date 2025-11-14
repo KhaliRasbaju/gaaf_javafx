@@ -75,7 +75,7 @@ public class ReporteCompraController {
 		
 	}
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "static-access" })
 	public static VBox getScene(List<Compra> reportes, List<Producto> productos) {
 
     	
@@ -146,11 +146,16 @@ public class ReporteCompraController {
 	    txtCantidad.setPromptText("Cantidad");
 	    txtCantidad.getStyleClass().add("filtros-textfield");
 	    txtCantidad.setTextFormatter(new TextFormatter<>(change -> {
-        	if (change.getControlNewText().matches("\\d*")) {
-                return change;
-            }
-            return null;
-        }));
+	        String nuevo = change.getControlNewText();
+	        if (!nuevo.matches("\\d*")) {
+	            return null;
+	        }	  
+	        
+	        if (nuevo.length() > 9) {
+	            return null;
+	        }
+	        return change;
+	    }));
 	    
 	    Label lblValorPedido = new Label("Valor del pedido:");
 	    lblValorPedido.getStyleClass().add("filtros-label");

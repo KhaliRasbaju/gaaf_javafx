@@ -33,7 +33,8 @@ public class MetodoPagoController {
     // 🔹 Acción para abrir formulario (nuevo método de pago)
     private void onActionMetodoPago() {
         try {
-            content.getChildren().setAll(MetodoPagoFormController.getScene("Registrar", null));
+        	MetodoPagoFormController controller = new MetodoPagoFormController(content);
+            content.getChildren().setAll(controller.getScene("Registrar", null));
         } catch (Exception ex) {
             System.out.println("Error al abrir formulario: " + ex);
         }
@@ -104,10 +105,10 @@ public class MetodoPagoController {
                         var respuesta = onActionEliminar(metodoPago.getId(), btnEliminar);
                         if (respuesta.getStatus() != 200) {
                         	NotificationManager.showNotification(btnEliminar.getScene(),
-                                    String.format("❎ %s", respuesta.getMessage()), Color.RED);
+                                    String.format("❌ %s", respuesta.getMessage()), Color.RED);
                         } else {
                         	NotificationManager.showNotification(btnEliminar.getScene(),
-                                    String.format("✅ %s", respuesta.getMessage()), Color.GREEN);
+                                    String.format("✔ %s", respuesta.getMessage()), Color.GREEN);
                             getTableView().getItems().remove(metodoPago);
                         }
                     } catch (Exception ex) {
