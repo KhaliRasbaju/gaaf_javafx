@@ -34,7 +34,7 @@ public class PrecioFormatter {
     // ============================================
     //        APLICAR FORMATO EN TEXTFIELD
     // ============================================
-    public static void aplicarFormato(TextField textField) {
+    public static void aplicarFormato(TextField textField, Boolean isPedido) {
 
         DecimalFormat df = new DecimalFormat("#,###");
         df.setGroupingUsed(true);
@@ -53,6 +53,13 @@ public class PrecioFormatter {
             if (!newText.matches("[0-9$ .]*")) {
                 return null;
             }
+            
+            if(isPedido) {            	
+            	if(newText.length() > 14) {
+            		return null;
+            	}
+            }
+            
 
             // ✅ Quitar todo excepto números
             String digits = newText.replaceAll("[^0-9]", "");

@@ -383,7 +383,8 @@
 
 /* ======= Botón Restablecer estilo minimal ======= */
 .filtros-reset-button, 
-.btn-active {
+.btn-active, 
+.btn-recibir {
     -fx-background-color: transparent;
     -fx-text-fill: #5BB318;
     -fx-font-size: 13px;
@@ -397,13 +398,17 @@
     -fx-transition: all 0.3s ease;
 }
 
-.filtros-reset-button:hover {
+.filtros-reset-button:hover,
+.btn-recibir:hover,
+.btn-active:hover {
     -fx-background-color: #5BB318;
     -fx-text-fill: white;
     -fx-effect: dropshadow(gaussian, rgba(91,179,24,0.3), 4, 0, 0, 2);
 }
 
-.filtros-reset-button:pressed {
+.filtros-reset-button:pressed,
+.btn-recibir:pressed,
+.btn-active:pressed {
     -fx-background-color: #4ea016;
 }
 

@@ -151,14 +151,9 @@ public class PedidoFormController {
         // Campos básicos
         TextField txtValor = new TextField();
         txtValor.setPromptText("Valor total del pedido");
-        txtValor.setTextFormatter(new TextFormatter<>(change -> {
-        	if (change.getControlNewText().matches("\\d*")) {
-                return change;
-            }
-            return null;
-        }));
         
-        PrecioFormatter.aplicarFormato(txtValor);
+      
+        PrecioFormatter.aplicarFormato(txtValor, true);
 
         DatePicker dpFechaPedido = new DatePicker(LocalDate.now());
         dpFechaPedido.setPromptText("Fecha del pedido");
@@ -251,10 +246,13 @@ public class PedidoFormController {
         txtFermentacion.setPromptText("Fermentación");
         
         txtFermentacion.setTextFormatter(new TextFormatter<>(change -> {
-        	if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
-                return change;
-            }
-            return null;
+        	String nuevo = change.getControlNewText();
+        	if (!nuevo.matches("^\\d{0,2}(\\.\\d{0,2})?$")) {
+                return null;
+            }       
+ 	        
+ 	      
+ 	        return change;    
         }));
 
 		Label lblFermentacion = new Label("Fermentación");
@@ -266,13 +264,15 @@ public class PedidoFormController {
         TextField txtPeso = new TextField();
         txtPeso.setPromptText("Peso");
         txtPeso.setTextFormatter(new TextFormatter<>(change -> {
-        	if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
+        	String nuevo = change.getControlNewText();
+        	if (!nuevo.matches("^\\d{0,2}(\\.\\d{0,2})?$")) {
                 return change;
-            }
-            return null;
+            }       
+ 	         
+ 	        return change;         
         }));
 
-        Label lblPeso = new Label("Peso");
+        Label lblPeso = new Label("Peso (Kg)");
         lblPeso.getStyleClass().add("form-label");
         formDetalle.add(lblPeso, 0, 2);
         txtPeso.getStyleClass().add("form-field");
@@ -282,10 +282,15 @@ public class PedidoFormController {
         txtCantidad.setPromptText("Cantidad");
         
         txtCantidad.setTextFormatter(new TextFormatter<>(change -> {
-        	if (change.getControlNewText().matches("\\d*")) {
-                return change;
-            }
-            return null;
+        	String nuevo = change.getControlNewText();
+        	if (!nuevo.matches("\\d*")) {
+                return null;
+            }       
+ 	        
+ 	        if (nuevo.length() > 6) {
+ 	            return null;
+ 	        }
+ 	        return change;
         }));
         
         Label lblCantidad = new Label("Cantidad");
@@ -298,10 +303,13 @@ public class PedidoFormController {
         txtHumedad.setPromptText("Humedad");
         
         txtHumedad.setTextFormatter(new TextFormatter<>(change -> {
-        	if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
-                return change;
-            }
-            return null;
+        	String nuevo = change.getControlNewText();
+        	if (!nuevo.matches("^\\d{0,2}(\\.\\d{0,2})?$")) {
+                return null;
+            }       
+ 	        
+ 	       
+ 	        return change;  
         }));
         
         Label lblHumedad = new Label("Humedad");
@@ -313,10 +321,13 @@ public class PedidoFormController {
         TextField txtEstadoCacao = new TextField();
         txtEstadoCacao.setPromptText("Estado cacao");
         txtEstadoCacao.setTextFormatter(new TextFormatter<>(change -> {
-        	if (change.getControlNewText().matches("\\d*(\\.\\d{0,2})?")) {
-                return change;
-            }
-            return null;
+        	String nuevo = change.getControlNewText();
+        	if (!nuevo.matches("^\\d{0,2}(\\.\\d{0,2})?$")) {
+                return null;
+            }       
+ 	        
+ 	       
+ 	        return change;  
         }));
         
         Label lblEstado = new Label("Estado del cacao");
@@ -404,7 +415,7 @@ public class PedidoFormController {
                         .orElse(null);
 
                 if (idProductoSeleccionado == null) {
-                	NotificationManager.showNotification(cbProducto.getScene(), "⚠️ Debes seleccionar un producto", Color.ORANGE);
+                	NotificationManager.showNotification(cbProducto.getScene(), "⚠ Debes seleccionar un producto", Color.ORANGE);
                     return;
                 }
 
@@ -423,7 +434,7 @@ public class PedidoFormController {
                     existente.setEstadoCacao(Float.parseFloat(txtEstadoCacao.getText()));
 
                     tablaDetalles.refresh(); // refresca la tabla visualmente
-                    NotificationManager.showNotification(cbProducto.getScene(), "✏ Detalle actualizado", Color.DODGERBLUE);
+                    NotificationManager.showNotification(cbProducto.getScene(), "✏ Detalle actualizado", Color.GREEN);
                 } else {
                     // ➕ Agrega un nuevo detalle
                     DetallePedidoRequest nuevo = new DetallePedidoRequest(
@@ -484,7 +495,7 @@ public class PedidoFormController {
             txtValor.setTextFormatter(null);
             String valorPlano = new BigDecimal(String.valueOf(pedido.getValor())).toPlainString();
             txtValor.setText(PrecioFormatter.formatearPrecio(Double.valueOf(valorPlano))); // formatea antes de mostrar
-            PrecioFormatter.aplicarFormato(txtValor); 
+            PrecioFormatter.aplicarFormato(txtValor, true); 
             
             dpFechaPedido.setValue(pedido.getFechaPedido().toLocalDate());
 
@@ -537,6 +548,58 @@ public class PedidoFormController {
         btnAccion.setOnAction(e -> {
             try {
 
+            	// Proveedor
+            	if (cbProveedor.getValue() == null || cbProveedor.getValue().isEmpty()) {
+            	    NotificationManager.showNotification(btnAccion.getScene(),
+            	            "⚠ Debes seleccionar un proveedor",
+            	            Color.ORANGE);
+            	    return;
+            	}
+
+            	// Valor total
+            	if (txtValor.getText().trim().isEmpty()) {
+            	    NotificationManager.showNotification(btnAccion.getScene(),
+            	            "⚠ El valor total no puede estar vacío",
+            	            Color.ORANGE);
+            	    return;
+            	}
+
+            	// Fecha
+            	if (dpFechaPedido.getValue() == null) {
+            	    NotificationManager.showNotification(btnAccion.getScene(),
+            	            "⚠ Debes seleccionar una fecha de pedido",
+            	            Color.ORANGE);
+            	    return;
+            	}
+
+            	// Método de pago
+            	if (cbMetodoPago.getValue() == null || cbMetodoPago.getValue().isEmpty()) {
+            	    NotificationManager.showNotification(btnAccion.getScene(),
+            	            "⚠ Debes seleccionar un método de pago",
+            	            Color.ORANGE);
+            	    return;
+            	}
+
+            	// Referencia (si NO es efectivo)
+            	if (!"Efectivo".equals(cbMetodoPago.getValue()) &&
+            	        (txtReferencia.getText() == null || txtReferencia.getText().trim().isEmpty())) {
+
+            	    NotificationManager.showNotification(btnAccion.getScene(),
+            	            "⚠ Debes ingresar la referencia del pago",
+            	            Color.ORANGE);
+            	    return;
+            	}
+
+            	// Detalles del pedido
+            	if (listaDetalles.isEmpty()) {
+            	    NotificationManager.showNotification(btnAccion.getScene(),
+            	            "⚠ Debes agregar al menos un detalle al pedido",
+            	            Color.ORANGE);
+            	    return;
+            	}
+            	
+            	
+            	
                 // -----------------------------
                 //   Obtener NIT del proveedor
                 // -----------------------------
@@ -570,13 +633,21 @@ public class PedidoFormController {
                         idMetodoPago
                 );
 
-                Double valor = Double.parseDouble(
-                        txtValor.getText().replace(".", "").replace("$", "").trim()
+                BigDecimal valor = new BigDecimal(
+                        txtValor.getText()
+                                .replace(".", "")
+                                .replace(",", ".")
+                                .replace("$", "")
+                                .trim()
                 );
 
+                
+                System.out.println(valor.toPlainString());
+                
+                
                 PedidoRequest request = new PedidoRequest(
                         nitProveedor,
-                        valor,
+                        Double.parseDouble(valor.toPlainString()),
                         dpFechaPedido.getValue().atStartOfDay(),
                         medioPago,
                         new ArrayList<>(listaDetalles)
@@ -599,7 +670,7 @@ public class PedidoFormController {
                     NotificationManager.showNotification(
                             btnAccion.getScene(),
                             String.format("❌ %s", response.getMessage()),
-                            Color.YELLOWGREEN
+                            Color.RED
                     );
                 } else {
                     String icon = esNuevo ? "✔" : "✏";

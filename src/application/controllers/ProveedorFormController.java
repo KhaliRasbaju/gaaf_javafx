@@ -437,7 +437,7 @@ public class ProveedorFormController {
             		|| txtNombre.getText().isEmpty()
                     || txtCorreo.getText().isEmpty() 
                     || txtTelefono.getText().isEmpty() 
-                    || !txtCorreo.getText().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+                    || !txtCorreo.getText().matches("^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,6}$")
                     ) {
             	NotificationManager.showNotification(btnAccion.getScene(), "⚠ Completa todos los campos. El correo debe ser tener formato como gaaf@gaaf.co ", Color.ORANGE);              
                 return;

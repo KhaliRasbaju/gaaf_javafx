@@ -175,7 +175,7 @@ public class ReporteCompraController {
         txtValor.setPromptText("Valor total del pedido");
         txtValor.getStyleClass().add("filtros-textfield");
         
-        PrecioFormatter.aplicarFormato(txtValor);
+        PrecioFormatter.aplicarFormato(txtValor, false);
 	
 		
 

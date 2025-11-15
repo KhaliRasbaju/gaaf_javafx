@@ -261,7 +261,7 @@ public class RegistrarFormController {
 	                    txtUsuario.getText().isEmpty() ||
 	                    txtCorreo.getText().isEmpty() ||
 	                    txtNombre.getText().isEmpty() ||
-	                    !txtCorreo.getText().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$") ||
+	                    !txtCorreo.getText().matches("^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,6}$") ||
 	                    txtTelefono.getText().isEmpty() ||
 	                    (usuario == null && txtContraseña.getText().isEmpty()) ||
 	                    cbRol.getValue() == null;
