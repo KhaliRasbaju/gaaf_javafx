@@ -20,6 +20,9 @@ import javafx.scene.control.Button;
 public class DashboardComprasView extends DashboardViewBase {
 	
 	
+	// ================================
+	//   EVENTO: REPORTE COMPRAS
+	// ================================
 	private void onActionReporteCompra() {
 		try {
 			ProductoService serviceP = new ProductoService();
@@ -31,6 +34,10 @@ public class DashboardComprasView extends DashboardViewBase {
 			System.out.println("Error tipo: " + ex);
 		}
 	}
+	
+	// ================================
+	//   EVENTO: REPORTE PEDIDOS PROVEEDOR
+	// ================================
 	private void onActionReportePedidosProveedor() {
 		try {
 			MetodoPagoService serviceM = new MetodoPagoService();
@@ -43,6 +50,9 @@ public class DashboardComprasView extends DashboardViewBase {
 		}
 	}
 	
+	// ================================
+	//        EVENTO: PROVEEDORES
+	// ================================
 	private void onActionProveedor() {
 	    try {
 	        ProveedorService service = new ProveedorService();
@@ -54,6 +64,9 @@ public class DashboardComprasView extends DashboardViewBase {
 	    }
 	}
 
+	// ================================
+	//        EVENTO: PEDIDOS
+	// ================================
 	private void onActionPedido() {
 	    try {
 	        PedidoService service = new PedidoService();
@@ -66,6 +79,9 @@ public class DashboardComprasView extends DashboardViewBase {
 	}
 
 
+	// ================================
+	//        EVENTO: PRODUCTOS
+	// ================================
 	private void onActionProducto() {
 	    try {
 	        ProductoService service = new ProductoService();
@@ -78,6 +94,9 @@ public class DashboardComprasView extends DashboardViewBase {
 	    }
 	}
 	
+	// ================================
+	//        EVENTO: METODO PAGO
+	// ================================
 	private void onActionMetodoPago() {
 	    try {
 	        MetodoPagoService service = new MetodoPagoService();
@@ -90,6 +109,9 @@ public class DashboardComprasView extends DashboardViewBase {
 	    }
 	}
 	
+	// ================================
+	//        EVENTO: ENTIDAD BANCARIA
+	// ================================
 	private void onActionEntidadBancaria() {
 	    try {
 	        EntidadService service = new EntidadService();
@@ -103,6 +125,9 @@ public class DashboardComprasView extends DashboardViewBase {
 	}
 
 
+    // ================================
+    //       CONFIGURAR BOTONES
+    // ================================
     @Override
     protected void addMenuButtons() {
         Button btnProductos = createMenuButton("\uD83D\uDCBC", "Productos");
@@ -122,8 +147,16 @@ public class DashboardComprasView extends DashboardViewBase {
         btnReportePedidoProveedor.setOnAction(e -> onActionReportePedidosProveedor());
         addSidebarFooter("Coord. Compras");
     }
+    
+    // ================================
+    //          TITULO DEL MENU
+    // ================================ 
     @Override
     protected String getTitleText() { return "📊 Dashboard"; }
+    
+    // ================================
+    //            BOTÓN SALIR
+    // ================================
     @Override
     protected void onSalir() { SceneManager.changeScene(new LoginView().getScene(), "Inicio de Sesión"); }
 }

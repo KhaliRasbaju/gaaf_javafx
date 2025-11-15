@@ -13,33 +13,49 @@ import application.utils.HttpClientUtil;
 
 public class BodegaService {
 
+    // ================================
+    //        MAPEO DEL JSON
+    // ================================
     private final ObjectMapper mapper = new ObjectMapper();
 
-
+    // ================================
+    //       OBTENER TODAS LAS BODEGAS
+    // ================================
     public List<Bodega> obtenerBodegas() throws Exception {
         String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/bodega", false);
         return mapper.readValue(response, new TypeReference<List<Bodega>>() {});
     }
 
-   
+    // ================================
+    //          CREAR BODEGA
+    // ================================
     public ResponseCommon crearBodega(BodegaRequest bodega) throws Exception {
         String jsonBody = mapper.writeValueAsString(bodega);
         String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/bodega/crear", jsonBody, false);
         return mapper.readValue(response, ResponseCommon.class);
     }
   
+
+    // ================================
+    //        EDITAR UNA BODEGA
+    // ================================
     public ResponseCommon editarBodega(Long id, BodegaRequest bodega) throws Exception {
         String jsonBody = mapper.writeValueAsString(bodega);
         String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/bodega/" + id, jsonBody);
         return mapper.readValue(response, ResponseCommon.class);
     }
     
+    // ================================
+    //        OBTENER UNA BODEGA
+    // ================================
     public Bodega obtenerBodega(Long id) throws Exception {
         String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/bodega/"+id, false);
         return mapper.readValue(response, Bodega.class);
     }
 
-   
+    // ================================
+    //        ELIMINAR UNA BODEGA
+    // ================================
     public ResponseCommon eliminarBodega(Long id) throws Exception {
         String response = HttpClientUtil.delete(ApiConfig.BASE_URL + "/bodega/" + id);
         return mapper.readValue(response, ResponseCommon.class);

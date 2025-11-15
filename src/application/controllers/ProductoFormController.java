@@ -24,13 +24,18 @@ import javafx.scene.text.Text;
 
 public class ProductoFormController {
 
+    // ================================================
+    //        CONTENEDOR PRINCIPAL
+    // ================================================
 	private final StackPane content;
 
     public ProductoFormController(StackPane content) {
         this.content = content;
     }
 
-    /** 🔹 Acción para registrar un producto */
+    // ================================================
+    //     ACCIÓN: REGISTRAR UN NUEVO PRODUCTO
+    // ================================================
     private static ResponseCommon onActionRegistrar(ProductoRequest request) {
         try {
             ProductoService service = new ProductoService();
@@ -41,7 +46,9 @@ public class ProductoFormController {
         }
     }
 
-    /** 🔹 Acción para actualizar un producto existente */
+    // ================================================
+    //     ACCIÓN: ACTUALIZAR PRODUCTO EXISTENTE
+    // ================================================
     private static ResponseCommon onActionActualizar(ProductoRequest request, Long id ) {
         try {
             ProductoService service = new ProductoService();
@@ -51,7 +58,9 @@ public class ProductoFormController {
         }
     }
 
-    /** 🔹 Construye y retorna la escena del formulario */
+    // ================================
+    //     CREACIÓN DE LA VISTA
+    // ================================
     public VBox getScene(String title, Producto producto) {
         // 🔹 Título principal
         Text titulo = new Text(String.format("📦 %s Producto", title));

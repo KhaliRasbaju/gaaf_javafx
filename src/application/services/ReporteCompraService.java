@@ -12,19 +12,31 @@ import application.models.response.ReporteCompra;
 import application.utils.HttpClientUtil;
 
 public class ReporteCompraService {
+	
+	// ================================
+	//        MAPEO DEL JSON
+	// ================================
 
     private final ObjectMapper mapper = new ObjectMapper();
     
+    // ================================
+    //     UBICACIÓN DEL SERVICIO
+    // ================================
     private static final String URL = ApiConfig.BASE_URL + "/reporte/compra";
 
 
+    // ================================
+    //     CONSTRUCTOR
+    // ================================
     public ReporteCompraService() {
     	mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 	}
 
 
-
+    // ================================
+	//   OBTENER REPORTE DE COMPRAS
+	// ================================
 	public ReporteCompra obtenerReporteCompras(
 			LocalDate fechaPedido,
             LocalDate fechaEntrega,

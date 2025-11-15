@@ -2,10 +2,16 @@ package application.models.response;
 
 public class ResponseCommon {
 
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Integer status;
 	
 	private String message; 
 	
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public ResponseCommon() {}
 	
 	public ResponseCommon(Integer status, String message) {
@@ -13,6 +19,9 @@ public class ResponseCommon {
 		this.message = message;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public Integer getStatus() {
 		return status;
 	}

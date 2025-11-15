@@ -11,14 +11,23 @@ import application.utils.HttpClientUtil;
 
 public class MunicipioService {
 
+    // ================================
+    //        MAPEO DEL JSON
+    // ================================
 	private final ObjectMapper mapper = new ObjectMapper();
 	
+
+	// ================================
+	//  OBTENER MUNICIPIOS POR ID DEPARTAMENTO
+	// ================================
 	public List<Municipio> obtenerMunicipiosPorDepartamento(Long id) throws Exception {
 	        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/municipio-departamento/"+id, false);
 	    return mapper.readValue(response, new TypeReference<List<Municipio>>() {});
 	}
 	
-	
+	// ================================
+	//      OBTENER MUNICIPIO POR ID
+	// ================================
 	public Municipio obtenerMunicipio(Long id) throws Exception {
         String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/ubicacion/municipio/"+id, false);
     return mapper.readValue(response, Municipio.class);

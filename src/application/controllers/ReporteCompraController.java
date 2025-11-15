@@ -31,6 +31,10 @@ import javafx.scene.layout.VBox;
 
 public class ReporteCompraController {
 	
+    // ============================================
+    //        VARIABLES ESTÁTICAS DEL CONTROLADOR
+    // ============================================
+	
 	// Elimina el "static" si no es necesario
 	private static Integer Page = 0;
 
@@ -38,7 +42,10 @@ public class ReporteCompraController {
 	private static final Double[] valor = { null };
 
 	private static Integer cantidad = null;
-	
+
+    // ============================================
+    //     METODO PARA ACTUALIZAR LA TABLA
+    // ============================================
 	private static void actualizarTabla(
 		TableView<Compra> tabla,
 		ComboBox<String> cbEstado,
@@ -74,6 +81,10 @@ public class ReporteCompraController {
 		    }).start();
 		
 	}
+	
+    // ============================================
+    //     VISTA PRINCIPAL
+    // ============================================
 
     @SuppressWarnings({ "unchecked", "static-access" })
 	public static VBox getScene(List<Compra> reportes, List<Producto> productos) {

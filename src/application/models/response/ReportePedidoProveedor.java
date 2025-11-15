@@ -4,6 +4,9 @@ import java.util.List;
 
 public class ReportePedidoProveedor {
 
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
 	private List<PedidoProveedor> content;
 	private PageableCommon pageable;
 	private Long totalElements;
@@ -16,6 +19,9 @@ public class ReportePedidoProveedor {
 	private Boolean first;
 	private Boolean empty;
 	
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public ReportePedidoProveedor() {}
 
 	public ReportePedidoProveedor(List<PedidoProveedor> content, PageableCommon pageable, Long totalElements,
@@ -33,6 +39,10 @@ public class ReportePedidoProveedor {
 		this.first = first;
 		this.empty = empty;
 	}
+	
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 
 	public List<PedidoProveedor> getContent() {
 		return content;

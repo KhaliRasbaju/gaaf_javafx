@@ -13,10 +13,14 @@ import application.utils.HttpClientUtil;
 
 public class ProductoService {
 	
+    // ================================
+    //        MAPEO DEL JSON
+    // ================================
 	private final ObjectMapper mapper = new ObjectMapper();
 	
-
-	
+	// ================================
+	//     CREAR UN NUEVO PRODUCTO
+	// ================================
 	public ResponseCommon crearProducto(ProductoRequest productoRequest) throws Exception {
 		String json = mapper.writeValueAsString(productoRequest);
 		String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/producto/crear", json, false);
@@ -24,6 +28,9 @@ public class ProductoService {
 		return mapper.readValue(response, ResponseCommon.class);	
 	}
 	
+	// ================================
+	//     EDITAR UN PRODUCTO
+	// ================================
 	public ResponseCommon editarProducto(ProductoRequest productoRequest, Long id) throws Exception {
 		String json = mapper.writeValueAsString(productoRequest);
 		String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/producto/editar/"+id, json);
@@ -31,16 +38,25 @@ public class ProductoService {
 		return mapper.readValue(response, ResponseCommon.class);	
 	}
 
+	// ================================
+	//     OBTENER PRODUCTO POR ID
+	// ================================
 	public Producto obtenerProducto(Long id) throws Exception{
 		String response = HttpClientUtil.get(ApiConfig.BASE_URL+"/producto/"+id, false);
 		return mapper.readValue(response, Producto.class);
 	}
 	
+	// ================================
+	//     OBTENER LISTA DE PRODUCTOS
+	// ================================
 	public List<Producto> obtenerProductos() throws Exception{
 		String response = HttpClientUtil.get(ApiConfig.BASE_URL+"/producto", false);
 		return mapper.readValue(response, new TypeReference<List<Producto>>() {});
 	}
 	
+	// ================================
+	//     ELIMINAR PRODUCTO
+	// ================================
 	public ResponseCommon eliminarProducto(Long id) throws Exception {
 		String response = HttpClientUtil.delete(ApiConfig.BASE_URL+"/producto/"+id.toString());
 		return mapper.readValue(response, ResponseCommon.class);

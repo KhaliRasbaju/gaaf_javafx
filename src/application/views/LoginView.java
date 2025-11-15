@@ -20,8 +20,14 @@ import javafx.util.Duration;
 
 public class LoginView {
 
+	//================================
+	//      SERVICIO DE ALMACENAMIENTO
+	//================================
 	private final StorageService storage = new StorageService();
 	
+	// ================================
+	//        VISTA PRINCIPAL
+	// ================================
     public Scene getScene() {
         // 🔹 Logo principal (reemplaza el texto "LOGIN GAAF")
         Image logoImg = new Image(getClass().getResource("/application/resources/logoGAAF.png").toExternalForm());
@@ -160,7 +166,10 @@ public class LoginView {
         return scene;
     }
 
-    // 🔹 Método para notificaciones modernas tipo Toast
+    
+    // ================================
+    //	NOTIFICACIONES MODERNAS
+    // ================================
     private void showNotification(Scene scene, String text, Color color) {
         Label notification = new Label(text);
         notification.getStyleClass().add("notification-toast");
@@ -184,7 +193,10 @@ public class LoginView {
         fade.play();
     }
 
-    // 🔹 Convertir Color a HEX
+    
+    // ================================
+    //	CONVERTIR COLOR A HEX
+    // ================================
     private String toHex(Color color) {
         return String.format("#%02X%02X%02X",
                 (int) (color.getRed() * 255),

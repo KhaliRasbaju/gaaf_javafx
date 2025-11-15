@@ -1,18 +1,27 @@
 package application.models.request;
 
 public class SesionRequest {
+
+	// ================================
+		//        ATRIBUTOS PRINCIPALES
+	// ================================
 	
 	private String usuario;
 	
 	private String contraseña;
 	
+	// ================================
+		//          CONSTRUCTORES
+	// ================================
 	public SesionRequest() {}
 
 	public SesionRequest(String usuario, String contraseña) {
 		this.usuario = usuario;
 		this.contraseña = contraseña;
 	}
-
+	// ================================
+		//        GETTERS Y SETTERS
+	// ================================
 	public String getUsuario() {
 		return usuario;
 	}

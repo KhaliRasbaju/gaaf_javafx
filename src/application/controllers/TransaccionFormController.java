@@ -19,17 +19,30 @@ import java.util.List;
 
 public class TransaccionFormController {
 
+
+    // ================================
+    //      CONTENEDOR PRINCIPAL
+    // ================================
     private final StackPane content;
+    
+    // ================================
+    //        ATRIBUTOS ESTATICOS
+    // ================================
     private static Long idProducto;
     private static Long idBodega;
     private static Long idPedido;
   
 
+    // ================================
+    //         CONSTRUCTOR
+    // ================================
     public TransaccionFormController(StackPane content) {
         this.content = content;
     }
 
-    // ✅ Carga la escena del formulario 
+    // ================================
+    //      ACCIÓN: CREAR TRANSACCIÓN
+    // ================================
     private static ResponseCommon onActionCrear(TransaccionRequest request) throws Exception {
 		try {
 			TransaccionService service = new TransaccionService();
@@ -42,7 +55,9 @@ public class TransaccionFormController {
 		}
 	}
     
-    
+    // ================================
+    //     OBTENER LISTADO DE BODEGAS
+    // ================================   
     private static List<Bodega> bodegas() throws Exception{
     	try {
     		BodegaService service = new BodegaService();
@@ -51,7 +66,10 @@ public class TransaccionFormController {
 			throw new Exception("Error tipo: " + ex);
 		}
     }
-    
+   
+    // ================================
+    //     OBTENER UNA BODEGA POR ID
+    // ================================
     private static Bodega bodega(Long id) throws Exception{
     	try {
     		BodegaService service = new BodegaService();
@@ -60,7 +78,10 @@ public class TransaccionFormController {
 			throw new Exception("Error tipo: " + ex);
 		}
     }
-    
+   
+    // ================================
+    //    OBTENER LISTA DE PRODUCTOS
+    // ================================
     private static List<Producto> productos() throws Exception {
 		try {
 			ProductoService service = new ProductoService();
@@ -71,6 +92,9 @@ public class TransaccionFormController {
 		}
 	}
     
+    // ================================
+    //     OBTENER PRODUCTO POR ID
+    // ================================  
     private static Producto producto(Long id) throws Exception {
     	try {
     		ProductoService service = new ProductoService();
@@ -82,7 +106,9 @@ public class TransaccionFormController {
     
    
 
-    // ✅ Crea el formulario de transacción
+    // ================================
+    //     VISTA PRINCIPAL
+    // ================================
     public VBox getScene() throws Exception {
 
         // --- CAMPOS ---

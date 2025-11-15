@@ -4,6 +4,9 @@ import java.util.List;
 
 public class Proveedor {
 	
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
 	private Long nit;
 	
     private String nombre;
@@ -17,15 +20,12 @@ public class Proveedor {
     
     private List<Cuenta> cuenta;
 
+    // ================================
+    //        CONSTRUCTORES
+    // ================================
     public Proveedor() {}
-    // Constructor
+ 
     
-
-    // Getters y Setters
-    public long getNit() {
-        return nit;
-    }
-
     public Proveedor(Long nit, String nombre, String telefono, String correo, 
 			List<Ubicacion> ubicacion, List<Cuenta> cuenta) {
 		this.nit = nit;
@@ -36,7 +36,13 @@ public class Proveedor {
 		this.cuenta = cuenta;
 	}
     
-    
+    // ================================
+    //        GETTERS & SETTERS
+     // ================================
+    public long getNit() {
+        return nit;
+    }
+
 	public void setNit(long nit) {
         this.nit = nit;
     }

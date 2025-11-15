@@ -7,7 +7,9 @@ import javafx.scene.control.Button;
 
 public class DashboardView extends DashboardViewBase {
 
-    // ---------- Acciones específicas ----------
+	// ================================
+	//        EVENTO: USUARIOS
+	// ================================
     private void onActionUsuarios() {
         try {
             UsuarioService service = new UsuarioService();
@@ -23,7 +25,9 @@ public class DashboardView extends DashboardViewBase {
         }
     }
 
-    // ---------- Sobrescritura de métodos base ----------
+    // ================================
+    //       CONFIGURAR BOTONES
+    // ================================
     @Override
     protected void addMenuButtons() {
         Button btnUsuarios = createMenuButton("👤", "Usuarios");
@@ -36,11 +40,17 @@ public class DashboardView extends DashboardViewBase {
         btnUsuarios.setOnAction(e -> onActionUsuarios());
     }
 
+    // ================================
+    //          TITULO DEL MENU
+    // ================================
     @Override
     protected String getTitleText() {
         return "📊 Dashboard";
     }
 
+    // ================================
+    //            BOTÓN SALIR
+    // ================================
     @Override
     protected void onSalir() {
         SceneManager.changeScene(new LoginView().getScene(), "Inicio de Sesión");

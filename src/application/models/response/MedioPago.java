@@ -2,6 +2,10 @@ package application.models.response;
 
 public class MedioPago {
 	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
+	
 	private Long id;
 	
 	private String referencia;
@@ -9,6 +13,9 @@ public class MedioPago {
 	private String metodoPago;
 	
 	
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public MedioPago() {}
 
 	public MedioPago(Long id, String referencia, String metodoPago) {
@@ -17,6 +24,9 @@ public class MedioPago {
 		this.metodoPago = metodoPago;
 	}
 	
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public Long getId() {
 		return id;
 	}

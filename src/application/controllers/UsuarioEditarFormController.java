@@ -17,14 +17,26 @@ import javafx.scene.paint.Color;
 
 public class UsuarioEditarFormController {
 
+    // ================================
+    //     CONTENEDOR PRINCIPAL
+    // ================================
 	private final StackPane content;
 
+    // ================================
+    //     CONSTRUCTOR
+    // ================================
 	public UsuarioEditarFormController(StackPane content) {
 		this.content = content;
 	}
 	
+    // ============================================
+    //  CONTROL DE HABILITACIÓN
+    // ============================================
     private boolean disable = true;
 
+    // ============================================
+    //     MÉTODO PARA DESHABILITAR / HABILITAR CAMPOS
+    // ============================================
     private void aplicarDisable(TextField txtUsuario, TextField txtCorreo,
                                 TextField txtNombre, TextField txtTelefono,
                                 Button btnActualizar) {
@@ -35,10 +47,17 @@ public class UsuarioEditarFormController {
         btnActualizar.setDisable(disable);
     }
 
+    // ============================
+    //    ACCIÓN: ACTUALIZAR
+    // ============================
     private void onActualizar(String id, UsuarioRequest request) throws Exception {
         UsuarioService service = new UsuarioService();
         service.editarUsuario(id, request);
     }
+    
+    // ================================
+    //      VISTA PRINCIPAL
+     // ================================
 
     public VBox getScene(String title, UsuarioResponse usuario) {
 

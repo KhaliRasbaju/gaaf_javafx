@@ -5,6 +5,9 @@ import java.util.List;
 
 public class ReporteInventarioMovimiento {
 
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
 	private List<InventarioMovimiento> content;
     private PageableCommon pageable;
     private Long totalElements;
@@ -17,6 +20,9 @@ public class ReporteInventarioMovimiento {
     private Boolean first;
     private Boolean empty;
     
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
     public ReporteInventarioMovimiento() {
 	}
 
@@ -35,6 +41,10 @@ public class ReporteInventarioMovimiento {
 		this.first = first;
 		this.empty = empty;
 	}
+	
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 
 	public List<InventarioMovimiento> getContent() {
 		return content;

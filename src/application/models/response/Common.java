@@ -2,10 +2,16 @@ package application.models.response;
 
 public class Common {
 
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Long id;
 	
 	private String nombre;
 	
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public Common() {
 	}
 
@@ -13,7 +19,9 @@ public class Common {
 		this.id = id;
 		this.nombre = nombre;
 	}
-
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public Long getId() {
 		return id;
 	}

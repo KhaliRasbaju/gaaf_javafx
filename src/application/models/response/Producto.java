@@ -2,7 +2,10 @@ package application.models.response;
 
 
 public class Producto {
-	
+
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
     private Long id;
     
     private String nombre;
@@ -10,6 +13,10 @@ public class Producto {
     private String tipo;
     
     private String descripcion;
+    
+    // ================================
+    //        CONSTRUCTORES
+    // ================================
 
     public Producto() {}
 
@@ -20,7 +27,10 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-    // Getters y Setters
+
+    // ================================
+    //        GETTERS & SETTERS
+    // ================================
     public Long getId() {
         return id;
     }

@@ -26,17 +26,29 @@ import javafx.scene.paint.Color;
 
 public class ProveedorFormController {
 
-	
+    // ================================
+    //        ATRIBUTOS ESTATICOS
+    // ================================
 	private static Long idEntidad;
 	private static Long idDepartamento;
 	private static Long idMunicipio;
+	
+	// ================================
+	//      CONTENEDOR PRINCIPAL
+	// ================================
 	private final StackPane content;
 
+    // ================================
+    //      CONSTRUCTOR
+    // ================================
     public ProveedorFormController(StackPane content) {
         this.content = content;
     }
 	
 
+    // ================================
+    //   ACCION: REGISTRAR PROVEEDOR
+    // ================================
     private static ResponseCommon onActionRegistrar(ProveedorRequest request) {
         try {
             ProveedorService service = new ProveedorService();
@@ -46,6 +58,9 @@ public class ProveedorFormController {
         }
     }
 
+    // ================================
+    //   ACCION: ACTUALIZAR PROVEEDOR
+    // ================================
     private static ResponseCommon onActionActualizar(Long nit, ProveedorRequest request) {
         try {
             ProveedorService service = new ProveedorService();
@@ -55,6 +70,9 @@ public class ProveedorFormController {
         }
     }
     
+    // ================================
+    //  OBTENER LISTA DE ENTIDADES
+    // ================================
     private static List<Common> entidades() throws Exception {
         try {
             EntidadService service = new EntidadService();
@@ -68,6 +86,10 @@ public class ProveedorFormController {
         }
     }
     
+
+    // ================================
+    //  OBTENER LISTA DE DEPARTAMENTOS
+    // ================================
     private static List<Common> departamento() throws Exception {
         try {
             DepartamentoService service = new DepartamentoService();
@@ -80,7 +102,10 @@ public class ProveedorFormController {
         	throw new Exception("Error tipo 1 : " + ex);   
         }
     }
-    
+  
+    // ================================
+    //  OBTENER LISTA DE MUNICIPIOS POR DEPARTAMENTO
+    // ================================
     private static List<Municipio> municipios(Long id) throws Exception {
         try {
             MunicipioService service = new MunicipioService();
@@ -93,7 +118,10 @@ public class ProveedorFormController {
         	throw new Exception("Error tipo 2: " + ex);   
         }
     }
-    
+  
+    // ================================
+    //  OBTENER MUNICIPIO POR ID
+    // ================================
     private static Municipio municipio(Long id) throws Exception {
         try {
             MunicipioService service = new MunicipioService();
@@ -107,7 +135,9 @@ public class ProveedorFormController {
         }
     }
 
-
+    // ================================
+    //      VISTA PRINCIPAL
+    // ================================
     public  ScrollPane getScene(String title, Proveedor proveedor) throws Exception {
     	
     	 // --- TÍTULO ---

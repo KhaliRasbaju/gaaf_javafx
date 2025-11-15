@@ -22,7 +22,14 @@ import javafx.scene.paint.Color;
 
 public class EntidadBancariaController {
 
+    // ================================
+    //        CONTENEDOR PRINCIPAL
+    // ================================
     private final StackPane content;
+    
+    // ================================
+    //        CONSTRUCTOR
+    // ================================
 
     public EntidadBancariaController(StackPane content) {
         this.content = content;
@@ -30,7 +37,10 @@ public class EntidadBancariaController {
 
    
 
-    // 🔹 Acción para abrir formulario de nueva entidad bancaria
+
+    // ================================
+    //   ACCIÓN: CREAR NUEVA ENTIDAD
+    // ================================
     private void onActionEntidadBancaria() {
         try {
         	EntidadBancariaFormController controller = new EntidadBancariaFormController(content);
@@ -40,7 +50,9 @@ public class EntidadBancariaController {
         }
     }
 
-    // 🔹 Acción para editar entidad bancaria
+    // ================================
+    //     ACCIÓN: EDITAR ENTIDAD
+    // ================================
     private  void onActionEditar(Long id) throws Exception {
         try {
             EntidadService service = new EntidadService();
@@ -52,7 +64,10 @@ public class EntidadBancariaController {
         }
     }
 
-    // 🔹 Acción para eliminar entidad bancaria
+
+    // ================================
+    //    ACCIÓN: ELIMINAR ENTIDAD
+    // ================================
     private static ResponseCommon onActionEliminar(Long id, Button button) throws Exception {
         try {
             EntidadService service = new EntidadService();
@@ -64,6 +79,10 @@ public class EntidadBancariaController {
         }
     }
     
+
+    // ================================
+    //    OBTENER ENTIDAD POR ID
+    // ================================
     private static Common entidad(Long id) throws Exception {
 		try {
 			
@@ -77,9 +96,10 @@ public class EntidadBancariaController {
 		}
 	}
     
-    
 
-    // ✅ Muestra la tabla con entidades bancarias
+    // ================================
+    //    VISTA PRINCIPAL: TABLA
+    // ================================
     public VBox getScene(List<Common> entidades) {
     	Label lblTitulo = new Label("Lista de Entidades Bancarias");
 		lblTitulo.getStyleClass().add("form-title");

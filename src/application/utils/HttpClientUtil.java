@@ -9,11 +9,22 @@ import java.net.http.HttpResponse;
 import application.session.SessionManager;
 
 public class HttpClientUtil {
+	
+    // ============================================
+    //                 CLIENTE HTTP
+    // ============================================
 	private static final HttpClient client = HttpClient.newHttpClient();
 	
+    // ============================================
+    //           OBTENER TOKEN DE SESIÓN
+    // ============================================
 	private static String getToken() {
 	    return SessionManager.getInstance().getToken();
 	}
+	
+	// ============================================
+	//              METODO GET
+	// ============================================
 	public static String get(String url, boolean noHeader) throws Exception{
 		System.out.println(getToken());
 		HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -28,6 +39,10 @@ public class HttpClientUtil {
 		System.out.println(response);
 		return response.body();
 	}
+	
+	// ============================================
+	//              METODO POST
+	// ============================================
 
 	 public static String post(String url, String jsonBody, Boolean noHeader) throws Exception {
         HttpRequest.Builder builder = HttpRequest.newBuilder()
@@ -45,6 +60,9 @@ public class HttpClientUtil {
         return response.body();
     }
 	 
+	 // ============================================
+	 //              METODO PUT CON BODY
+	 // ============================================
 	 public static String put(String url, String jsonBody) throws Exception {
 		 HttpRequest request = HttpRequest.newBuilder()
 				 .uri(new URI(url))
@@ -60,6 +78,9 @@ public class HttpClientUtil {
         return response.body();
 	 }
 	 
+	 // ============================================
+	 //              METODO PUT SIN BODY
+	 // ============================================
 	 public static String put(String url) throws Exception {
 		 HttpRequest request = HttpRequest.newBuilder()
 				 .uri(new URI(url))
@@ -75,7 +96,9 @@ public class HttpClientUtil {
 	 }
 	 
 
-	 
+	 // ============================================
+	 //              METODO DELETE
+	 // ============================================
 	 public static String delete(String url) throws Exception {
 	    HttpRequest request = HttpRequest.newBuilder()
 	            .uri(new URI(url))

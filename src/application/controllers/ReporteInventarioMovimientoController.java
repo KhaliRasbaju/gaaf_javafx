@@ -29,12 +29,17 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class ReporteInventarioMovimientoController {
-
+	// ================================
+    //      VARIABLES ESTÁTICAS
+    // ================================
 	private static Integer Page = 0;
 
 
 	private static Integer cantidad = null;
-
+	
+    // ============================================
+    //     METODO PARA ACTUALIZAR LA TABLA
+    // ============================================
 	private static void actualizarTabla(
 			TableView<InventarioMovimiento> tabla,
 			ComboBox<String> cbProducto,
@@ -68,6 +73,9 @@ public class ReporteInventarioMovimientoController {
 			
 		}
 	
+	// ================================
+    //     VISTA PRINCIPAL
+    // ================================
     public static VBox getScene(List<InventarioMovimiento> movimientos, List<Producto> productos) {
 
     	Label lblTitulo = new Label("Reporte del Movimiento en el Iventario");

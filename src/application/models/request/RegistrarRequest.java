@@ -2,6 +2,9 @@ package application.models.request;
 
 public class RegistrarRequest {
 	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
     private String usuario;
     
     private String correo;
@@ -14,6 +17,9 @@ public class RegistrarRequest {
     
     private String rol;
 
+    // ================================
+    //          CONSTRUCTORES
+    // ================================
     public RegistrarRequest() {}
 
     public RegistrarRequest(String usuario, String correo, String nombre, String telefono, String contraseña, String rol) {
@@ -25,6 +31,9 @@ public class RegistrarRequest {
         this.rol = rol;
     }
 
+    // ================================
+    //        GETTERS Y SETTERS
+    // ================================
 	public String getUsuario() {
 		return usuario;
 	}

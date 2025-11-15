@@ -4,6 +4,9 @@ import java.util.List;
 
 public class ReporteInventarioProductoBodega {
 
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
 	private List<InventarioProductoBodega> content;
     private PageableCommon pageable;
     private Long totalElements;
@@ -16,6 +19,9 @@ public class ReporteInventarioProductoBodega {
     private Boolean first;
     private Boolean empty;
     
+    // ================================
+    //        CONSTRUCTORES
+    // ================================
 	public ReporteInventarioProductoBodega() {}
 
 	public ReporteInventarioProductoBodega(List<InventarioProductoBodega> content, PageableCommon pageable,
@@ -34,6 +40,9 @@ public class ReporteInventarioProductoBodega {
 		this.empty = empty;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public List<InventarioProductoBodega> getContent() {
 		return content;
 	}

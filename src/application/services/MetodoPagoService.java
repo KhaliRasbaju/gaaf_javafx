@@ -13,32 +13,49 @@ import application.utils.HttpClientUtil;
 
 public class MetodoPagoService {
 
-	
+    // ================================
+    //        MAPEO DEL JSON
+    // ================================
 	private final ObjectMapper mapper = new ObjectMapper();
 	 
 	
+		// ================================
+		//     OBTENER MÉTODOS DE PAGO
+		// ================================
 	    public List<Common> obtenerMetodos() throws Exception {
 	        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/metodo-pago", false);
 	        return mapper.readValue(response, new TypeReference<List<Common>>() {});
 	    }
 
+	    // ================================
+	    //     CREAR NUEVO MÉTODO DE PAGO
+	    // ================================
 	    public ResponseCommon crearMetodo(CommonRequest entidad) throws Exception {
 	        String jsonBody = mapper.writeValueAsString(entidad);
 	        String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/metodo-pago/crear", jsonBody, false);
 	        return mapper.readValue(response, ResponseCommon.class);
 	    }
 
+	    // ================================
+	    //     EDITAR MÉTODO DE PAGO
+	    // ================================
 	    public ResponseCommon editarMetodo(Long id, CommonRequest entidad) throws Exception {
 	        String jsonBody = mapper.writeValueAsString(entidad);
 	        String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/metodo-pago/editar/" + id, jsonBody);
 	        return mapper.readValue(response, ResponseCommon.class);
 	    }
 	    
+	    // ================================
+	    //     OBTENER MÉTODO DE PAGO POR ID
+	    // ================================
 	    public Common obtenerMetodo(Long id) throws Exception {
 	        String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/metodo-pago/" + id, false);
 	        return mapper.readValue(response, Common.class);
 	    }
 	  
+	    // ================================
+	    //     ELIMINAR MÉTODO DE PAGO
+	    // ================================
 	    public ResponseCommon eliminarMetodo(Long id) throws Exception {
 	        String response = HttpClientUtil.delete(ApiConfig.BASE_URL + "/metodo-pago/" + id);
 	        return mapper.readValue(response, ResponseCommon.class);

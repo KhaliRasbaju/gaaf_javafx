@@ -2,10 +2,16 @@ package application.models.request;
 
 public class MedioPagoRequest {
 	
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
 	 private String referencia;
 	 
 	 private Long idMetodoPago;
 	 
+	// ================================
+	//          CONSTRUCTORES
+	// ================================
 	 public MedioPagoRequest() {}
 
 	 public MedioPagoRequest(String referencia, Long idMetodoPago) {
@@ -13,6 +19,9 @@ public class MedioPagoRequest {
 		this.idMetodoPago = idMetodoPago;
 	 }
 
+	 // ================================
+	 //        GETTERS Y SETTERS
+	 // ================================
 	 public String getReferencia() {
 		 return referencia;
 	 }

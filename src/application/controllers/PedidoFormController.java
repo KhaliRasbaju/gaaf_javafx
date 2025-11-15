@@ -31,21 +31,35 @@ import javafx.scene.text.Text;
 
 public class PedidoFormController {
 
+    // ================================
+    //     ATRIBUTOS ESTATICOS
+    // ================================
     private static Long idMetodoPago;
     private static Long nitProveedor;
     private static Long idProductoSeleccionado;
     
+    // ================================
+    //     CONTENEDOR PRINCIPAL
+    // ================================
     private final StackPane content;
 
+    // ================================
+    //     CONSTRUCTOR
+    // ================================
     public PedidoFormController(StackPane content) {
         this.content = content;
     }
 
-    // Lista para los detalles del pedido
+
+    // ================================
+    //     LISTA DE DETALLES DEL PEDIDO
+    // ================================
     private final ObservableList<DetallePedidoRequest> listaDetalles = FXCollections.observableArrayList();
 
    
-
+    // ================================
+    //     ACCIÓN: REGISTRAR PEDIDO
+    // ================================
     private static ResponseCommon onActionRegistrar(PedidoRequest request) {
         try {
             PedidoService service = new PedidoService();
@@ -54,8 +68,10 @@ public class PedidoFormController {
             throw new RuntimeException("Error tipo: " + ex);
         }
     }
-    
-    
+  
+    // ================================
+    //     ACCIÓN: EDITAR PEDIDO
+    // ================================
     private static ResponseCommon onActionEditar(Long idPedido, PedidoRequest request) {
 		try {
 			PedidoService service = new PedidoService();
@@ -65,7 +81,9 @@ public class PedidoFormController {
 		}
 	}
 
-    // Obtener listas auxiliares
+    // ================================
+    //     OBTENER LISTA DE PROVEEDORES
+    // ================================
     private static List<Proveedor> proveedores() throws Exception {
         try {
         	ProveedorService service = new ProveedorService();
@@ -79,17 +97,25 @@ public class PedidoFormController {
     }
         
     
-
+    // ================================
+    //     OBTENER LISTA DE MÉTODOS DE PAGO
+    // ================================
     private static List<Common> metodosPago() throws Exception {
         MetodoPagoService service = new MetodoPagoService();
         return service.obtenerMetodos();
     }
 
+    // ================================
+    //     OBTENER UN PRODUCTO POR ID
+    // ================================
     private static Producto producto(Long id) throws Exception {
         ProductoService service = new ProductoService();
         return service.obtenerProducto(id);
     }
-    
+
+    // ================================
+    //     OBTENER LISTA DE PRODUCTOS
+    // ================================
     private static List<Producto> productos() throws Exception {
         try {
         	ProductoService service = new ProductoService();
@@ -102,6 +128,9 @@ public class PedidoFormController {
         }
     }
 
+    // ================================
+    //     CREACIÓN DE LA VISTA
+    // ================================
     public ScrollPane getScene(String title, Pedido pedido) throws Exception {
     	
     	

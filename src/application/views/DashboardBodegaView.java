@@ -13,7 +13,9 @@ import javafx.scene.control.Button;
 
 public class DashboardBodegaView extends DashboardViewBase {
 	
-	
+    // ================================
+    //   EVENTO: REPORTE INVENTARIO
+    // ================================
 	private void onActionReporteInventario() {
 		try {
 			ProductoService serviceP = new ProductoService();
@@ -25,6 +27,10 @@ public class DashboardBodegaView extends DashboardViewBase {
 			System.out.println("Error tipo: " + ex);
 		}
 	}
+	
+    // ================================
+    //        EVENTO: BODEGAS
+    // ================================
 	private void onActionBodega() {
 		try {
 			BodegaService service = new BodegaService();
@@ -35,6 +41,10 @@ public class DashboardBodegaView extends DashboardViewBase {
 			System.out.println("Error tipo: " + ex);
 		}
 	}
+	
+    // ================================
+    //   EVENTO: REPORTE MOVIMIENTOS
+    // ================================
 	private void onActionReporteInventarioMovimiento() {
 		try {
 			ProductoService serviceP = new ProductoService();
@@ -47,6 +57,9 @@ public class DashboardBodegaView extends DashboardViewBase {
 		}
 	}
 	
+    // ================================
+    //    EVENTO: TRANSACCIONES
+    // ================================
 	private void onActionTransaccion() {
 	    try {
 	    	
@@ -61,7 +74,9 @@ public class DashboardBodegaView extends DashboardViewBase {
 
 
 	
-	
+    // ================================
+    //       CONFIGURAR BOTONES
+    // ================================
     @Override
     protected void addMenuButtons() {
         Button btnBodegas = createMenuButton("\uD83C\uDFE2", "Bodegas");
@@ -75,8 +90,17 @@ public class DashboardBodegaView extends DashboardViewBase {
         btnReporteMovimiento.setOnAction(e -> onActionReporteInventarioMovimiento());
         addSidebarFooter("Jefe Bodega");
     }
+    
+    // ================================
+    //          TITULO DEL MENU
+    // ================================
     @Override
     protected String getTitleText() { return "📦 Dashboard"; }
+    
+
+    // ================================
+    //            BOTÓN SALIR
+    // ================================
     @Override
     protected void onSalir() { SceneManager.changeScene(new LoginView().getScene(), "Inicio de Sesión"); }
 }

@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class Pedido {
 	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Long id;
 	
 	private Long nitProveedor;
@@ -25,6 +28,9 @@ public class Pedido {
     
     private List<DetallePedido> detallePedido;
     
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public Pedido() {}
 
 	public Pedido(Long id, Long nitProveedor, Double valor, LocalDateTime fechaPedido, Boolean recibido,
@@ -39,6 +45,9 @@ public class Pedido {
 		this.detallePedido = detallePedido;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public Long getId() {
 		return id;
 	}

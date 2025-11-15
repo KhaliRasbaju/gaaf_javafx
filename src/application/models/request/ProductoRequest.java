@@ -2,13 +2,20 @@ package application.models.request;
 
 
 public class ProductoRequest {
-	
+
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
     private String nombre;
     
     private String tipo;
     
     private String descripcion;
 
+    // ================================
+    //          CONSTRUCTORES
+    // ================================
+    
     public ProductoRequest() {}
 
     public ProductoRequest(String nombre, String tipo, String descripcion) {
@@ -17,6 +24,9 @@ public class ProductoRequest {
         this.descripcion = descripcion;
     }
 
+    // ================================
+    //        GETTERS Y SETTERS
+    // ================================
     public String getNombre() {
         return nombre;
     }

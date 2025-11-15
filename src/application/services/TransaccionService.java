@@ -11,9 +11,14 @@ import application.utils.HttpClientUtil;
 
 public class TransaccionService {
 
+    // ================================
+    //        MAPEO DEL JSON
+    // ================================
     private final ObjectMapper mapper = new ObjectMapper();
 
-    // 🔹 CREAR TRANSACCIÓN (POST)
+    // ================================
+    //       CREAR TRANSACCIÓN
+    // ================================
     public ResponseCommon crearTransaccion(TransaccionRequest transaccion) throws Exception {
         String jsonBody = mapper.writeValueAsString(transaccion);
         String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/transaccion/crear", jsonBody, false);

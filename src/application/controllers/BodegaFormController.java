@@ -23,21 +23,33 @@ import javafx.scene.paint.Color;
 
 public class BodegaFormController {
 
+    // ================================
+    //     CONTENEDOR PRINCIPAL
+    // ================================
     private final StackPane content;
 
-    // 🔹 Campos como atributos para poder usarlos fuera de getScene()
+    // ================================
+    //     CAMPOS DEL FORMULARIO
+    // ================================
     private TextField txtNombre;
     private TextField txtUbicacion;
     private Button btnAccion;
 
-    // 🔹 Bodega actual (null si es registro)
+    // ================================
+    //     BODEGA EN EDICIÓN (SI APLICA)
+    // ================================
     private Bodega bodegaActual;
 
+    // ================================
+    //         CONSTRUCTOR
+    // ================================
     public BodegaFormController(StackPane content) {
         this.content = content;
     }
 
-    // ⭐ Acción registrar
+    // ================================
+    //     ACCIÓN: REGISTRAR BODEGA
+    // ================================
     private static ResponseCommon onActionRegistrar(BodegaRequest request) {
         try {
             BodegaService service = new BodegaService();
@@ -47,7 +59,9 @@ public class BodegaFormController {
         }
     }
 
-    // ⭐ Acción actualizar
+    // ================================
+    //     ACCIÓN: ACTUALIZAR BODEGA
+    // ================================
     private static ResponseCommon onActionActualizar(Long id, BodegaRequest request) {
         try {
             BodegaService service = new BodegaService();
@@ -57,18 +71,16 @@ public class BodegaFormController {
         }
     }
 
-    /** ============================================================
-     *  🔷 Construcción del formulario
-     *  ============================================================ */
+    // ================================
+    //     CREACIÓN DE LA VISTA
+    // ================================
     public VBox getScene(String title, Bodega bodega) {
 
         this.bodegaActual = bodega;
 
-        // --- Título ---
+
         Label lblTitulo = new Label(String.format("🏢 %s de Bodega", title));
         lblTitulo.getStyleClass().add("form-title");
-
-        // --- GRID ---
         GridPane grid = new GridPane();
         grid.getStyleClass().add("form-container");
         grid.setHgap(25);
@@ -82,9 +94,6 @@ public class BodegaFormController {
         col2.setPercentWidth(50);
         grid.getColumnConstraints().addAll(col1, col2);
 
-        // -------------------------------
-        // 🔹 Campo Nombre
-        // -------------------------------
         Label lblNombre = new Label("Nombre de la bodega");
         lblNombre.getStyleClass().add("form-label");
         grid.add(lblNombre, 0, 0);
@@ -107,9 +116,6 @@ public class BodegaFormController {
 
         grid.add(txtNombre, 0, 1, 2, 1);
 
-        // -------------------------------
-        // 🔹 Campo Ubicación
-        // -------------------------------
         Label lblUbicacion = new Label("Ubicación de la bodega");
         lblUbicacion.getStyleClass().add("form-label");
         grid.add(lblUbicacion, 0, 2);
@@ -123,9 +129,7 @@ public class BodegaFormController {
 
         grid.add(txtUbicacion, 0, 3, 2, 1);
 
-        // -------------------------------
-        // 🔹 Botón Registrar / Actualizar
-        // -------------------------------
+
         btnAccion = new Button(bodega == null ? "Registrar" : "Actualizar");
         btnAccion.getStyleClass().add("form-button");
         btnAccion.setPrefWidth(200);
@@ -146,9 +150,9 @@ public class BodegaFormController {
     }
 
 
-    /** ============================================================
-     *  🔷 Lógica principal: Guardar Bodega
-     *  ============================================================ */
+    // ================================
+    //     GUARDAR / ACTUALIZAR
+    // ================================
     private void guardarBodega() {
 
         if (!validarCampos()) {
@@ -183,9 +187,9 @@ public class BodegaFormController {
         recargarVista();
     }
 
-    /** ============================================================
-     *  🔷 Validaciones
-     *  ============================================================ */
+    // ================================
+    //     VALIDACIÓN DE CAMPOS
+    // ================================
     private boolean validarCampos() {
 
         if (txtNombre.getText().isEmpty() || txtUbicacion.getText().isEmpty()) {
@@ -200,9 +204,9 @@ public class BodegaFormController {
         return true;
     }
 
-    /** ============================================================
-     *  🔷 Manejo de respuesta
-     *  ============================================================ */
+    // ================================
+    //     MANEJO DE RESPUESTAS
+    // ================================
     private void manejarRespuesta(ResponseCommon response) {
 
         boolean exito = response.getStatus() == 200 || response.getStatus() == 201;
@@ -223,17 +227,17 @@ public class BodegaFormController {
         );
     }
 
-    /** ============================================================
-     *  🔷 Limpieza de campos
-     *  ============================================================ */
+    // ================================
+    //     LIMPIAR CAMPOS
+    // ================================
     private void limpiarCampos() {
         txtNombre.clear();
         txtUbicacion.clear();
     }
 
-    /** ============================================================
-     *  🔷 Recarga de vista principal
-     *  ============================================================ */
+    // ================================
+    //     RECARGAR VISTA PRINCIPAL DE BODEGAS
+    // ================================
     private void recargarVista() {
         try {
             BodegaService service = new BodegaService();

@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class InventarioMovimiento {
 	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Long id;
 	
 	private String producto;
@@ -21,6 +24,9 @@ public class InventarioMovimiento {
     
     private String observacion;
     
+    // ================================
+    //        CONSTRUCTORES
+    // ================================
     public InventarioMovimiento() {}
 
 	public InventarioMovimiento(Long id, String producto, String bodega, String tipo, Integer cantidad,
@@ -35,6 +41,9 @@ public class InventarioMovimiento {
 	}
 
 	
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 
 	public Long getId() {
 		return id;

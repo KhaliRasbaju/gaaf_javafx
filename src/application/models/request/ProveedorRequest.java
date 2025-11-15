@@ -1,7 +1,10 @@
 package application.models.request;
 
 public class ProveedorRequest {
-	
+
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
     private Long nit;
     
     private String nombre;
@@ -14,6 +17,10 @@ public class ProveedorRequest {
     
     private UbicacionRequest ubicacion;
 
+    // ================================
+    //          CONSTRUCTORES
+    // ================================
+    
     public ProveedorRequest() {}
 
     public ProveedorRequest(Long nit, String nombre, String correo, String telefono, CuentaRequest cuenta, UbicacionRequest ubicacion) {
@@ -25,7 +32,9 @@ public class ProveedorRequest {
         this.ubicacion = ubicacion;
     }
 
-    // Getters y Setters
+	// ================================
+    //        GETTERS Y SETTERS
+    // ================================
     public Long getNit() {
         return nit;
     }
@@ -74,6 +83,9 @@ public class ProveedorRequest {
         this.ubicacion = ubicacion;
     }
 
+    // ================================
+    //       REPRESENTACIÓN STRING
+     // ================================
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub

@@ -6,6 +6,9 @@ import java.util.List;
 
 public class ReporteCompra {
 	
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
 	private List<Compra> content;
     private PageableCommon pageable;
     private Long totalElements;
@@ -18,6 +21,9 @@ public class ReporteCompra {
     private Boolean first;
     private Boolean empty;
     
+    // ================================
+    //        CONSTRUCTORES
+    // ================================
 	public ReporteCompra() {}
 	
 	public ReporteCompra(List<Compra> content, PageableCommon pageable, Long totalElements, Integer totalPages,
@@ -35,6 +41,10 @@ public class ReporteCompra {
 		this.first = first;
 		this.empty = empty;
 	}
+	
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 
 	public List<Compra> getContent() {
 		return content;

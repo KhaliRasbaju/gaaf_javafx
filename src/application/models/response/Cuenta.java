@@ -2,7 +2,10 @@ package application.models.response;
 
 
 public class Cuenta {
-	
+
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Long id;
 	
 	private String numero;
@@ -11,6 +14,9 @@ public class Cuenta {
 	
 	private Common entidad;
 	
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public Cuenta() {}
 
 	public Cuenta(Long id, String numero, String tipo, Common entidad) {
@@ -20,6 +26,9 @@ public class Cuenta {
 		this.entidad = entidad;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public Long getId() {
 		return id;
 	}

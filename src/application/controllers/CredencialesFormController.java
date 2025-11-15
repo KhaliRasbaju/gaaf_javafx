@@ -11,28 +11,38 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+
+//================================
+//	CONTROLADOR FORMULARIO DE CREDENCIALES
+//================================
 public class CredencialesFormController {
 
+    // ================================
+    //     VALIDACIÓN PASSWORD
+    // ================================
     private static final String PASSWORD_REGEX = "^[A-Za-z0-9]{8,}$";
 
-    // 🔹 Campos como atributos para usar fuera de getScene()
+    // ================================
+    //     ATRIBUTOS DEL FORMULARIO
+    // ================================
     private static PasswordField contrasena;
     private static PasswordField contrasenaConfirma;
     private static Button btnActualizar;
 
     private static String userId;
 
-    /** ============================================================
-     *  🔹 Acción real: llamar al servicio
-     *  ============================================================ */
+
+    // ================================
+    //     ACCIÓN: EDITAR CREDENCIALES
+    // ================================
     private static ResponseCommon onCambiarCredenciales(String id, CredencialesRequest request) throws Exception {
         UsuarioService service = new UsuarioService();
         return service.editarCredenciales(id, request);
     }
 
-    /** ============================================================
-     *  🔹 Método principal: Construir vista
-     *  ============================================================ */
+    // ================================
+    //     CREACIÓN DE LA VISTA
+    // ================================
     public static VBox getScene(String title, String id) {
 
         userId = id;
@@ -40,7 +50,9 @@ public class CredencialesFormController {
         Label lblTitulo = new Label(String.format("📝 %s de Usuario", title));
         lblTitulo.getStyleClass().add("form-title");
 
-        //====== CAMPO PASSWORD ======//
+        // ================================
+        //     CAMPO: CONTRASEÑA
+        // ================================
         Label lblContrasena = new Label("Contraseña:");
         contrasena = new PasswordField();
         contrasena.setPromptText("Nueva contraseña");
@@ -54,7 +66,9 @@ public class CredencialesFormController {
 
         StackPane panePassword = crearPasswordPane(contrasena, contrasenaVisible, togglePass1);
 
-        //====== CAMPO CONFIRM PASSWORD ======//
+        // ================================
+        //     CAMPO: CONFIRMAR CONTRASEÑA
+        // ================================
         Label lblContrasenaConfirmar = new Label("Confirmar contraseña:");
         contrasenaConfirma = new PasswordField();
         contrasenaConfirma.setPromptText("Repetir contraseña");
@@ -68,7 +82,6 @@ public class CredencialesFormController {
 
         StackPane panePassword2 = crearPasswordPane(contrasenaConfirma, contrasenaConfirmaVisible, togglePass2);
 
-        //====== INFO + BOTÓN ======//
         Label lblInfo = new Label("📌 Mín 8 caracteres, solo letras y números. Ambas deben coincidir.");
         lblInfo.setStyle("-fx-font-size: 12px; -fx-text-fill: #707070;");
 
@@ -78,7 +91,9 @@ public class CredencialesFormController {
 
         agregarValidacionPassword(contrasena, contrasenaConfirma, btnActualizar);
 
-        //====== GRID ======//
+        // ================================
+        //     GRID PRINCIPAL
+        // ================================
         GridPane grid = new GridPane();
         grid.getStyleClass().add("form-container");
         grid.setHgap(20);
@@ -104,9 +119,10 @@ public class CredencialesFormController {
     }
 
 
-    /** ============================================================
-     *  🔹 MÉTODO PRINCIPAL: cambiarCredenciales()
-     *  ============================================================ */
+
+    // ================================
+    //     ACCIÓN PRINCIPAL: GUARDAR CAMBIO
+    // ================================
     private static void cambiarCredenciales() {
 
         if (!validarCampos()) {
@@ -134,9 +150,9 @@ public class CredencialesFormController {
     }
 
 
-    /** ============================================================
-     *  🔹 Validaciones
-     *  ============================================================ */
+    // ================================
+    //     VALIDACIÓN GENERAL DE LOS CAMPOS
+    // ================================
     private static boolean validarCampos() {
 
         String pass = contrasena.getText();
@@ -156,9 +172,9 @@ public class CredencialesFormController {
     }
 
 
-    /** ============================================================
-     *  🔹 Manejo de respuesta
-     *  ============================================================ */
+    // ================================
+    //     MANEJO DE RESPUESTA
+    // ================================
     private static void manejarRespuesta(boolean exito, String mensaje) {
         Color color = exito ? Color.GREEN : Color.RED;
 
@@ -170,9 +186,9 @@ public class CredencialesFormController {
     }
 
 
-    /** ============================================================
-     *  🔹 Mostrar/ocultar contraseña
-     *  ============================================================ */
+    // ================================
+    //     BOTON DE MOSTRAR/OCULTAR CONTRASEÑA
+    // ================================
     private static StackPane crearPasswordPane(PasswordField passField, TextField passVisible, Button toggleBtn) {
 
         passVisible.managedProperty().bind(passVisible.visibleProperty());
@@ -194,9 +210,9 @@ public class CredencialesFormController {
         return pane;
     }
 
-    /** ============================================================
-     *  🔹 Validación dinámica en tiempo real
-     *  ============================================================ */
+    // ================================
+    //     VALIDACIÓN DINÁMICA
+    // ================================
     private static void agregarValidacionPassword(PasswordField campo, PasswordField confirmar, Button btn) {
 
         ChangeListener<String> validar = (obs, ov, nv) -> {

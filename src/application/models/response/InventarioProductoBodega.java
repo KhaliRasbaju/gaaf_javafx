@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class InventarioProductoBodega {
 
 
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Long id;
 	
 	private String bodega;
@@ -18,6 +21,9 @@ public class InventarioProductoBodega {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fecha;
     
+    // ================================
+    //        CONSTRUCTORES
+    // ================================
     public InventarioProductoBodega() {}
 
 	
@@ -31,6 +37,9 @@ public class InventarioProductoBodega {
 	}
 
 	
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 
 	public Long getId() {
 		return id;

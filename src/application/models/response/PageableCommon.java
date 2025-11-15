@@ -1,13 +1,20 @@
 package application.models.response;
 
 public class PageableCommon {
+	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Integer pageNumber;
     private Integer pageSize;
     private SortCommon sort;
     private Long offset;
     private Boolean paged;
     private Boolean unpaged;
-      
+    
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public PageableCommon() {}
 	
 	public PageableCommon(Integer pageNumber, Integer pageSize, SortCommon sort, Long offset, Boolean paged,
@@ -19,6 +26,10 @@ public class PageableCommon {
 		this.paged = paged;
 		this.unpaged = unpaged;
 	}
+	
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	
 	public Integer getPageNumber() {
 		return pageNumber;

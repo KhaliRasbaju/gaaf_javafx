@@ -32,7 +32,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class ReportePedidoProveedorController {
-	
+	// ================================
+    //      VARIABLES ESTÁTICAS
+    // ================================	
 	// Elimina el "static" si no es necesario
 	private static Integer Page = 0;
 
@@ -40,7 +42,9 @@ public class ReportePedidoProveedorController {
 	private static final Double[] valor = { null };
 
 
-	
+    // ============================================
+    //     METODO PARA ACTUALIZAR LA TABLA
+    // ============================================	
 	private static void actualizarTabla(
 		TableView<PedidoProveedor> tabla,
 		ComboBox<String> cbEstado,
@@ -73,6 +77,10 @@ public class ReportePedidoProveedorController {
 		    }).start();
 		
 	}
+	
+    // ============================================
+    //     VISTA PRINCIPAL
+    // ============================================
 	
 	@SuppressWarnings("unchecked")
 	public static VBox getScene(List<PedidoProveedor> pedidos, List<Common> metodos) {

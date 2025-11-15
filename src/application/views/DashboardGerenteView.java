@@ -10,6 +10,9 @@ import javafx.scene.control.Button;
 
 public class DashboardGerenteView extends DashboardViewBase {
 
+		// ================================
+		//   EVENTO: REPORTE INVENTARIO
+		// ================================
     private void onActionReporteInventario() {
         try {
         	ProductoService serviceP = new ProductoService();
@@ -23,7 +26,9 @@ public class DashboardGerenteView extends DashboardViewBase {
             ex.printStackTrace();
         }
     }
-    
+    	// ================================
+    	//   EVENTO: REPORTE COMPRAS
+    	// ================================
     private void onActionReporteCompra() {
         try {
             System.out.println("→ Clic en Reporte Inventario");
@@ -38,7 +43,9 @@ public class DashboardGerenteView extends DashboardViewBase {
         }
     }
 
-
+    // ================================
+    //       CONFIGURAR BOTONES
+    // ================================
     @Override
     protected void addMenuButtons() {
         Button btnReporteInventario = createMenuButton("📄", "Reporte Inventario");
@@ -52,11 +59,17 @@ public class DashboardGerenteView extends DashboardViewBase {
         btnReporteCompras.setOnAction(e -> onActionReporteCompra());
     }
 
+     // ================================
+	 //       TITULO DEL MENU
+	 // ================================
     @Override
     protected String getTitleText() { 
         return "📈 Dashboard"; 
     }
 
+    // ================================
+    //          BOTON SALIR
+    // ================================
     @Override
     protected void onSalir() { 
         SceneManager.changeScene(new LoginView().getScene(), "Inicio de Sesión"); 

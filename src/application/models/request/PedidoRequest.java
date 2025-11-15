@@ -5,7 +5,9 @@ import java.util.List;
 
 public class PedidoRequest {
 
-	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
     private Long nitProveedor;
     
     private Double valor;
@@ -16,6 +18,9 @@ public class PedidoRequest {
     
     private List<DetallePedidoRequest> detalle;
 
+    // ================================
+    //          CONSTRUCTORES
+    // ================================
     public PedidoRequest() {}
 
 	public PedidoRequest(Long nitProveedor, Double valor, LocalDateTime fechaPedido, MedioPagoRequest medioPago,
@@ -27,6 +32,9 @@ public class PedidoRequest {
 		this.detalle = detalle;
 	}
 
+	// ================================
+	//        GETTERS Y SETTERS
+	// ================================
 	public Long getNitProveedor() {
 		return nitProveedor;
 	}
@@ -85,6 +93,10 @@ public class PedidoRequest {
 	public void setRecibido(boolean recibido) {
 	    this.recibido = recibido;
 	}
+	
+	// ================================
+	//       REPRESENTACIÓN STRING
+	// ================================
 
 	@Override
 	public String toString() {

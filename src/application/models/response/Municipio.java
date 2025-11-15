@@ -2,12 +2,18 @@ package application.models.response;
 
 public class Municipio {
 	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private  Long id;
 	
 	private String nombre;
 	
 	private String departameto;
 	
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public Municipio() {}
 
 	public Municipio(Long id, String nombre, String departameto) {
@@ -16,6 +22,9 @@ public class Municipio {
 		this.departameto = departameto;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public Long getId() {
 		return id;
 	}

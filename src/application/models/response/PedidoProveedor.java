@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class PedidoProveedor {
 
-
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Long id;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -32,7 +34,10 @@ public class PedidoProveedor {
     private String entidadBancaria;
     
     private Double valorPedido;
-        
+     
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public PedidoProveedor() {}
 
 	public PedidoProveedor(Long id, LocalDate fechaPedido, LocalDate fechaEntrega, String estado,
@@ -52,6 +57,9 @@ public class PedidoProveedor {
 		this.valorPedido = valorPedido;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public Long getId() {
 		return id;
 	}

@@ -3,12 +3,18 @@ package application.models.response;
 
 public class Bodega {
 	
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
     private Long id;
     
     private String nombre;
     
     private String ubicacion;
 
+    // ================================
+    //        CONSTRUCTORES
+    // ================================
     public Bodega() {}
 
     public Bodega(String nombre, String ubicacion, Long id) {
@@ -17,6 +23,9 @@ public class Bodega {
         this.ubicacion = ubicacion;
     }
 
+    // ================================
+    //        GETTERS & SETTERS
+    // ================================
     public Long getId() {
         return id;
     }
@@ -41,6 +50,9 @@ public class Bodega {
         this.ubicacion = ubicacion;
     }
 
+    // ================================
+    //        REPRESENTACIÓN STRING
+    // ================================
     @Override
     public String toString() {
         return nombre + " (" + ubicacion + ")";

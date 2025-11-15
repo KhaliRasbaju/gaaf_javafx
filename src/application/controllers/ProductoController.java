@@ -23,13 +23,21 @@ import javafx.scene.paint.Color;
 
 public class ProductoController {
 
+    // ================================
+    //     CONTENEDOR PRINCIPAL
+    // ================================
     private final StackPane content;
 
+    // ================================
+    //     CONSTRUCTOR
+    // ================================
     public ProductoController(StackPane content) {
         this.content = content;
     }
 
-    // 🔹 Acción para abrir formulario de nuevo producto
+    // ================================
+    //     ACCIÓN: ABRIR FORMULARIO PARA REGISTRAR PRODUCTO
+    // ================================
     private void onActionProducto() {
         try {
         	ProductoFormController controller = new ProductoFormController(content);
@@ -41,7 +49,9 @@ public class ProductoController {
     }
 
 
-    // 🔹 Acción para editar producto
+    // ================================
+    //     ACCIÓN: EDITAR PRODUCTO
+    // ================================
     private void onActionEditar(Long id) {
         try {
             ProductoService service = new ProductoService();
@@ -53,7 +63,9 @@ public class ProductoController {
         }
     }
 
-    // 🔹 Acción para eliminar producto
+    // ================================
+    //     ACCIÓN: ELIMINAR PRODUCTO
+    // ================================
     private static ResponseCommon onActionEliminar(Long id, Button button) throws Exception {
         try {
             ProductoService service = new ProductoService();
@@ -65,7 +77,9 @@ public class ProductoController {
         }
     }
 
-    // ✅ Muestra la tabla con sus acciones
+    // ================================
+    //     VISTA PRINCIPAL: TABLA
+    // ================================
     public VBox getScene(List<Producto> productos) {
     	
     	Label lblTitulo = new Label("Lista de Productos");

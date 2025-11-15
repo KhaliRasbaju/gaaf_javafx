@@ -11,7 +11,9 @@ import javafx.scene.image.Image;
 
 public class Main extends Application {
 	
-	@Override
+	// ======================================================
+    //   INICIO DE LA APLICACIÓN
+    // ======================================================
 	public void start(Stage primaryStage) throws Exception {
 		try {
 			

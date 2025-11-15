@@ -2,6 +2,9 @@ package application.models.response;
 
 public class Usuario {
 	
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
     private String usuario;
     
     private String correo;
@@ -12,6 +15,9 @@ public class Usuario {
 
     private String rol;
 
+    // ================================
+    //        CONSTRUCTORES
+    // ================================
     public Usuario() {}
 
 
@@ -28,6 +34,9 @@ public class Usuario {
     
     
   
+    // ================================
+	//        GETTERS & SETTERS
+	// ================================
 
 	public String getUsuario() {
 		return usuario;

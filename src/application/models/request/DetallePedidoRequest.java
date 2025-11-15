@@ -2,6 +2,10 @@ package application.models.request;
 
 public class DetallePedidoRequest {
 	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
+	
 	private Float fermentacion;
 	
     private Float peso;
@@ -14,10 +18,11 @@ public class DetallePedidoRequest {
     
     private Long idProducto;
     
+    // ================================
+    //          CONSTRUCTORES
+    // ================================
 	public DetallePedidoRequest() {}
 
-	
-	
 	public DetallePedidoRequest(Float fermentacion, Float peso, Integer cantidad, Float humedad, Float estadoCacao,
 			Long idProducto) {
 		this.fermentacion = fermentacion;
@@ -27,6 +32,10 @@ public class DetallePedidoRequest {
 		this.estadoCacao = estadoCacao;
 		this.idProducto = idProducto;
 	}
+	
+	// ================================
+	//        GETTERS Y SETTERS
+	// ================================
 
 	public Long getIdProducto() {
 		return idProducto;
@@ -75,6 +84,10 @@ public class DetallePedidoRequest {
 	public void setEstadoCacao(Float estadoCacao) {
 		this.estadoCacao = estadoCacao;
 	}
+	
+	// ================================
+	//       REPRESENTACIÓN STRING
+	// ================================
 	
 	@Override
 	public String toString() {

@@ -12,35 +12,50 @@ import application.models.response.ResponseCommon;
 import application.utils.HttpClientUtil;
 
 public class EntidadService {
+	
+    // ================================
+    //        MAPEO DEL JSON
+    // ================================
 	 private final ObjectMapper mapper = new ObjectMapper();
 	 
- // 🔹 OBTENER TODAS LAS ENTIDADES (GET)
+    // ================================
+    //       OBTENER TODAS LAS ENTIDADES
+    // ================================
     public List<Common> obtenerEntidades() throws Exception {
         String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/entidad-bancaria", false);
         return mapper.readValue(response, new TypeReference<List<Common>>() {});
     }
 
-    // 🔹 CREAR ENTIDAD (POST)
+    // ================================
+    //       CREAR UNA NUEVA ENTIDAD
+    // ================================
     public ResponseCommon crearEntidad(CommonRequest entidad) throws Exception {
         String jsonBody = mapper.writeValueAsString(entidad);
         String response = HttpClientUtil.post(ApiConfig.BASE_URL + "/entidad-bancaria/crear", jsonBody, false);
         return mapper.readValue(response, ResponseCommon.class);
     }
 
-    // 🔹 EDITAR ENTIDAD (PUT)
+    // ================================
+    //       EDITAR UNA ENTIDAD
+    // ================================
     public ResponseCommon editarEntidad(Long id, CommonRequest entidad) throws Exception {
         String jsonBody = mapper.writeValueAsString(entidad);
         String response = HttpClientUtil.put(ApiConfig.BASE_URL + "/entidad-bancaria/editar/" + id, jsonBody);
         return mapper.readValue(response, ResponseCommon.class);
     }
     
+    // ================================
+    //       OBTENER UNA ENTIDAD POR ID
+    // ================================
     public Common obtenerEntidad(Long id) throws Exception {
         String response = HttpClientUtil.get(ApiConfig.BASE_URL + "/entidad-bancaria/" + id, false);
         return mapper.readValue(response, Common.class);
     }
     
 
-    // 🔹 ELIMINAR ENTIDAD (DELETE)
+	// ================================
+    //       ELIMINAR UNA ENTIDAD
+    // ================================
     public ResponseCommon eliminarEntidad(Long id) throws Exception {
         String response = HttpClientUtil.delete(ApiConfig.BASE_URL + "/entidad-bancaria/" + id);
         return mapper.readValue(response, ResponseCommon.class);

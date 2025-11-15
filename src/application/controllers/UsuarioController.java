@@ -23,14 +23,21 @@ import javafx.scene.paint.Color;
 
 public class UsuarioController {
 
+    // ================================
+    //     CONTENEDOR PRINCIPAL
+    // ================================
 	private final StackPane content;
 
+    // ================================
+    //     CONSTRUCTOR
+    // ================================
 	public UsuarioController(StackPane content) {
 		this.content = content;
 	}
 
-	
-
+	// ============================================================
+	//        ACCIÓN: ABRIR FORMULARIO DE CREAR USUARIO
+	// ============================================================	
 	private void onActionCrear() {
 		try {
 			
@@ -41,6 +48,9 @@ public class UsuarioController {
 		}
 	}
 	
+	// ============================================================
+	//          ACCIÓN: ABRIR FORMULARIO DE EDITAR USUARIO
+	// ============================================================	
 	private void onActionEditar(String id) {
 		try {
 			
@@ -54,7 +64,9 @@ public class UsuarioController {
 		}
 	}
 	
-	
+	// ============================================================
+	//                  ACCIÓN: ELIMINAR USUARIO
+	// ============================================================	
 	private ResponseCommon onActionEliminar(String id) throws Exception {
 		try {
 			UsuarioService service = new UsuarioService();
@@ -65,11 +77,16 @@ public class UsuarioController {
 		}
 	}
 	
+	// ============================================================
+	//                OBTENER ID DEL USUARIO LOGUEADO
+	// ============================================================	
 	private static String getUserId() {
 		return SessionManager.getInstance().getId();
 	}
 	
-	// ------------------- Tabla de Usuarios -------------------
+    // ================================
+    //     VISTA PRINCIPAL
+    // ================================
 	public VBox getScene(List<UsuarioResponse> usuarios) {
 		
 		Button btnAgregar = new Button("+");

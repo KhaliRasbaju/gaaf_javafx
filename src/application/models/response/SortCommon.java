@@ -2,10 +2,16 @@ package application.models.response;
 
 public class SortCommon {
 
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Boolean sorted;	    
 	private Boolean unsorted;
 	private Boolean empty;
 	
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public SortCommon() {}
 
 	public SortCommon(Boolean sorted, Boolean unsorted, Boolean empty) {
@@ -14,6 +20,9 @@ public class SortCommon {
 		this.empty = empty;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public Boolean getSorted() {
 		return sorted;
 	}

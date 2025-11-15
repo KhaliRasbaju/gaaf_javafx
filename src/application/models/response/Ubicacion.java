@@ -2,12 +2,18 @@ package application.models.response;
 
 public class Ubicacion {
 	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Long id;
 	
 	private String direccion;
 	
 	private Municipio municipio;
 	
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public Ubicacion() {}
 
 	public Ubicacion(Long id, String direccion, Municipio municipio) {
@@ -16,6 +22,9 @@ public class Ubicacion {
 		this.municipio = municipio;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public Long getId() {
 		return id;
 	}

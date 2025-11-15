@@ -8,6 +8,10 @@ import java.util.function.UnaryOperator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 public class PrecioFormatter {
+	
+    // ============================================
+    //             FORMATO DECIMAL BASE
+    // ============================================
 	private static final DecimalFormat decimalFormat;
 
     static {
@@ -19,12 +23,17 @@ public class PrecioFormatter {
         decimalFormat = new DecimalFormat("#,##0", symbols);
     }
 
+    // ============================================
+    //             FORMATEAR PRECIO A TEXTO
+    // ============================================
     public static String formatearPrecio(Double valor) {
         if (valor == null) return "$ 0";
         return "$ " + decimalFormat.format(valor);
     }
     
-    
+    // ============================================
+    //        APLICAR FORMATO EN TEXTFIELD
+    // ============================================
     public static void aplicarFormato(TextField textField) {
 
         DecimalFormat df = new DecimalFormat("#,###");

@@ -10,6 +10,9 @@ import javafx.util.Duration;
 public class NotificationManager {
 
 
+	 // ============================================
+	 //              CONVERSIONES DE COLOR
+	 // ============================================
     public static String toHex(Color color) {
         return String.format("#%02X%02X%02X",
                 (int) (color.getRed() * 255),
@@ -17,7 +20,10 @@ public class NotificationManager {
                 (int) (color.getBlue() * 255));
     }
 
-    /** 🔹 Muestra un pequeño mensaje tipo Toast */
+
+	// ============================================
+    //          NOTIFICACIONES TOAST
+    // ============================================
     public static void showNotification(Scene scene, String text, Color color) {
         Label notification = new Label(text);
         notification.getStyleClass().add("notification-toast");

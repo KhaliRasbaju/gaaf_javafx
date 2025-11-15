@@ -2,11 +2,17 @@ package application.models.request;
 
 public class UbicacionRequest {
 
+	// =================================
+	//        ATRIBUTOS PRINCIPALES
+	// =================================
 
     private String direccion;
     
     private Long idMunicipio;
 
+    // =================================
+    //          CONSTRUCTORES
+    // =================================
     public UbicacionRequest() {}
 
     public UbicacionRequest(String direccion, Long idMunicipio) {
@@ -14,7 +20,9 @@ public class UbicacionRequest {
         this.idMunicipio = idMunicipio;
     }
 
-    // Getters y Setters
+	// =================================
+    //        GETTERS Y SETTERS
+    // =================================
     public String getDireccion() {
         return direccion;
     }

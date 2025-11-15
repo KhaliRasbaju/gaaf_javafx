@@ -15,16 +15,28 @@ import application.utils.HttpClientUtil;
 
 public class ReportePedidoProveedorService {
 
+    // ================================
+    //        MAPEO DEL JSON
+    // ================================
 	private final ObjectMapper mapper = new ObjectMapper();
 
-	 private static final String URL = ApiConfig.BASE_URL + "/reporte/pedido-proveedor";
+    // ================================
+    //        UBICACIÓN SERVICIO
+    // ================================
+	private static final String URL = ApiConfig.BASE_URL + "/reporte/pedido-proveedor";
 	
+    // ================================
+    //        CONSTRUCTOR
+    // ================================
     public ReportePedidoProveedorService() {
     	mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 	}
 
 
+    // ================================
+	//   OBTENER REPORTE DE PEDIDOS POR PROVEEDORES
+	// ================================
 
 	public ReportePedidoProveedor obtenerReportePedidoProveedor(
 			LocalDate fechaPedido,

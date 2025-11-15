@@ -2,6 +2,9 @@ package application.models.response;
 
 public class UsuarioResponse {
 
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
 	private String id;
 	    
     private String usuario;
@@ -16,6 +19,9 @@ public class UsuarioResponse {
 
     private String rol;
 
+    // ================================
+    //        CONSTRUCTORES
+    // ================================
 	public UsuarioResponse() {
 	}
 
@@ -30,6 +36,9 @@ public class UsuarioResponse {
 		this.rol = rol;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public String getId() {
 		return id;
 	}

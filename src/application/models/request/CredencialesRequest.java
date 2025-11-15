@@ -2,8 +2,14 @@ package application.models.request;
 
 public class CredencialesRequest {
 
+	// ================================
+	//        ATRIBUTO PRINCIPAL
+	// ================================
 	private String contraseña;
 
+	// ================================
+	//          CONSTRUCTORES
+	// ================================
 	public CredencialesRequest() {
 	}
 
@@ -11,6 +17,10 @@ public class CredencialesRequest {
 		this.contraseña = contraseña;
 	}
 
+	// ================================
+	//        GETTERS Y SETTERS
+	// ================================
+	
 	public String getContraseña() {
 		return contraseña;
 	}

@@ -4,6 +4,9 @@ package application.models.request;
 
 public class UsuarioRequest {
 	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private String nombre;
 	
 
@@ -19,6 +22,9 @@ public class UsuarioRequest {
 
 	
 
+	// ================================
+	//          CONSTRUCTORES
+	// ================================
 	public UsuarioRequest() {
 	}
 
@@ -33,7 +39,9 @@ public class UsuarioRequest {
 	}
 
 
-
+	// ================================
+	//        GETTERS Y SETTERS
+	// ================================
 	public String getNombre() {
 		return nombre;
 	}

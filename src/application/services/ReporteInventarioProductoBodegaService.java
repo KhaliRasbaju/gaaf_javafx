@@ -15,18 +15,30 @@ import application.utils.HttpClientUtil;
 
 public class ReporteInventarioProductoBodegaService {
 	
+    // ================================
+    //        MAPEO DEL JSON
+    // ================================
 	
 	private final ObjectMapper mapper = new ObjectMapper();
+	
+	// ================================
+	//  UBICACIÓN DEL SERVICIO
+	// ================================
 
 	private static final String URL = ApiConfig.BASE_URL + "/reporte/producto-bodega"; 
 	
-	
+    // ================================
+    //        CONSTRUCTOR
+    // ================================
 	
 	public ReporteInventarioProductoBodegaService() {
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 	
+	// ================================
+	// OBTENER REPORTE DE INVENTARIO POR PRODUCTO DE BODEGA
+	// ================================
     public ReporteInventarioProductoBodega obtenerReporteReporteInventarioProductoBodega(
     		String producto,
     		Integer cantidad,

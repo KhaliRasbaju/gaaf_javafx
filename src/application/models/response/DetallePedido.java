@@ -2,6 +2,9 @@ package application.models.response;
 
 public class DetallePedido {
 	
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Float fermentacion;
 	
     private Float peso;
@@ -14,6 +17,9 @@ public class DetallePedido {
     
     private String producto;
     
+    // ================================
+    //        CONSTRUCTORES
+     // ================================
 	public DetallePedido() {}
 
 	public DetallePedido(Float fermentacion, Float peso, Integer cantidad, Float humedad, Float estadoCacao,
@@ -25,6 +31,10 @@ public class DetallePedido {
 		this.estadoCacao = estadoCacao;
 		this.producto = producto;
 	}
+	
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 
 	public Float getFermentacion() {
 		return fermentacion;

@@ -23,14 +23,23 @@ import javafx.scene.paint.Color;
 
 public class ProveedorController {
 
+    // ================================
+    //      CONTENEDOR PRINCIPAL
+    // ================================
     private final StackPane content;
 
+    // ================================
+    //        CONSTRUCTOR
+    // ================================
     public ProveedorController(StackPane content) {
         this.content = content;
     }
 
     
 
+    // ================================
+    //   ACCIÓN: ABRIR FORMULARIO PARA REGISTRAR PROVEEDOR
+    // ================================
     private void onActionProveedor() {
         try {
         	ProveedorFormController controller = new ProveedorFormController(content);
@@ -40,6 +49,9 @@ public class ProveedorController {
         }
     }
 
+    // ================================
+    //   ACCIÓN: ABRIR FORMULARIO PARA EDITAR PROVEEDOR
+    // ================================
     private void onActionEditar(Long nit) {
         try {
             ProveedorService service = new ProveedorService();
@@ -51,6 +63,10 @@ public class ProveedorController {
         }
     }
 
+
+    // ================================
+    //   ACCIÓN: ELIMINAR PROVEEDOR
+    // ================================
     private static ResponseCommon onActionEliminar(Long nit, Button button) throws Exception {
         try {
             ProveedorService service = new ProveedorService();
@@ -62,6 +78,9 @@ public class ProveedorController {
         }
     }
 
+    // ================================
+    //   VISTA PRINCIPAL
+    // ================================
     public VBox getScene(List<Proveedor> proveedores) {
     	
     	Label lblTitulo = new Label("Lista de Proveedores");

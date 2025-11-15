@@ -7,12 +7,22 @@ import javafx.stage.Stage;
 
 public class SceneManager {
 
+    // ============================================
+    //               STAGE GLOBAL
+    // ============================================
 	private static Stage stage;
 	
+    // ============================================
+    //          ASIGNAR STAGE PRINCIPAL
+    // ============================================
 	public static void setStage(Stage st) {
 		stage = st;
 	}
 	
+
+    // ============================================
+    //           CAMBIAR ESCENA PRINCIPAL
+    // ============================================
 	public static void changeScene(Scene scene, String title) {
 		stage.setTitle(title);
 		scene.getStylesheets().add(SceneManager.class.getResource("/application/resources/application.css").toExternalForm());

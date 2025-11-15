@@ -3,12 +3,20 @@ package application.models.request;
 
 public class CuentaRequest {
 
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
+	
 	private Long numero;
 	
 	private String tipo;
 	
 	private Long idEntidad;
 
+	// ================================
+	//          CONSTRUCTORES
+	// ================================
+	
 	public CuentaRequest() {}
 
 	public CuentaRequest(Long numero, String tipo, Long idEntidad) {
@@ -17,13 +25,13 @@ public class CuentaRequest {
 		this.idEntidad = idEntidad;
 	}
 
-	
+	// ================================
+	//        GETTERS Y SETTERS
+	// ================================
 	
 	public void setNumero(Long numero) {
 		this.numero = numero;
 	}
-
-
 
 	public Long getNumero() {
 		return numero;

@@ -24,12 +24,21 @@ import javafx.scene.paint.Color;
 
 public class RegistrarFormController {
 	
+	// =========================================
+	//        CONTENEDOR PRINCIPAL
+	// =========================================
 	private final StackPane content;
 
+	// =========================================
+	//     CONSTRUCTOR
+	// =========================================
 	public RegistrarFormController(StackPane content) {
 		this.content = content;
 	}
 	
+	// =========================================
+	//     ACCION: REGISTRAR USUARIO
+	// =========================================	
 	private static void onActionRegistrar(RegistrarRequest request) {
 		try {
 			AutentificacionService service = new AutentificacionService();
@@ -39,7 +48,10 @@ public class RegistrarFormController {
 			throw new RuntimeException("Error tipo "+ ex);
 		}
 	}
-	
+
+	// =========================================
+	//     ACCIÓN: EDITAR USUARIO
+	// =========================================
 	private static ResponseCommon onActionEditar( String id, UsuarioRequest request) {
 		try {
 			UsuarioService service = new UsuarioService();
@@ -50,7 +62,10 @@ public class RegistrarFormController {
 		}
 	}
 	
-	
+
+	// =========================================
+	//     VISTA PRINCIPAL
+	// =========================================
 	public VBox getScene(String title, UsuarioResponse usuario) {
 	    // --- TÍTULO ---
 	    Label lblTitulo = new Label(String.format("📝 %s de Usuario", title));

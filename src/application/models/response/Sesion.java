@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Sesion {
 
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
 	private String usuario;
 	
 	private String token;
@@ -13,6 +16,9 @@ public class Sesion {
 	
 	private String id;
 	
+	// ================================
+	//        CONSTRUCTORES
+	// ================================
 	public Sesion() {}
 
 	public Sesion(String usuario, String token, String rol, String id) {
@@ -22,6 +28,9 @@ public class Sesion {
 		this.id = id;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public String getUsuario() {
 		return usuario;
 	}
@@ -54,6 +63,9 @@ public class Sesion {
 		this.id = id;
 	}
 
+	// ================================
+	//        REPRESENTACIÓN STRING
+	// ================================
 	@Override
 	public String toString() {
 		return "Usuario: " + this.usuario + "\n token: " +this.token+"\n rol: "+ this.rol;

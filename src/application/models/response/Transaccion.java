@@ -2,6 +2,9 @@ package application.models.response;
 
 public class Transaccion {
 	
+    // ================================
+    //        ATRIBUTOS PRINCIPALES
+    // ================================
 	private Long id;
 	
 	private String tipo;
@@ -16,6 +19,9 @@ public class Transaccion {
     
     private String producto;
 
+    // ================================
+    //        CONSTRUCTORES
+    	// ================================
 	public Transaccion() {}
 
 	public Transaccion(Long id, String tipo, Integer cantidad, String observacion, Long idPedido, String bodega,
@@ -29,6 +35,9 @@ public class Transaccion {
 		this.producto = producto;
 	}
 
+	// ================================
+	//        GETTERS & SETTERS
+	// ================================
 	public Long getId() {
 		return id;
 	}

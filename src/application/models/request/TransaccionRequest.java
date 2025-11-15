@@ -2,6 +2,10 @@ package application.models.request;
 
 public class TransaccionRequest {
 	
+
+	// ================================
+	//        ATRIBUTOS PRINCIPALES
+	// ================================
 	private Long idProducto;
 	
 	private Long idPedido;
@@ -14,6 +18,9 @@ public class TransaccionRequest {
 	
 	private Integer cantidad;
 	
+	// ================================
+	//          CONSTRUCTORES
+	// ================================
 	public TransaccionRequest() {}
 
 	public TransaccionRequest(Long idProducto, Long idPedido, String observacion, String tipo, Long idBodega,
@@ -26,6 +33,9 @@ public class TransaccionRequest {
 		this.cantidad = cantidad;
 	}
 
+	// ================================
+	//        GETTERS Y SETTERS
+	// ================================
 	public Long getIdProducto() {
 		return idProducto;
 	}

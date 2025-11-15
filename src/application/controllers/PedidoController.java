@@ -25,12 +25,21 @@ import javafx.scene.paint.Color;
 
 public class PedidoController {
 
+    // ==========================================
+    //          CONTENEDOR PRINCIPAL
+    // ==========================================
     private final StackPane content;
 
+    // ==========================================
+    //              CONSTRUCTOR
+    // ==========================================
     public PedidoController(StackPane content) {
         this.content = content;
     }
     
+    // ==========================================
+    //      ACCIÓN: ABRIR FORMULARIO NUEVO
+    // ==========================================
     private void onActionAgregar() {
         try {
         	PedidoFormController controller = new PedidoFormController(content);
@@ -40,6 +49,9 @@ public class PedidoController {
         }
     }
 
+    // ==========================================
+    //           ACCIÓN: EDITAR PEDIDO
+    // ==========================================
     private void onActionEditar(Long id) {
         try {
             PedidoService service = new PedidoService();
@@ -50,7 +62,10 @@ public class PedidoController {
             System.out.println("Error tipo: " + ex);
         }
     }
-    
+  
+    // ==========================================
+    //          ACCIÓN: RECIBIR PEDIDO
+    // ==========================================
     private ResponseCommon onActionRecibir(Long id) throws Exception {
 		try {
 			PedidoService service = new PedidoService();
@@ -62,6 +77,9 @@ public class PedidoController {
 		}
 	}
 
+    // ==========================================
+    //          ACCIÓN: ELIMINAR PEDIDO
+    // ==========================================
     private ResponseCommon onActionEliminar(Long id) throws Exception {
         PedidoService service = new PedidoService();
         return service.eliminarPedido(id);
@@ -69,7 +87,9 @@ public class PedidoController {
 
    
 
-    // 🔹 Escena principal (tabla)
+    // ================================================
+    //      ESCENA PRINCIPAL (TABLA DE PEDIDOS)
+    // ================================================
     @SuppressWarnings("unchecked")
     public VBox getScene(List<Pedido> pedidos) {
 
@@ -79,6 +99,7 @@ public class PedidoController {
         btnAgregar.getStyleClass().add("btn-agregar");
         btnAgregar.setAlignment(Pos.CENTER);
 
+        // Columnas de la tabla
         TableView<Pedido> table = new TableView<>();
 
         TableColumn<Pedido, Long> colId = new TableColumn<>("ID Pedido");

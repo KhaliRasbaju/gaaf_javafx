@@ -23,14 +23,22 @@ import javafx.scene.paint.Color;
 
 public class MetodoPagoController {
 
+    // ================================
+    //        CONTENEDOR PRINCIPAL
+    // ================================
     private final StackPane content;
 
+    // ================================
+    //            CONSTRUCTOR
+    // ================================
     public MetodoPagoController(StackPane content) {
         this.content = content;
     }
 
 
-    // 🔹 Acción para abrir formulario (nuevo método de pago)
+    // ================================
+    //   ACCIÓN: CREAR NUEVO MÉTODO
+    // ================================
     private void onActionMetodoPago() {
         try {
         	MetodoPagoFormController controller = new MetodoPagoFormController(content);
@@ -40,7 +48,9 @@ public class MetodoPagoController {
         }
     }
 
-    // 🔹 Acción para editar método de pago
+    // ================================
+    //       ACCIÓN: EDITAR MÉTODO
+    // ================================
     private void onActionEditar(Long id) {
         try {
             MetodoPagoService service = new MetodoPagoService();
@@ -52,7 +62,9 @@ public class MetodoPagoController {
         }
     }
 
-    // 🔹 Acción para eliminar método de pago
+    // ================================
+    //     ACCIÓN: ELIMINAR MÉTODO
+    // ================================
     private static ResponseCommon onActionEliminar(Long id, Button button) throws Exception {
         try {
             MetodoPagoService service = new MetodoPagoService();
@@ -64,7 +76,10 @@ public class MetodoPagoController {
         }
     }
 
-    // ✅ Muestra la tabla con los métodos de pago
+
+    // ================================
+    //     VISTA PRINCIPAL: TABLA
+    // ================================
     public VBox getScene(List<Common> metodosPago) {
     	
     	Label lblTitulo = new Label("Lista de Metodos de Pagos");

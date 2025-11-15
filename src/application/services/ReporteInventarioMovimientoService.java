@@ -15,18 +15,29 @@ import application.utils.HttpClientUtil;
 
 public class ReporteInventarioMovimientoService {
 	
-	
+    // ================================
+    //        MAPEO DEL JSON
+    // ================================
 	private final ObjectMapper mapper = new ObjectMapper();
+	
+	// ================================
+	//   UBICACION SERVICIO
+	// ================================
 
 	private static final String URL = ApiConfig.BASE_URL + "/reporte/inventario-movimiento";
 	
+	// ================================
+	//	 CONSTRUCTOR
+	// ================================
     public ReporteInventarioMovimientoService() {
     	mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 	}
 
 
-
+	// ================================
+	// OBTENER REPORTE DE INVENTARIO POR MOVIMIENTO
+	// ================================
 	public ReporteInventarioMovimiento obtenerReporteInventarioMovimiento(
 			String producto,
 			String tipo,

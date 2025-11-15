@@ -26,6 +26,9 @@ import javafx.scene.control.ScrollPane;
 
 public abstract class DashboardViewBase {
 
+    // ================================
+    //       ATRIBUTOS PRINCIPALES
+    // ================================
     protected boolean menuOpen = true;
     protected VBox vbox;
     protected StackPane content;
@@ -42,6 +45,9 @@ public abstract class DashboardViewBase {
 
     private Text userLabel;
 
+    // ================================
+    //       CONSTRUCTOR
+    // ================================
     public DashboardViewBase() {
         vbox = new VBox(12);
         vbox.setPadding(new Insets(18));
@@ -100,10 +106,16 @@ public abstract class DashboardViewBase {
         toggleMenu.setOnAction(e -> toggleMenu());
     }
 
+    // ============================================
+    //         METODOS ABSTRACTOS DEL DASHBOARD
+    // ============================================
     protected abstract void addMenuButtons();
     protected abstract String getTitleText();
     protected abstract void onSalir();
 
+    // ============================================
+    //         CREAR BOTONES DEL MENU
+    // ============================================
     protected Button createMenuButton(String icon, String text) {
         Text iconText = new Text(icon);
         iconText.getStyleClass().add("dashboard-icon");
@@ -147,11 +159,17 @@ public abstract class DashboardViewBase {
         return btn;
     }
 
+    // ============================================
+    //          MOSTRAR / OCULTAR AJUSTES
+    // ============================================
     private void toggleSettingsMenu() {
         settingsOpen = !settingsOpen;
         settingsMenu.setVisible(settingsOpen);
     }
 
+    // ============================================
+    //          MOSTRAR / OCULTAR MENU
+    // ============================================
     private void toggleMenu() {
 
         double start = sidebarScroll.getPrefWidth();
@@ -205,8 +223,9 @@ public abstract class DashboardViewBase {
     }
 
 
-    
-
+    // ============================================
+    //              VISTA PRINCIPAL
+    // ============================================
     public Scene getScene() {
         BorderPane root = new BorderPane();
         root.setTop(headerBox);
@@ -219,6 +238,9 @@ public abstract class DashboardViewBase {
         return scene;
     }
 
+    // ============================================
+    //        AÑADIR FOOTER AL SIDEBAR
+    // ============================================
     protected void addSidebarFooter(String roleName) {
         Region push = new Region();
         VBox.setVgrow(push, Priority.ALWAYS);
@@ -262,6 +284,9 @@ public abstract class DashboardViewBase {
         vbox.getChildren().add(settingsMenu);
     }
 
+    // ============================================
+    //       CREAR ITEM DEL MENÚ DE AJUSTES
+    // ============================================
     private Button createSettingsItem(String icon, String text) {
         Text iconText = new Text(icon);
         iconText.getStyleClass().add("dashboard-icon");
@@ -315,10 +340,16 @@ public abstract class DashboardViewBase {
         return btn;
     }
 
+    // ============================================
+    //        OBTENER ID DE SESIÓN ACTUAL
+    // ============================================
     private static String getId() {
         return SessionManager.getInstance().getId();
     }
 
+    // ============================================
+    //         ACCION: INFORMACIÓN DEL USUARIO
+    // ============================================
     private void onObtenerInformacion() throws Exception {
         try {
             String id = getId();
@@ -330,7 +361,10 @@ public abstract class DashboardViewBase {
             throw new Exception("Error tipo: " + ex);
         }
     }
-
+    
+    // ============================================
+    //       ACCION: CAMBIAR CREDENCIALES
+    // ============================================
     private void onCredenciales() throws Exception {
         try {
             String id = getId();
